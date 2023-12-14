@@ -30,7 +30,6 @@ content: |-
   {{ .Requirements }}
   {{ .Inputs }}
   {{ .Outputs }}
-  {{ .Providers }}
   {{ .Resources }}
   {{ .Modules }}
 output:

@@ -68,14 +68,6 @@ module "ise" {
 |------|-------------|
 | <a name="output_default_values"></a> [default\_values](#output\_default\_values) | All default values. |
 | <a name="output_model"></a> [model](#output\_model) | Full model. |
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_ise"></a> [ise](#provider\_ise) | 0.1.7 |
-| <a name="provider_local"></a> [local](#provider\_local) | 2.4.0 |
-| <a name="provider_time"></a> [time](#provider\_time) | >= 0.10.0 |
-| <a name="provider_utils"></a> [utils](#provider\_utils) | 0.2.5 |
 ## Resources
 
 | Name | Type |

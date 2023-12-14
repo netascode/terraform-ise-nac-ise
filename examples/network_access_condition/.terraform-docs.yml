@@ -1,0 +1,40 @@
+version: ">= 0.14.0"
+
+formatter: markdown table
+
+content: |-
+  # ISE Network Access Condition Example
+
+  Set environment variables pointing to ISE:
+
+  ```bash
+  export ISE_USERNAME=admin
+  export ISE_PASSWORD=Cisco123
+  export ISE_URL=https://10.1.1.1
+  ```
+
+  To run this example you need to execute:
+
+  ```bash
+  $ terraform init
+  $ terraform plan
+  $ terraform apply
+  ```
+
+  Note that this example will create resources. Resources can be destroyed with `terraform destroy`.
+
+  #### `network_access_condition.yaml`
+
+  ```yaml
+  {{ include "./network_access_condition.yaml" }}
+  ```
+
+  #### `main.tf`
+
+  ```hcl
+  {{ include "./main.tf" }}
+  ```
+
+output:
+  file: README.md
+  mode: replace

@@ -1,0 +1,42 @@
+version: ">= 0.14.0"
+
+formatter: markdown table
+
+content: |-
+  # Terraform Network-as-Code Cisco ISE Module
+
+  A Terraform module to configure Cisco ISE.
+
+  ## Usage
+
+  This module supports an inventory driven approach, where a complete ISE configuration or parts of it are either modeled in one or more YAML files or natively using Terraform variables.
+
+  ## Examples
+
+  Configuring a Network Access Condition using YAML:
+
+  #### `network_access_condition.yaml`
+
+  ```yaml
+  {{ include "./examples/network_access_condition/network_access_condition.yaml" }}
+  ```
+
+  #### `main.tf`
+
+  ```hcl
+  {{ include "./examples/network_access_condition/main.tf" }}
+  ```
+
+  {{ .Requirements }}
+  {{ .Inputs }}
+  {{ .Outputs }}
+  {{ .Providers }}
+  {{ .Resources }}
+  {{ .Modules }}
+output:
+  file: README.md
+  mode: replace
+
+sort:
+  enabled: true
+  by: required

@@ -1,0 +1,12 @@
+---
+ise:
+  network_access:
+    policy_elements:
+      conditions:
+        - name: CertificateNotExpired
+          type: LibraryConditionAttributes
+          is_negate: false
+          dictionary_name: CERTIFICATE
+          attribute_name: Is Expired
+          operator: equals
+          attribute_value: "False"

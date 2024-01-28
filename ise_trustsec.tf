@@ -67,6 +67,8 @@ resource "ise_trustsec_ip_to_sgt_mapping" "trustsec_ip_to_sgt_mapping" {
 
 # Workaround for ISE API issue where deleting an SGT immediately after deleting an object using this SGT fails
 resource "time_sleep" "sgt_wait" {
+  count = var.manage_trust_sec ? 1 : 0
+
   destroy_duration = "10s"
 
   depends_on = [ise_trustsec_security_group.trustsec_security_group]

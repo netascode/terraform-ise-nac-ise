@@ -1169,6 +1169,8 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
 
 # Workaround for ISE API issue where deleting a TACACS profile or command set immediately after deleting an object using it fails
 resource "time_sleep" "device_admin_policy_object_wait" {
+  count = var.manage_device_administration ? 1 : 0
+
   destroy_duration = "5s"
 
   depends_on = [

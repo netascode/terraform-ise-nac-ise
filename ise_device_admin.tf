@@ -48,6 +48,8 @@ resource "ise_device_admin_condition" "device_admin_condition" {
       id               = try(c2.type, local.defaults.ise.device_administration.policy_elements.conditions.type, null) == "ConditionReference" ? data.ise_device_admin_condition.device_admin_condition_circular[c2.name].id : null
     }]
   }]
+
+  depends_on = [ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_allowed_protocols_tacacs" "allowed_protocols_tacacs" {
@@ -214,7 +216,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_0" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_allowed_protocols_tacacs.allowed_protocols_tacacs]
+  depends_on = [ise_allowed_protocols_tacacs.allowed_protocols_tacacs, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_1" {
@@ -235,7 +237,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_1" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_0]
+  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_0, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_2" {
@@ -256,7 +258,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_2" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_1]
+  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_1, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_3" {
@@ -277,7 +279,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_3" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_2]
+  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_2, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_4" {
@@ -298,7 +300,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_4" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_3]
+  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_3, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_5" {
@@ -319,7 +321,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_5" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_4]
+  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_4, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_6" {
@@ -340,7 +342,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_6" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_5]
+  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_7" {
@@ -361,7 +363,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_7" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_6]
+  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_6, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_8" {
@@ -382,7 +384,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_8" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_7]
+  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_7, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_9" {
@@ -403,7 +405,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_9" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_8]
+  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_8, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_10" {
@@ -424,7 +426,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_10" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_9]
+  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_9, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_11" {
@@ -445,7 +447,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_11" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_10]
+  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_10, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_12" {
@@ -466,7 +468,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_12" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_11]
+  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_11, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_13" {
@@ -487,7 +489,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_13" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_12]
+  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_12, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_14" {
@@ -508,7 +510,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_14" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_13]
+  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_13, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_15" {
@@ -529,7 +531,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_15" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_14]
+  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_14, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_16" {
@@ -550,7 +552,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_16" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_15]
+  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_15, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_17" {
@@ -571,7 +573,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_17" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_16]
+  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_16, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_18" {
@@ -592,7 +594,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_18" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_17]
+  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_17, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_19" {
@@ -613,7 +615,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_19" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_18]
+  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_18, ise_active_directory_add_groups.active_directory_groups]
 }
 
 locals {
@@ -705,6 +707,8 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
   if_process_fail           = each.value.if_process_fail
   if_user_not_found         = each.value.if_user_not_found
   children                  = each.value.children
+
+  depends_on = [ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_1" {
@@ -728,7 +732,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
   if_user_not_found         = each.value.if_user_not_found
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_0]
+  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_0, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_2" {
@@ -752,7 +756,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
   if_user_not_found         = each.value.if_user_not_found
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_1]
+  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_1, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_3" {
@@ -776,7 +780,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
   if_user_not_found         = each.value.if_user_not_found
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_2]
+  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_2, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_4" {
@@ -800,7 +804,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
   if_user_not_found         = each.value.if_user_not_found
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_3]
+  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_3, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_5" {
@@ -824,7 +828,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
   if_user_not_found         = each.value.if_user_not_found
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_4]
+  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_4, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_6" {
@@ -848,7 +852,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
   if_user_not_found         = each.value.if_user_not_found
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_5]
+  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_7" {
@@ -872,7 +876,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
   if_user_not_found         = each.value.if_user_not_found
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_6]
+  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_6, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_8" {
@@ -896,7 +900,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
   if_user_not_found         = each.value.if_user_not_found
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_7]
+  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_7, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_9" {
@@ -920,7 +924,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
   if_user_not_found         = each.value.if_user_not_found
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_8]
+  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_8, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_10" {
@@ -944,7 +948,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
   if_user_not_found         = each.value.if_user_not_found
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_9]
+  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_9, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_11" {
@@ -968,7 +972,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
   if_user_not_found         = each.value.if_user_not_found
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_10]
+  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_10, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_12" {
@@ -992,7 +996,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
   if_user_not_found         = each.value.if_user_not_found
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_11]
+  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_11, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_13" {
@@ -1016,7 +1020,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
   if_user_not_found         = each.value.if_user_not_found
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_12]
+  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_12, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_14" {
@@ -1040,7 +1044,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
   if_user_not_found         = each.value.if_user_not_found
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_13]
+  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_13, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_15" {
@@ -1064,7 +1068,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
   if_user_not_found         = each.value.if_user_not_found
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_14]
+  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_14, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_16" {
@@ -1088,7 +1092,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
   if_user_not_found         = each.value.if_user_not_found
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_15]
+  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_15, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_17" {
@@ -1112,7 +1116,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
   if_user_not_found         = each.value.if_user_not_found
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_16]
+  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_16, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_18" {
@@ -1136,7 +1140,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
   if_user_not_found         = each.value.if_user_not_found
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_17]
+  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_17, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_19" {
@@ -1160,7 +1164,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
   if_user_not_found         = each.value.if_user_not_found
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_18]
+  depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule_18, ise_active_directory_add_groups.active_directory_groups]
 }
 
 # Workaround for ISE API issue where deleting a TACACS profile or command set immediately after deleting an object using it fails
@@ -1237,7 +1241,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_tacacs_profile.tacacs_profile, ise_tacacs_command_set.tacacs_command_set, time_sleep.device_admin_policy_object_wait]
+  depends_on = [ise_tacacs_profile.tacacs_profile, ise_tacacs_command_set.tacacs_command_set, time_sleep.device_admin_policy_object_wait, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_1" {
@@ -1259,7 +1263,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_0]
+  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_0, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_2" {
@@ -1281,7 +1285,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_1]
+  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_1, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_3" {
@@ -1303,7 +1307,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_2]
+  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_2, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_4" {
@@ -1325,7 +1329,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_3]
+  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_3, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_5" {
@@ -1347,7 +1351,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_4]
+  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_4, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_6" {
@@ -1369,7 +1373,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_5]
+  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_7" {
@@ -1391,7 +1395,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_6]
+  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_6, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_8" {
@@ -1413,7 +1417,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_7]
+  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_7, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_9" {
@@ -1435,7 +1439,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_8]
+  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_8, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_10" {
@@ -1457,7 +1461,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_9]
+  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_9, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_11" {
@@ -1479,7 +1483,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_10]
+  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_10, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_12" {
@@ -1501,7 +1505,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_11]
+  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_11, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_13" {
@@ -1523,7 +1527,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_12]
+  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_12, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_14" {
@@ -1545,7 +1549,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_13]
+  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_13, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_15" {
@@ -1567,7 +1571,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_14]
+  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_14, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_16" {
@@ -1589,7 +1593,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_15]
+  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_15, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_17" {
@@ -1611,7 +1615,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_16]
+  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_16, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_18" {
@@ -1633,7 +1637,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_17]
+  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_17, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_19" {
@@ -1655,7 +1659,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_18]
+  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule_18, ise_active_directory_add_groups.active_directory_groups]
 }
 
 locals {
@@ -1722,7 +1726,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_tacacs_profile.tacacs_profile, ise_tacacs_command_set.tacacs_command_set, time_sleep.device_admin_policy_object_wait]
+  depends_on = [ise_tacacs_profile.tacacs_profile, ise_tacacs_command_set.tacacs_command_set, time_sleep.device_admin_policy_object_wait, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_1" {
@@ -1744,7 +1748,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_0]
+  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_0, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_2" {
@@ -1766,7 +1770,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_1]
+  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_1, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_3" {
@@ -1788,7 +1792,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_2]
+  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_2, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_4" {
@@ -1810,7 +1814,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_3]
+  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_3, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_5" {
@@ -1832,7 +1836,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_4]
+  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_4, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_6" {
@@ -1854,7 +1858,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_5]
+  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_7" {
@@ -1876,7 +1880,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_6]
+  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_6, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_8" {
@@ -1898,7 +1902,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_7]
+  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_7, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_9" {
@@ -1920,7 +1924,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_8]
+  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_8, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_10" {
@@ -1942,7 +1946,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_9]
+  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_9, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_11" {
@@ -1964,7 +1968,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_10]
+  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_10, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_12" {
@@ -1986,7 +1990,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_11]
+  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_11, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_13" {
@@ -2008,7 +2012,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_12]
+  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_12, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_14" {
@@ -2030,7 +2034,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_13]
+  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_13, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_15" {
@@ -2052,7 +2056,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_14]
+  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_14, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_16" {
@@ -2074,7 +2078,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_15]
+  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_15, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_17" {
@@ -2096,7 +2100,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_16]
+  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_16, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_18" {
@@ -2118,7 +2122,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_17]
+  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_17, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_19" {
@@ -2140,7 +2144,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_18]
+  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule_18, ise_active_directory_add_groups.active_directory_groups]
 }
 
 locals {
@@ -2202,7 +2206,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_tacacs_profile.tacacs_profile, ise_tacacs_command_set.tacacs_command_set, time_sleep.device_admin_policy_object_wait]
+  depends_on = [ise_tacacs_profile.tacacs_profile, ise_tacacs_command_set.tacacs_command_set, time_sleep.device_admin_policy_object_wait, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_1" {
@@ -2223,7 +2227,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_0]
+  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_0, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_2" {
@@ -2244,7 +2248,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_1]
+  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_1, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_3" {
@@ -2265,7 +2269,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_2]
+  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_2, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_4" {
@@ -2286,7 +2290,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_3]
+  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_3, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_5" {
@@ -2307,7 +2311,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_4]
+  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_4, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_6" {
@@ -2328,7 +2332,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_5]
+  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_7" {
@@ -2349,7 +2353,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_6]
+  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_6, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_8" {
@@ -2370,7 +2374,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_7]
+  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_7, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_9" {
@@ -2391,7 +2395,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_8]
+  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_8, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_10" {
@@ -2412,7 +2416,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_9]
+  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_9, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_11" {
@@ -2433,7 +2437,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_10]
+  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_10, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_12" {
@@ -2454,7 +2458,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_11]
+  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_11, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_13" {
@@ -2475,7 +2479,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_12]
+  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_12, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_14" {
@@ -2496,7 +2500,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_13]
+  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_13, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_15" {
@@ -2517,7 +2521,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_14]
+  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_14, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_16" {
@@ -2538,7 +2542,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_15]
+  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_15, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_17" {
@@ -2559,7 +2563,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_16]
+  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_16, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_18" {
@@ -2580,7 +2584,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_17]
+  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_17, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_19" {
@@ -2601,5 +2605,5 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_18]
+  depends_on = [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule_18, ise_active_directory_add_groups.active_directory_groups]
 }

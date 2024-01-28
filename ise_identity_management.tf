@@ -130,8 +130,8 @@ data "ise_active_directory_groups_by_domain" "all_groups" {
 
 locals {
   active_directory_groups_all = {
-    for k, v in ise_active_directory_groups_by_domain.all_groups :
-    k => { for group in v.groups : group.name => group }
+    for k, v in data.ise_active_directory_groups_by_domain.all_groups :
+    k => { for group in v.groups : group.name => group } if var.manage_identity_management
   }
 
   active_directory_groups = {
@@ -141,7 +141,7 @@ locals {
         type = try(local.active_directory_groups_all[ad.name][group].type, null)
         sid  = try(local.active_directory_groups_all[ad.name][group].sid, null)
       }
-    ]
+    ] if var.manage_identity_management
   }
 }
 
@@ -154,7 +154,7 @@ resource "ise_active_directory_add_groups" "active_directory_groups" {
   domain                     = ise_active_directory_join_point.active_directory_join_point[each.key].domain
   ad_scopes_names            = ise_active_directory_join_point.active_directory_join_point[each.key].ad_scopes_names
   enable_domain_allowed_list = ise_active_directory_join_point.active_directory_join_point[each.key].enable_domain_allowed_list
-  groups                     = try(local.active_directory_groups, local.defaults.ise.identity_management.active_directory.groups, null)
+  groups                     = try(local.active_directory_groups[each.key], local.defaults.ise.identity_management.active_directory.groups, null)
 
   depends_on = [ise_active_directory_join_point.active_directory_join_point, ise_active_directory_join_domain_with_all_nodes.active_directory_join_domain_with_all_nodes]
 }

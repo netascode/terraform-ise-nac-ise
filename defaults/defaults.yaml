@@ -29,19 +29,6 @@ defaults:
           send_configuration_to_device_using: DISABLE_ALL
           include_when_deploying_sgt_updates: false
     identity_management:
-      active_directory:
-        ad_scopes_names: Default_Scope
-        enable_domain_allowed_list: true
-        enable_rewrites: false
-        enable_pass_change: true
-        enable_machine_auth: true
-        enable_machine_access: true
-        enable_dialin_permission_check: false
-        plaintext_auth: false
-        aging_time: 5
-        enable_callback_for_dialin_client: false
-        enable_failed_auth_protection: false
-        failed_auth_threshold: 5
       internal_users:
         enabled: true
         change_password: true

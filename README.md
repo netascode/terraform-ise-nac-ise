@@ -22,8 +22,7 @@ ise:
         - name: CertificateNotExpired
           type: LibraryConditionAttributes
           is_negate: false
-          dictionary_name: CERTIFICATE
-          attribute_name: Is Expired
+          attribute_name: CERTIFICATE:Is Expired
           operator: equals
           attribute_value: "False"
 ```
@@ -36,6 +35,8 @@ module "ise" {
   version = ">= 0.1.0"
 
   yaml_files = ["network_access_condition.yaml"]
+
+  manage_network_access = true
 }
 ```
 
@@ -44,7 +45,7 @@ module "ise" {
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
-| <a name="requirement_ise"></a> [ise](#requirement\_ise) | >= 0.1.8 |
+| <a name="requirement_ise"></a> [ise](#requirement\_ise) | >= 0.1.12 |
 | <a name="requirement_local"></a> [local](#requirement\_local) | >= 2.3.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.10.0 |
 | <a name="requirement_utils"></a> [utils](#requirement\_utils) | >= 0.2.5 |
@@ -72,6 +73,9 @@ module "ise" {
 
 | Name | Type |
 |------|------|
+| [ise_active_directory_add_groups.active_directory_groups](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/active_directory_add_groups) | resource |
+| [ise_active_directory_join_domain_with_all_nodes.active_directory_join_domain_with_all_nodes](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/active_directory_join_domain_with_all_nodes) | resource |
+| [ise_active_directory_join_point.active_directory_join_point](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/active_directory_join_point) | resource |
 | [ise_allowed_protocols.allowed_protocols](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/allowed_protocols) | resource |
 | [ise_allowed_protocols_tacacs.allowed_protocols_tacacs](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/allowed_protocols_tacacs) | resource |
 | [ise_authorization_profile.authorization_profile](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/authorization_profile) | resource |
@@ -305,6 +309,7 @@ module "ise" {
 | [time_sleep.device_admin_policy_object_wait](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [time_sleep.network_device_group_wait](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [time_sleep.sgt_wait](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
+| [ise_active_directory_groups_by_domain.all_groups](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/data-sources/active_directory_groups_by_domain) | data source |
 | [ise_device_admin_condition.device_admin_condition](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/data-sources/device_admin_condition) | data source |
 | [ise_device_admin_condition.device_admin_condition_circular](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/data-sources/device_admin_condition) | data source |
 | [ise_endpoint_identity_group.endpoint_identity_group](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/data-sources/endpoint_identity_group) | data source |

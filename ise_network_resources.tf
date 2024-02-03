@@ -136,6 +136,8 @@ resource "ise_network_device_group" "network_device_group_5" {
 
 # Workaround for ISE API issue where creating/deleting a network device immediately after creating/deleting a network device group fails
 resource "time_sleep" "network_device_group_wait" {
+  count = var.manage_network_resources ? 1 : 0
+
   create_duration  = "5s"
   destroy_duration = "5s"
 

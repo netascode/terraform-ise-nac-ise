@@ -30,8 +30,7 @@ ise:
         - name: CertificateNotExpired
           type: LibraryConditionAttributes
           is_negate: false
-          dictionary_name: CERTIFICATE
-          attribute_name: Is Expired
+          attribute_name: CERTIFICATE:Is Expired
           operator: equals
           attribute_value: "False"
 ```
@@ -42,6 +41,8 @@ ise:
 module "ise" {
   source  = "netascode/nac-ise/ise"
   version = ">= 0.1.0"
+
+  manage_network_access = true
 
   yaml_files = ["network_access_condition.yaml"]
 }

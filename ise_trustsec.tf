@@ -1,11 +1,11 @@
 locals {
   trustsec_matrix = { for cell in try(local.ise.trust_sec.matrix_entries, []) : "${cell.source_sgt}-${cell.destination_sgt}" => cell if var.manage_trust_sec }
-  unique_sgts     = distinct(concat([for key, value in local.trustsec_matrix : value.source_sgt], [for key, value in local.trustsec_matrix : value.destination_sgt], [for map in try(local.ise.trust_sec.ip_sgt_mappings, []) : try(map.sgt, null) if try(map.sgt, null) != null], [for map in try(local.ise.trust_sec.ip_sgt_mapping_groups, []) : try(map.sgt, null) if try(map.sgt, null) != null]))
-  known_sgts      = [for group in try(local.ise.trust_sec.security_groups, []) : group.name]
-  unknown_sgts    = setsubtract(local.unique_sgts, local.known_sgts)
-  unique_sgacls   = distinct([for key, value in local.trustsec_matrix : value.sgacl_name])
-  known_sgacls    = [for acl in try(local.ise.trust_sec.security_group_acls, []) : acl.name]
-  unknown_sgacls  = setsubtract(local.unique_sgacls, local.known_sgacls)
+  unique_sgts     = var.manage_trust_sec ? distinct(concat([for key, value in local.trustsec_matrix : value.source_sgt], [for key, value in local.trustsec_matrix : value.destination_sgt], [for map in try(local.ise.trust_sec.ip_sgt_mappings, []) : try(map.sgt, null) if try(map.sgt, null) != null], [for map in try(local.ise.trust_sec.ip_sgt_mapping_groups, []) : try(map.sgt, null) if try(map.sgt, null) != null])) : []
+  known_sgts      = var.manage_trust_sec ? [for group in try(local.ise.trust_sec.security_groups, []) : group.name] : []
+  unknown_sgts    = var.manage_trust_sec ? setsubtract(local.unique_sgts, local.known_sgts) : []
+  unique_sgacls   = var.manage_trust_sec ? distinct([for key, value in local.trustsec_matrix : value.sgacl_name]) : []
+  known_sgacls    = var.manage_trust_sec ? [for acl in try(local.ise.trust_sec.security_group_acls, []) : acl.name] : []
+  unknown_sgacls  = var.manage_trust_sec ? setsubtract(local.unique_sgacls, local.known_sgacls) : []
 }
 
 data "ise_trustsec_security_group" "trustsec_security_group" {

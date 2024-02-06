@@ -39,6 +39,19 @@ defaults:
         username_from: CERTIFICATE
         certificate_attribute_name: SUBJECT_COMMON_NAME
         external_identity_store_name: "[not applicable]"
+      active_directories:
+        ad_scopes_names: Default_Scope
+        enable_domain_allowed_list: true
+        enable_rewrites: false
+        enable_pass_change: true
+        enable_machine_auth: true
+        enable_machine_access: true
+        enable_dialin_permission_check: false
+        plaintext_auth: false
+        aging_time: 5
+        enable_callback_for_dialin_client: false
+        enable_failed_auth_protection: false
+        failed_auth_threshold: 5
     trust_sec:
       security_groups:
         propagate_to_apic: false

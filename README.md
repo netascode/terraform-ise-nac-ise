@@ -178,6 +178,7 @@ module "ise" {
 | [ise_device_admin_time_and_date_condition.device_admin_time_and_date_condition](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_time_and_date_condition) | resource |
 | [ise_downloadable_acl.downloadable_acl](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/downloadable_acl) | resource |
 | [ise_endpoint_identity_group.endpoint_identity_group](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/endpoint_identity_group) | resource |
+| [ise_identity_source_sequence.identity_source_sequences](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/identity_source_sequence) | resource |
 | [ise_internal_user.internal_user](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/internal_user) | resource |
 | [ise_license_tier_state.license_tier_state](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/license_tier_state) | resource |
 | [ise_network_access_authentication_rule.network_access_authentication_rule_0](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_authentication_rule) | resource |

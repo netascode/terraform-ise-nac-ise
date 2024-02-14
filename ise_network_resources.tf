@@ -1,13 +1,13 @@
 locals {
-  network_device_groups = var.manage_network_resources ? [for group in try(local.ise.network_resources.network_device_groups, []) : {
+  network_device_groups = [for group in try(local.ise.network_resources.network_device_groups, []) : {
     name        = try(split("#", group.path)[0] == "All Device Types", false) ? "Device Type#${group.path}#${group.name}" : (try(split("#", group.path)[0] == "All Locations", false) ? "Location#${group.path}#${group.name}" : (try(split("#", group.path)[0] == "Is IPSEC Device", false) ? "IPSEC#${group.path}" : (try(group.path, null) == null ? "${group.name}#${group.name}" : "${split("#", group.path)[0]}#${group.path}#${group.name}")))
     description = try(group.description, local.defaults.ise.network_resources.network_device_groups.description, null)
     root_group  = try(split("#", group.path)[0] == "All Device Types", false) ? "Device Type" : (try(split("#", group.path)[0] == "All Locations", false) ? "Location" : (try(split("#", group.path)[0] == "Is IPSEC Device", false) ? "IPSEC" : try(split("#", group.path)[0], group.name)))
-  }] : []
+  }]
 }
 
 resource "ise_network_device_group" "network_device_group_0" {
-  for_each = { for group in local.network_device_groups : group.name => group if var.manage_network_resources }
+  for_each = { for group in local.network_device_groups : group.name => group }
 
   name        = each.value.name
   description = each.value.description
@@ -15,17 +15,17 @@ resource "ise_network_device_group" "network_device_group_0" {
 }
 
 locals {
-  network_device_groups_children = var.manage_network_resources ? flatten([for p in try(local.ise.network_resources.network_device_groups, []) : [
+  network_device_groups_children = flatten([for p in try(local.ise.network_resources.network_device_groups, []) : [
     for c in try(p.children, []) : {
       name        = try(split("#", p.path)[0] == "All Device Types", false) ? "Device Type#${p.path}#${p.name}#${c.name}" : (try(split("#", p.path)[0] == "All Locations", false) ? "Location#${p.path}#${p.name}#${c.name}" : (try(split("#", p.path)[0] == "Is IPSEC Device", false) ? "IPSEC#${p.path}" : (try(p.path, null) == null ? "${p.name}#${p.name}#${c.name}" : "${split("#", p.path)[0]}#${p.path}#${p.name}#${c.name}")))
       description = try(c.description, local.defaults.ise.network_resources.network_device_groups.children.description, null)
       root_group  = try(split("#", p.path)[0] == "All Device Types", false) ? "Device Type" : (try(split("#", p.path)[0] == "All Locations", false) ? "Location" : (try(split("#", p.path)[0] == "Is IPSEC Device", false) ? "IPSEC" : try(split("#", p.path)[0], p.name)))
     }
-  ]]) : []
+  ]])
 }
 
 resource "ise_network_device_group" "network_device_group_1" {
-  for_each = { for group in local.network_device_groups_children : group.name => group if var.manage_network_resources }
+  for_each = { for group in local.network_device_groups_children : group.name => group }
 
   name        = each.value.name
   description = each.value.description
@@ -35,7 +35,7 @@ resource "ise_network_device_group" "network_device_group_1" {
 }
 
 locals {
-  network_device_groups_children_children = var.manage_network_resources ? flatten([for p in try(local.ise.network_resources.network_device_groups, []) : [
+  network_device_groups_children_children = flatten([for p in try(local.ise.network_resources.network_device_groups, []) : [
     for c in try(p.children, []) : [
       for c2 in try(c.children, []) : {
         name        = try(split("#", p.path)[0] == "All Device Types", false) ? "Device Type#${p.path}#${p.name}#${c.name}#${c2.name}" : (try(split("#", p.path)[0] == "All Locations", false) ? "Location#${p.path}#${p.name}#${c.name}#${c2.name}" : (try(split("#", p.path)[0] == "Is IPSEC Device", false) ? "IPSEC#${p.path}" : (try(p.path, null) == null ? "${p.name}#${p.name}#${c.name}#${c2.name}" : "${split("#", p.path)[0]}#${p.path}#${p.name}#${c.name}#${c2.name}")))
@@ -43,11 +43,11 @@ locals {
         root_group  = try(split("#", p.path)[0] == "All Device Types", false) ? "Device Type" : (try(split("#", p.path)[0] == "All Locations", false) ? "Location" : (try(split("#", p.path)[0] == "Is IPSEC Device", false) ? "IPSEC" : try(split("#", p.path)[0], p.name)))
       }
     ]
-  ]]) : []
+  ]])
 }
 
 resource "ise_network_device_group" "network_device_group_2" {
-  for_each = { for group in local.network_device_groups_children_children : group.name => group if var.manage_network_resources }
+  for_each = { for group in local.network_device_groups_children_children : group.name => group }
 
   name        = each.value.name
   description = each.value.description
@@ -57,7 +57,7 @@ resource "ise_network_device_group" "network_device_group_2" {
 }
 
 locals {
-  network_device_groups_children_children_children = var.manage_network_resources ? flatten([for p in try(local.ise.network_resources.network_device_groups, []) : [
+  network_device_groups_children_children_children = flatten([for p in try(local.ise.network_resources.network_device_groups, []) : [
     for c in try(p.children, []) : [
       for c2 in try(c.children, []) : [
         for c3 in try(c2.children, []) : {
@@ -67,11 +67,11 @@ locals {
         }
       ]
     ]
-  ]]) : []
+  ]])
 }
 
 resource "ise_network_device_group" "network_device_group_3" {
-  for_each = { for group in local.network_device_groups_children_children_children : group.name => group if var.manage_network_resources }
+  for_each = { for group in local.network_device_groups_children_children_children : group.name => group }
 
   name        = each.value.name
   description = each.value.description
@@ -81,7 +81,7 @@ resource "ise_network_device_group" "network_device_group_3" {
 }
 
 locals {
-  network_device_groups_children_children_children_children = var.manage_network_resources ? flatten([for p in try(local.ise.network_resources.network_device_groups, []) : [
+  network_device_groups_children_children_children_children = flatten([for p in try(local.ise.network_resources.network_device_groups, []) : [
     for c in try(p.children, []) : [
       for c2 in try(c.children, []) : [
         for c3 in try(c2.children, []) : [
@@ -93,11 +93,11 @@ locals {
         ]
       ]
     ]
-  ]]) : []
+  ]])
 }
 
 resource "ise_network_device_group" "network_device_group_4" {
-  for_each = { for group in local.network_device_groups_children_children_children_children : group.name => group if var.manage_network_resources }
+  for_each = { for group in local.network_device_groups_children_children_children_children : group.name => group }
 
   name        = each.value.name
   description = each.value.description
@@ -107,7 +107,7 @@ resource "ise_network_device_group" "network_device_group_4" {
 }
 
 locals {
-  network_device_groups_children_children_children_children_children = var.manage_network_resources ? flatten([for p in try(local.ise.network_resources.network_device_groups, []) : [
+  network_device_groups_children_children_children_children_children = flatten([for p in try(local.ise.network_resources.network_device_groups, []) : [
     for c in try(p.children, []) : [
       for c2 in try(c.children, []) : [
         for c3 in try(c2.children, []) : [
@@ -121,11 +121,11 @@ locals {
         ]
       ]
     ]
-  ]]) : []
+  ]])
 }
 
 resource "ise_network_device_group" "network_device_group_5" {
-  for_each = { for group in local.network_device_groups_children_children_children_children_children : group.name => group if var.manage_network_resources }
+  for_each = { for group in local.network_device_groups_children_children_children_children_children : group.name => group }
 
   name        = each.value.name
   description = each.value.description
@@ -136,7 +136,7 @@ resource "ise_network_device_group" "network_device_group_5" {
 
 # Workaround for ISE API issue where creating/deleting a network device immediately after creating/deleting a network device group fails
 resource "time_sleep" "network_device_group_wait" {
-  count = var.manage_network_resources ? 1 : 0
+  count = length(try(local.network_device_groups_children_children_children_children_children, [])) > 0 ? 1 : 0
 
   create_duration  = "5s"
   destroy_duration = "5s"
@@ -145,7 +145,7 @@ resource "time_sleep" "network_device_group_wait" {
 }
 
 resource "ise_network_device" "network_device" {
-  for_each = { for nd in try(local.ise.network_resources.network_devices, []) : nd.name => nd if var.manage_network_resources }
+  for_each = { for nd in try(local.ise.network_resources.network_devices, []) : nd.name => nd }
 
   name                                          = each.value.name
   description                                   = try(each.value.description, local.defaults.ise.network_resources.network_devices.description, null)

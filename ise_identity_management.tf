@@ -1,12 +1,12 @@
 resource "ise_user_identity_group" "user_identity_group" {
-  for_each = { for group in try(local.ise.identity_management.user_identity_groups, []) : group.name => group if var.manage_identity_management }
+  for_each = { for group in try(local.ise.identity_management.user_identity_groups, []) : group.name => group }
 
   name        = each.key
   description = try(each.value.description, local.defaults.ise.identity_management.user_identity_groups.description, null)
 }
 
 resource "ise_internal_user" "internal_user" {
-  for_each = { for user in try(local.ise.identity_management.internal_users, []) : user.name => user if var.manage_identity_management }
+  for_each = { for user in try(local.ise.identity_management.internal_users, []) : user.name => user }
 
   name                   = each.key
   description            = try(each.value.description, local.defaults.ise.identity_management.internal_users.description, null)
@@ -24,8 +24,8 @@ resource "ise_internal_user" "internal_user" {
 }
 
 locals {
-  endpoint_identity_groups             = { for group in try(local.ise.identity_management.endpoint_identity_groups, []) : group.name => group if var.manage_identity_management }
-  endpoint_identity_groups_with_parent = { for k, v in local.endpoint_identity_groups : k => v if try(v.parent_group, "") != "" && var.manage_identity_management }
+  endpoint_identity_groups             = { for group in try(local.ise.identity_management.endpoint_identity_groups, []) : group.name => group }
+  endpoint_identity_groups_with_parent = { for k, v in local.endpoint_identity_groups : k => v if try(v.parent_group, "") != "" }
 }
 
 data "ise_endpoint_identity_group" "endpoint_identity_group" {
@@ -43,7 +43,7 @@ resource "ise_endpoint_identity_group" "endpoint_identity_group" {
 }
 
 resource "ise_certificate_authentication_profile" "certificate_authentication_profile" {
-  for_each = { for profile in try(local.ise.identity_management.certificate_authentication_profiles, []) : profile.name => profile if var.manage_identity_management }
+  for_each = { for profile in try(local.ise.identity_management.certificate_authentication_profiles, []) : profile.name => profile }
 
   name                         = each.key
   description                  = try(each.value.description, local.defaults.ise.identity_management.certificate_authentication_profiles.description, null)
@@ -55,7 +55,7 @@ resource "ise_certificate_authentication_profile" "certificate_authentication_pr
 }
 
 resource "ise_active_directory_join_point" "active_directory_join_point" {
-  for_each = { for ad in try(local.ise.identity_management.active_directories, []) : ad.name => ad if var.manage_identity_management }
+  for_each = { for ad in try(local.ise.identity_management.active_directories, []) : ad.name => ad }
 
   name                       = each.key
   description                = try(each.value.description, local.defaults.ise.identity_management.active_directories.description, null)
@@ -102,7 +102,7 @@ resource "ise_active_directory_join_point" "active_directory_join_point" {
 }
 
 resource "ise_active_directory_join_domain_with_all_nodes" "active_directory_join_domain_with_all_nodes" {
-  for_each = { for ad in try(local.ise.identity_management.active_directories, []) : ad.name => ad if var.manage_identity_management }
+  for_each = { for ad in try(local.ise.identity_management.active_directories, []) : ad.name => ad }
 
   join_point_id = ise_active_directory_join_point.active_directory_join_point[each.key].id
   additional_data = [
@@ -120,7 +120,7 @@ resource "ise_active_directory_join_domain_with_all_nodes" "active_directory_joi
 }
 
 data "ise_active_directory_groups_by_domain" "all_groups" {
-  for_each = { for ad in try(local.ise.identity_management.active_directories, []) : ad.name => ad if var.manage_identity_management }
+  for_each = { for ad in try(local.ise.identity_management.active_directories, []) : ad.name => ad }
 
   join_point_id = ise_active_directory_join_point.active_directory_join_point[each.key].id
   domain        = try(each.value.domain, local.defaults.ise.identity_management.active_directories.domain, null)
@@ -131,7 +131,7 @@ data "ise_active_directory_groups_by_domain" "all_groups" {
 locals {
   active_directory_groups_all = {
     for k, v in data.ise_active_directory_groups_by_domain.all_groups :
-    k => { for group in v.groups : group.name => group } if var.manage_identity_management
+    k => { for group in v.groups : group.name => group }
   }
 
   active_directory_groups = {
@@ -141,12 +141,12 @@ locals {
         type = try(local.active_directory_groups_all[ad.name][group].type, null)
         sid  = try(local.active_directory_groups_all[ad.name][group].sid, null)
       }
-    ] if var.manage_identity_management
+    ]
   }
 }
 
 resource "ise_active_directory_add_groups" "active_directory_groups" {
-  for_each = { for ad in try(local.ise.identity_management.active_directories, []) : ad.name => ad if var.manage_identity_management }
+  for_each = { for ad in try(local.ise.identity_management.active_directories, []) : ad.name => ad }
 
   join_point_id              = ise_active_directory_join_point.active_directory_join_point[each.key].id
   name                       = ise_active_directory_join_point.active_directory_join_point[each.key].name

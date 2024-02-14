@@ -1,11 +1,11 @@
 locals {
-  device_admin_conditions_circular_names = var.manage_device_administration ? distinct(flatten([
+  device_admin_conditions_circular_names = distinct(flatten([
     for v in try(local.ise.device_administration.policy_elements.conditions, []) : [
       for v2 in try(v.children, []) : try(v2.type, null) == "ConditionReference" ? [[v2.name]] : [
         for v3 in try(v2.children, []) : try(v3.type, null) == "ConditionReference" ? [v3.name] : []
       ]
     ]
-  ])) : []
+  ]))
 }
 
 data "ise_device_admin_condition" "device_admin_condition_circular" {
@@ -15,7 +15,7 @@ data "ise_device_admin_condition" "device_admin_condition_circular" {
 }
 
 resource "ise_device_admin_condition" "device_admin_condition" {
-  for_each = { for condition in try(local.ise.device_administration.policy_elements.conditions, []) : condition.name => condition if var.manage_device_administration }
+  for_each = { for condition in try(local.ise.device_administration.policy_elements.conditions, []) : condition.name => condition }
 
   condition_type   = try(each.value.type, local.defaults.ise.device_administration.policy_elements.conditions.type, null)
   is_negate        = try(each.value.is_negate, local.defaults.ise.device_administration.policy_elements.conditions.is_negate, null)
@@ -53,7 +53,7 @@ resource "ise_device_admin_condition" "device_admin_condition" {
 }
 
 resource "ise_allowed_protocols_tacacs" "allowed_protocols_tacacs" {
-  for_each = { for protocol in try(local.ise.device_administration.policy_elements.allowed_protocols, []) : protocol.name => protocol if var.manage_device_administration }
+  for_each = { for protocol in try(local.ise.device_administration.policy_elements.allowed_protocols, []) : protocol.name => protocol }
 
   description      = try(each.value.description, "")
   name             = each.key
@@ -63,7 +63,7 @@ resource "ise_allowed_protocols_tacacs" "allowed_protocols_tacacs" {
 }
 
 resource "ise_tacacs_profile" "tacacs_profile" {
-  for_each = { for profile in try(local.ise.device_administration.policy_elements.tacacs_profiles, []) : profile.name => profile if var.manage_device_administration }
+  for_each = { for profile in try(local.ise.device_administration.policy_elements.tacacs_profiles, []) : profile.name => profile }
 
   name        = each.key
   description = try(each.value.description, local.defaults.ise.device_administration.policy_elements.tacacs_profiles.description, null)
@@ -75,7 +75,7 @@ resource "ise_tacacs_profile" "tacacs_profile" {
 }
 
 resource "ise_tacacs_command_set" "tacacs_command_set" {
-  for_each = { for cs in try(local.ise.device_administration.policy_elements.tacacs_command_sets, []) : cs.name => cs if var.manage_device_administration }
+  for_each = { for cs in try(local.ise.device_administration.policy_elements.tacacs_command_sets, []) : cs.name => cs }
 
   name             = each.key
   description      = try(each.value.description, local.defaults.ise.device_administration.policy_elements.tacacs_command_sets.description, null)
@@ -88,7 +88,7 @@ resource "ise_tacacs_command_set" "tacacs_command_set" {
 }
 
 resource "ise_device_admin_time_and_date_condition" "device_admin_time_and_date_condition" {
-  for_each = { for c in try(local.ise.device_administration.policy_elements.time_date_conditions, []) : c.name => c if var.manage_device_administration }
+  for_each = { for c in try(local.ise.device_administration.policy_elements.time_date_conditions, []) : c.name => c }
 
   name                 = each.key
   description          = try(each.value.description, local.defaults.ise.device_administration.policy_elements.time_date_conditions.description, null)
@@ -105,14 +105,14 @@ resource "ise_device_admin_time_and_date_condition" "device_admin_time_and_date_
 }
 
 locals {
-  conditions_device_admin_policy_sets = var.manage_device_administration ? flatten([
+  conditions_device_admin_policy_sets = flatten([
     for v in try(local.ise.device_administration.policy_sets, []) : try(v.condition.type, null) == "ConditionReference" ? [[[v.condition.name]]] : [
       for v2 in try(v.condition.children, []) : try(v2.type, null) == "ConditionReference" ? [[v2.name]] : [
         for v3 in try(v2.children, []) : try(v3.type, null) == "ConditionReference" ? [v3.name] : []
       ]
     ]
-  ]) : []
-  conditions_device_admin_policy_set_authentication_rules = var.manage_device_administration ? flatten([
+  ])
+  conditions_device_admin_policy_set_authentication_rules = flatten([
     for v in try(local.ise.device_administration.policy_sets, []) : [
       for r in try(v.authentication_rules, []) : try(r.condition.type, null) == "ConditionReference" ? [[[r.condition.name]]] : [
         for v2 in try(r.condition.children, []) : try(v2.type, null) == "ConditionReference" ? [[v2.name]] : [
@@ -120,8 +120,8 @@ locals {
         ]
       ]
     ]
-  ]) : []
-  conditions_device_admin_policy_set_authorization_rules = var.manage_device_administration ? flatten([
+  ])
+  conditions_device_admin_policy_set_authorization_rules = flatten([
     for v in try(local.ise.device_administration.policy_sets, []) : [
       for r in try(v.authorization_rules, []) : try(r.condition.type, null) == "ConditionReference" ? [[[r.condition.name]]] : [
         for v2 in try(r.condition.children, []) : try(v2.type, null) == "ConditionReference" ? [[v2.name]] : [
@@ -129,8 +129,8 @@ locals {
         ]
       ]
     ]
-  ]) : []
-  conditions_device_admin_policy_set_authorization_exception_rules = var.manage_device_administration ? flatten([
+  ])
+  conditions_device_admin_policy_set_authorization_exception_rules = flatten([
     for v in try(local.ise.device_administration.policy_sets, []) : [
       for r in try(v.authorization_exception_rules, []) : try(r.condition.type, null) == "ConditionReference" ? [[[r.condition.name]]] : [
         for v2 in try(r.condition.children, []) : try(v2.type, null) == "ConditionReference" ? [[v2.name]] : [
@@ -138,17 +138,17 @@ locals {
         ]
       ]
     ]
-  ]) : []
-  conditions_device_admin_authorization_global_exception_rules = var.manage_device_administration ? flatten([
+  ])
+  conditions_device_admin_authorization_global_exception_rules = flatten([
     for v in try(local.ise.device_administration.authorization_global_exception_rules, []) : try(v.condition.type, null) == "ConditionReference" ? [[[v.condition.name]]] : [
       for v2 in try(v.condition.children, []) : try(v2.type, null) == "ConditionReference" ? [[v2.name]] : [
         for v3 in try(v2.children, []) : try(v3.type, null) == "ConditionReference" ? [v3.name] : []
       ]
     ]
-  ]) : []
-  unique_conditions_device_admin  = var.manage_device_administration ? distinct(concat(local.conditions_device_admin_policy_sets, local.conditions_device_admin_policy_set_authentication_rules, local.conditions_device_admin_policy_set_authorization_rules, local.conditions_device_admin_policy_set_authorization_exception_rules, local.conditions_device_admin_authorization_global_exception_rules)) : []
-  known_conditions_device_admin   = var.manage_device_administration ? [for condition in try(local.ise.device_administration.policy_elements.conditions, []) : condition.name] : []
-  unknown_conditions_device_admin = var.manage_device_administration ? setsubtract(local.unique_conditions_device_admin, local.known_conditions_device_admin) : []
+  ])
+  unique_conditions_device_admin  = distinct(concat(local.conditions_device_admin_policy_sets, local.conditions_device_admin_policy_set_authentication_rules, local.conditions_device_admin_policy_set_authorization_rules, local.conditions_device_admin_policy_set_authorization_exception_rules, local.conditions_device_admin_authorization_global_exception_rules))
+  known_conditions_device_admin   = [for condition in try(local.ise.device_administration.policy_elements.conditions, []) : condition.name]
+  unknown_conditions_device_admin = setsubtract(local.unique_conditions_device_admin, local.known_conditions_device_admin)
 }
 
 data "ise_device_admin_condition" "device_admin_condition" {
@@ -158,7 +158,7 @@ data "ise_device_admin_condition" "device_admin_condition" {
 }
 
 locals {
-  device_admin_policy_sets = var.manage_device_administration ? [
+  device_admin_policy_sets = [
     for ps in try(local.ise.device_administration.policy_sets, []) : {
       condition_type             = try(ps.condition.type, local.defaults.ise.device_administration.policy_sets.condition.type, null)
       condition_is_negate        = try(ps.condition.is_negate, local.defaults.ise.device_administration.policy_sets.condition.is_negate, null)
@@ -195,11 +195,11 @@ locals {
         }], null)
       }], null)
     }
-  ] : []
+  ]
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_0" {
-  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if var.manage_device_administration && (ps.rank == 0 || ps.rank == null) }
+  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if(ps.rank == 0 || ps.rank == null) }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -220,7 +220,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_0" {
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_1" {
-  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if var.manage_device_administration && ps.rank == 1 }
+  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if ps.rank == 1 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -241,7 +241,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_1" {
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_2" {
-  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if var.manage_device_administration && ps.rank == 2 }
+  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if ps.rank == 2 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -262,7 +262,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_2" {
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_3" {
-  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if var.manage_device_administration && ps.rank == 3 }
+  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if ps.rank == 3 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -283,7 +283,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_3" {
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_4" {
-  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if var.manage_device_administration && ps.rank == 4 }
+  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if ps.rank == 4 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -304,7 +304,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_4" {
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_5" {
-  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if var.manage_device_administration && ps.rank == 5 }
+  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if ps.rank == 5 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -325,7 +325,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_5" {
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_6" {
-  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if var.manage_device_administration && ps.rank == 6 }
+  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if ps.rank == 6 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -346,7 +346,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_6" {
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_7" {
-  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if var.manage_device_administration && ps.rank == 7 }
+  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if ps.rank == 7 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -367,7 +367,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_7" {
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_8" {
-  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if var.manage_device_administration && ps.rank == 8 }
+  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if ps.rank == 8 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -388,7 +388,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_8" {
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_9" {
-  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if var.manage_device_administration && ps.rank == 9 }
+  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if ps.rank == 9 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -409,7 +409,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_9" {
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_10" {
-  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if var.manage_device_administration && ps.rank == 10 }
+  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if ps.rank == 10 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -430,7 +430,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_10" {
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_11" {
-  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if var.manage_device_administration && ps.rank == 11 }
+  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if ps.rank == 11 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -451,7 +451,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_11" {
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_12" {
-  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if var.manage_device_administration && ps.rank == 12 }
+  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if ps.rank == 12 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -472,7 +472,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_12" {
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_13" {
-  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if var.manage_device_administration && ps.rank == 13 }
+  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if ps.rank == 13 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -493,7 +493,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_13" {
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_14" {
-  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if var.manage_device_administration && ps.rank == 14 }
+  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if ps.rank == 14 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -514,7 +514,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_14" {
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_15" {
-  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if var.manage_device_administration && ps.rank == 15 }
+  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if ps.rank == 15 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -535,7 +535,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_15" {
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_16" {
-  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if var.manage_device_administration && ps.rank == 16 }
+  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if ps.rank == 16 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -556,7 +556,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_16" {
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_17" {
-  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if var.manage_device_administration && ps.rank == 17 }
+  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if ps.rank == 17 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -577,7 +577,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_17" {
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_18" {
-  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if var.manage_device_administration && ps.rank == 18 }
+  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if ps.rank == 18 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -598,7 +598,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_18" {
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_19" {
-  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if var.manage_device_administration && ps.rank == 19 }
+  for_each = { for ps in local.device_admin_policy_sets : ps.name => ps if ps.rank == 19 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -619,7 +619,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_19" {
 }
 
 locals {
-  device_admin_policy_set_ids = var.manage_device_administration ? merge(
+  device_admin_policy_set_ids = merge(
     { for ps in local.device_admin_policy_sets : ps.name => ise_device_admin_policy_set.device_admin_policy_set_0[ps.name].id if ps.rank == 0 || ps.rank == null },
     { for ps in local.device_admin_policy_sets : ps.name => ise_device_admin_policy_set.device_admin_policy_set_1[ps.name].id if ps.rank == 1 },
     { for ps in local.device_admin_policy_sets : ps.name => ise_device_admin_policy_set.device_admin_policy_set_2[ps.name].id if ps.rank == 2 },
@@ -640,8 +640,8 @@ locals {
     { for ps in local.device_admin_policy_sets : ps.name => ise_device_admin_policy_set.device_admin_policy_set_17[ps.name].id if ps.rank == 17 },
     { for ps in local.device_admin_policy_sets : ps.name => ise_device_admin_policy_set.device_admin_policy_set_18[ps.name].id if ps.rank == 18 },
     { for ps in local.device_admin_policy_sets : ps.name => ise_device_admin_policy_set.device_admin_policy_set_19[ps.name].id if ps.rank == 19 },
-  ) : {}
-  device_admin_authentication_rules = var.manage_device_administration ? flatten([
+  )
+  device_admin_authentication_rules = flatten([
     for ps in try(local.ise.device_administration.policy_sets, []) : [
       for rule in try(ps.authentication_rules, []) : {
         key                        = format("%s/%s", ps.name, rule.name)
@@ -684,11 +684,11 @@ locals {
         }], null)
       }
     ]
-  ]) : null
+  ])
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_0" {
-  for_each = { for rule in coalesce(local.device_admin_authentication_rules, []) : rule.key => rule if var.manage_device_administration && (rule.rank == 0 || rule.rank == null) }
+  for_each = { for rule in local.device_admin_authentication_rules : rule.key => rule if(rule.rank == 0 || rule.rank == null) }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -712,7 +712,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_1" {
-  for_each = { for rule in coalesce(local.device_admin_authentication_rules, []) : rule.key => rule if var.manage_device_administration && rule.rank == 1 }
+  for_each = { for rule in local.device_admin_authentication_rules : rule.key => rule if rule.rank == 1 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -736,7 +736,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_2" {
-  for_each = { for rule in coalesce(local.device_admin_authentication_rules, []) : rule.key => rule if var.manage_device_administration && rule.rank == 2 }
+  for_each = { for rule in local.device_admin_authentication_rules : rule.key => rule if rule.rank == 2 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -760,7 +760,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_3" {
-  for_each = { for rule in coalesce(local.device_admin_authentication_rules, []) : rule.key => rule if var.manage_device_administration && rule.rank == 3 }
+  for_each = { for rule in local.device_admin_authentication_rules : rule.key => rule if rule.rank == 3 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -784,7 +784,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_4" {
-  for_each = { for rule in coalesce(local.device_admin_authentication_rules, []) : rule.key => rule if var.manage_device_administration && rule.rank == 4 }
+  for_each = { for rule in local.device_admin_authentication_rules : rule.key => rule if rule.rank == 4 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -808,7 +808,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_5" {
-  for_each = { for rule in coalesce(local.device_admin_authentication_rules, []) : rule.key => rule if var.manage_device_administration && rule.rank == 5 }
+  for_each = { for rule in local.device_admin_authentication_rules : rule.key => rule if rule.rank == 5 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -832,7 +832,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_6" {
-  for_each = { for rule in coalesce(local.device_admin_authentication_rules, []) : rule.key => rule if var.manage_device_administration && rule.rank == 6 }
+  for_each = { for rule in local.device_admin_authentication_rules : rule.key => rule if rule.rank == 6 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -856,7 +856,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_7" {
-  for_each = { for rule in coalesce(local.device_admin_authentication_rules, []) : rule.key => rule if var.manage_device_administration && rule.rank == 7 }
+  for_each = { for rule in local.device_admin_authentication_rules : rule.key => rule if rule.rank == 7 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -880,7 +880,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_8" {
-  for_each = { for rule in coalesce(local.device_admin_authentication_rules, []) : rule.key => rule if var.manage_device_administration && rule.rank == 8 }
+  for_each = { for rule in local.device_admin_authentication_rules : rule.key => rule if rule.rank == 8 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -904,7 +904,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_9" {
-  for_each = { for rule in coalesce(local.device_admin_authentication_rules, []) : rule.key => rule if var.manage_device_administration && rule.rank == 9 }
+  for_each = { for rule in local.device_admin_authentication_rules : rule.key => rule if rule.rank == 9 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -928,7 +928,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_10" {
-  for_each = { for rule in coalesce(local.device_admin_authentication_rules, []) : rule.key => rule if var.manage_device_administration && rule.rank == 10 }
+  for_each = { for rule in local.device_admin_authentication_rules : rule.key => rule if rule.rank == 10 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -952,7 +952,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_11" {
-  for_each = { for rule in coalesce(local.device_admin_authentication_rules, []) : rule.key => rule if var.manage_device_administration && rule.rank == 11 }
+  for_each = { for rule in local.device_admin_authentication_rules : rule.key => rule if rule.rank == 11 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -976,7 +976,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_12" {
-  for_each = { for rule in coalesce(local.device_admin_authentication_rules, []) : rule.key => rule if var.manage_device_administration && rule.rank == 12 }
+  for_each = { for rule in local.device_admin_authentication_rules : rule.key => rule if rule.rank == 12 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1000,7 +1000,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_13" {
-  for_each = { for rule in coalesce(local.device_admin_authentication_rules, []) : rule.key => rule if var.manage_device_administration && rule.rank == 13 }
+  for_each = { for rule in local.device_admin_authentication_rules : rule.key => rule if rule.rank == 13 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1024,7 +1024,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_14" {
-  for_each = { for rule in coalesce(local.device_admin_authentication_rules, []) : rule.key => rule if var.manage_device_administration && rule.rank == 14 }
+  for_each = { for rule in local.device_admin_authentication_rules : rule.key => rule if rule.rank == 14 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1048,7 +1048,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_15" {
-  for_each = { for rule in coalesce(local.device_admin_authentication_rules, []) : rule.key => rule if var.manage_device_administration && rule.rank == 15 }
+  for_each = { for rule in local.device_admin_authentication_rules : rule.key => rule if rule.rank == 15 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1072,7 +1072,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_16" {
-  for_each = { for rule in coalesce(local.device_admin_authentication_rules, []) : rule.key => rule if var.manage_device_administration && rule.rank == 16 }
+  for_each = { for rule in local.device_admin_authentication_rules : rule.key => rule if rule.rank == 16 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1096,7 +1096,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_17" {
-  for_each = { for rule in coalesce(local.device_admin_authentication_rules, []) : rule.key => rule if var.manage_device_administration && rule.rank == 17 }
+  for_each = { for rule in local.device_admin_authentication_rules : rule.key => rule if rule.rank == 17 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1120,7 +1120,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_18" {
-  for_each = { for rule in coalesce(local.device_admin_authentication_rules, []) : rule.key => rule if var.manage_device_administration && rule.rank == 18 }
+  for_each = { for rule in local.device_admin_authentication_rules : rule.key => rule if rule.rank == 18 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1144,7 +1144,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_19" {
-  for_each = { for rule in coalesce(local.device_admin_authentication_rules, []) : rule.key => rule if var.manage_device_administration && rule.rank == 19 }
+  for_each = { for rule in local.device_admin_authentication_rules : rule.key => rule if rule.rank == 19 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1169,7 +1169,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
 
 # Workaround for ISE API issue where deleting a TACACS profile or command set immediately after deleting an object using it fails
 resource "time_sleep" "device_admin_policy_object_wait" {
-  count = var.manage_device_administration ? 1 : 0
+  count = (length(try(local.ise.device_administration.policy_elements.tacacs_profiles, [])) > 0 || length(try(local.ise.device_administration.policy_elements.tacacs_command_sets, [])) > 0) ? 1 : 0
 
   destroy_duration = "5s"
 
@@ -1180,7 +1180,7 @@ resource "time_sleep" "device_admin_policy_object_wait" {
 }
 
 locals {
-  device_admin_authorization_rules = var.manage_device_administration ? flatten([
+  device_admin_authorization_rules = flatten([
     for ps in try(local.ise.device_administration.policy_sets, []) : [
       for rule in try(ps.authorization_rules, []) : {
         key                        = format("%s/%s", ps.name, rule.name)
@@ -1221,11 +1221,11 @@ locals {
         }], null)
       }
     ]
-  ]) : []
+  ])
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_0" {
-  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if var.manage_device_administration && (rule.rank == 0 || rule.rank == null) }
+  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if(rule.rank == 0 || rule.rank == null) }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1247,7 +1247,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_1" {
-  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if var.manage_device_administration && rule.rank == 1 }
+  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if rule.rank == 1 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1269,7 +1269,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_2" {
-  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if var.manage_device_administration && rule.rank == 2 }
+  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if rule.rank == 2 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1291,7 +1291,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_3" {
-  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if var.manage_device_administration && rule.rank == 3 }
+  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if rule.rank == 3 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1313,7 +1313,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_4" {
-  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if var.manage_device_administration && rule.rank == 4 }
+  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if rule.rank == 4 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1335,7 +1335,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_5" {
-  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if var.manage_device_administration && rule.rank == 5 }
+  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if rule.rank == 5 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1357,7 +1357,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_6" {
-  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if var.manage_device_administration && rule.rank == 6 }
+  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if rule.rank == 6 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1379,7 +1379,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_7" {
-  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if var.manage_device_administration && rule.rank == 7 }
+  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if rule.rank == 7 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1401,7 +1401,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_8" {
-  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if var.manage_device_administration && rule.rank == 8 }
+  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if rule.rank == 8 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1423,7 +1423,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_9" {
-  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if var.manage_device_administration && rule.rank == 9 }
+  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if rule.rank == 9 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1445,7 +1445,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_10" {
-  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if var.manage_device_administration && rule.rank == 10 }
+  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if rule.rank == 10 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1467,7 +1467,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_11" {
-  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if var.manage_device_administration && rule.rank == 11 }
+  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if rule.rank == 11 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1489,7 +1489,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_12" {
-  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if var.manage_device_administration && rule.rank == 12 }
+  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if rule.rank == 12 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1511,7 +1511,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_13" {
-  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if var.manage_device_administration && rule.rank == 13 }
+  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if rule.rank == 13 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1533,7 +1533,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_14" {
-  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if var.manage_device_administration && rule.rank == 14 }
+  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if rule.rank == 14 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1555,7 +1555,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_15" {
-  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if var.manage_device_administration && rule.rank == 15 }
+  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if rule.rank == 15 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1577,7 +1577,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_16" {
-  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if var.manage_device_administration && rule.rank == 16 }
+  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if rule.rank == 16 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1599,7 +1599,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_17" {
-  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if var.manage_device_administration && rule.rank == 17 }
+  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if rule.rank == 17 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1621,7 +1621,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_18" {
-  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if var.manage_device_administration && rule.rank == 18 }
+  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if rule.rank == 18 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1643,7 +1643,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_19" {
-  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if var.manage_device_administration && rule.rank == 19 }
+  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if rule.rank == 19 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1665,7 +1665,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
 }
 
 locals {
-  device_admin_authorization_exception_rules = var.manage_device_administration ? flatten([
+  device_admin_authorization_exception_rules = flatten([
     for ps in try(local.ise.device_administration.policy_sets, []) : [
       for rule in try(ps.authorization_exception_rules, []) : {
         key                        = format("%s/%s", ps.name, rule.name)
@@ -1706,11 +1706,11 @@ locals {
         }], null)
       }
     ]
-  ]) : []
+  ])
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_0" {
-  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if var.manage_device_administration && (rule.rank == 0 || rule.rank == null) }
+  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if(rule.rank == 0 || rule.rank == null) }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1732,7 +1732,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_1" {
-  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if var.manage_device_administration && rule.rank == 1 }
+  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if rule.rank == 1 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1754,7 +1754,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_2" {
-  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if var.manage_device_administration && rule.rank == 2 }
+  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if rule.rank == 2 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1776,7 +1776,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_3" {
-  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if var.manage_device_administration && rule.rank == 3 }
+  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if rule.rank == 3 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1798,7 +1798,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_4" {
-  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if var.manage_device_administration && rule.rank == 4 }
+  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if rule.rank == 4 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1820,7 +1820,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_5" {
-  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if var.manage_device_administration && rule.rank == 5 }
+  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if rule.rank == 5 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1842,7 +1842,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_6" {
-  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if var.manage_device_administration && rule.rank == 6 }
+  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if rule.rank == 6 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1864,7 +1864,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_7" {
-  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if var.manage_device_administration && rule.rank == 7 }
+  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if rule.rank == 7 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1886,7 +1886,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_8" {
-  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if var.manage_device_administration && rule.rank == 8 }
+  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if rule.rank == 8 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1908,7 +1908,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_9" {
-  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if var.manage_device_administration && rule.rank == 9 }
+  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if rule.rank == 9 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1930,7 +1930,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_10" {
-  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if var.manage_device_administration && rule.rank == 10 }
+  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if rule.rank == 10 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1952,7 +1952,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_11" {
-  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if var.manage_device_administration && rule.rank == 11 }
+  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if rule.rank == 11 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1974,7 +1974,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_12" {
-  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if var.manage_device_administration && rule.rank == 12 }
+  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if rule.rank == 12 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1996,7 +1996,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_13" {
-  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if var.manage_device_administration && rule.rank == 13 }
+  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if rule.rank == 13 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2018,7 +2018,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_14" {
-  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if var.manage_device_administration && rule.rank == 14 }
+  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if rule.rank == 14 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2040,7 +2040,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_15" {
-  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if var.manage_device_administration && rule.rank == 15 }
+  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if rule.rank == 15 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2062,7 +2062,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_16" {
-  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if var.manage_device_administration && rule.rank == 16 }
+  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if rule.rank == 16 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2084,7 +2084,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_17" {
-  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if var.manage_device_administration && rule.rank == 17 }
+  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if rule.rank == 17 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2106,7 +2106,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_18" {
-  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if var.manage_device_administration && rule.rank == 18 }
+  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if rule.rank == 18 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2128,7 +2128,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_19" {
-  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if var.manage_device_administration && rule.rank == 19 }
+  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule if rule.rank == 19 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2150,7 +2150,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
 }
 
 locals {
-  device_admin_authorization_global_exception_rules = var.manage_device_administration ? [
+  device_admin_authorization_global_exception_rules = [
     for rule in try(local.ise.device_administration.authorization_global_exception_rules, []) : {
       name                       = rule.name
       rank                       = try(rule.rank, local.defaults.ise.device_administration.authorization_global_exception_rules.rank, null)
@@ -2187,11 +2187,11 @@ locals {
         }], null)
       }], null)
     }
-  ] : []
+  ]
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_0" {
-  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if var.manage_device_administration && (rule.rank == 0 || rule.rank == null) }
+  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if(rule.rank == 0 || rule.rank == null) }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2212,7 +2212,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_1" {
-  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if var.manage_device_administration && rule.rank == 1 }
+  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if rule.rank == 1 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2233,7 +2233,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_2" {
-  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if var.manage_device_administration && rule.rank == 2 }
+  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if rule.rank == 2 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2254,7 +2254,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_3" {
-  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if var.manage_device_administration && rule.rank == 3 }
+  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if rule.rank == 3 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2275,7 +2275,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_4" {
-  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if var.manage_device_administration && rule.rank == 4 }
+  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if rule.rank == 4 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2296,7 +2296,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_5" {
-  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if var.manage_device_administration && rule.rank == 5 }
+  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if rule.rank == 5 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2317,7 +2317,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_6" {
-  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if var.manage_device_administration && rule.rank == 6 }
+  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if rule.rank == 6 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2338,7 +2338,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_7" {
-  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if var.manage_device_administration && rule.rank == 7 }
+  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if rule.rank == 7 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2359,7 +2359,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_8" {
-  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if var.manage_device_administration && rule.rank == 8 }
+  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if rule.rank == 8 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2380,7 +2380,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_9" {
-  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if var.manage_device_administration && rule.rank == 9 }
+  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if rule.rank == 9 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2401,7 +2401,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_10" {
-  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if var.manage_device_administration && rule.rank == 10 }
+  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if rule.rank == 10 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2422,7 +2422,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_11" {
-  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if var.manage_device_administration && rule.rank == 11 }
+  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if rule.rank == 11 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2443,7 +2443,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_12" {
-  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if var.manage_device_administration && rule.rank == 12 }
+  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if rule.rank == 12 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2464,7 +2464,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_13" {
-  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if var.manage_device_administration && rule.rank == 13 }
+  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if rule.rank == 13 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2485,7 +2485,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_14" {
-  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if var.manage_device_administration && rule.rank == 14 }
+  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if rule.rank == 14 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2506,7 +2506,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_15" {
-  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if var.manage_device_administration && rule.rank == 15 }
+  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if rule.rank == 15 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2527,7 +2527,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_16" {
-  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if var.manage_device_administration && rule.rank == 16 }
+  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if rule.rank == 16 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2548,7 +2548,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_17" {
-  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if var.manage_device_administration && rule.rank == 17 }
+  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if rule.rank == 17 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2569,7 +2569,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_18" {
-  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if var.manage_device_administration && rule.rank == 18 }
+  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if rule.rank == 18 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2590,7 +2590,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_19" {
-  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if var.manage_device_administration && rule.rank == 19 }
+  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule if rule.rank == 19 }
 
   name                      = each.value.name
   rank                      = each.value.rank

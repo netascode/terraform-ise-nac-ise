@@ -53,12 +53,6 @@ module "ise" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_manage_device_administration"></a> [manage\_device\_administration](#input\_manage\_device\_administration) | Flag to indicate if device administration configuration should be managed. | `bool` | `false` | no |
-| <a name="input_manage_identity_management"></a> [manage\_identity\_management](#input\_manage\_identity\_management) | Flag to indicate if identity management configuration should be managed. | `bool` | `false` | no |
-| <a name="input_manage_network_access"></a> [manage\_network\_access](#input\_manage\_network\_access) | Flag to indicate if network access configuration should be managed. | `bool` | `false` | no |
-| <a name="input_manage_network_resources"></a> [manage\_network\_resources](#input\_manage\_network\_resources) | Flag to indicate if network resources configuration should be managed. | `bool` | `false` | no |
-| <a name="input_manage_system"></a> [manage\_system](#input\_manage\_system) | Flag to indicate if system configuration should be managed. | `bool` | `false` | no |
-| <a name="input_manage_trust_sec"></a> [manage\_trust\_sec](#input\_manage\_trust\_sec) | Flag to indicate if TrustSec configuration should be managed. | `bool` | `false` | no |
 | <a name="input_model"></a> [model](#input\_model) | As an alternative to YAML files, a native Terraform data structure can be provided as well. | `map(any)` | `{}` | no |
 | <a name="input_write_default_values_file"></a> [write\_default\_values\_file](#input\_write\_default\_values\_file) | Write all default values to a YAML file. Value is a path pointing to the file to be created. | `string` | `""` | no |
 | <a name="input_yaml_directories"></a> [yaml\_directories](#input\_yaml\_directories) | List of paths to YAML directories. | `list(string)` | `[]` | no |

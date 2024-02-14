@@ -30,7 +30,8 @@ ise:
         - name: CertificateNotExpired
           type: LibraryConditionAttributes
           is_negate: false
-          attribute_name: CERTIFICATE:Is Expired
+          dictionary_name: CERTIFICATE
+          attribute_name: Is Expired
           operator: equals
           attribute_value: "False"
 ```
@@ -43,8 +44,6 @@ module "ise" {
   version = ">= 0.1.0"
 
   yaml_files = ["network_access_condition.yaml"]
-
-  manage_network_access = true
 }
 ```
 <!-- END_TF_DOCS -->

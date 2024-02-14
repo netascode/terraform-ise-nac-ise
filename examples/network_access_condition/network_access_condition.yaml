@@ -6,6 +6,7 @@ ise:
         - name: CertificateNotExpired
           type: LibraryConditionAttributes
           is_negate: false
-          attribute_name: CERTIFICATE:Is Expired
+          dictionary_name: CERTIFICATE
+          attribute_name: Is Expired
           operator: equals
           attribute_value: "False"

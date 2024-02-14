@@ -22,6 +22,9 @@ resource "ise_allowed_protocols" "allowed_protocols" {
   require_message_auth                              = try(each.value.require_message_auth, local.defaults.ise.network_access.policy_elements.allowed_protocols.require_message_auth, null)
   eap_tls_allow_auth_of_expired_certs               = try(each.value.allow_eap_tls, local.defaults.ise.network_access.policy_elements.allowed_protocols.allow_eap_tls, false) ? try(each.value.eap_tls.auth_of_expired_certs, local.defaults.ise.network_access.policy_elements.allowed_protocols.eap_tls.auth_of_expired_certs, null) : null
   eap_tls_enable_stateless_session_resume           = try(each.value.allow_eap_tls, local.defaults.ise.network_access.policy_elements.allowed_protocols.allow_eap_tls, false) ? try(each.value.eap_tls.enable_stateless_session_resume, local.defaults.ise.network_access.policy_elements.allowed_protocols.eap_tls.enable_stateless_session_resume, null) : null
+  eap_tls_session_ticket_ttl                        = try(each.value.eap_tls.enable_stateless_session_resume, local.defaults.ise.network_access.policy_elements.allowed_protocols.eap_tls.enable_stateless_session_resume, false) ? try(each.value.eap_tls.session_ticket_ttl, local.defaults.ise.network_access.policy_elements.allowed_protocols.eap_tls.session_ticket_ttl, null) : null
+  eap_tls_session_ticket_ttl_unit                   = try(each.value.eap_tls.enable_stateless_session_resume, local.defaults.ise.network_access.policy_elements.allowed_protocols.eap_tls.enable_stateless_session_resume, false) ? try(each.value.eap_tls.session_ticket_ttl_unit, local.defaults.ise.network_access.policy_elements.allowed_protocols.eap_tls.session_ticket_ttl_unit, null) : null
+  eap_tls_session_ticket_percentage                 = try(each.value.eap_tls.enable_stateless_session_resume, local.defaults.ise.network_access.policy_elements.allowed_protocols.eap_tls.enable_stateless_session_resume, false) ? try(each.value.eap_tls.session_ticket_percentage, local.defaults.ise.network_access.policy_elements.allowed_protocols.eap_tls.session_ticket_percentage, null) : null
   peap_allow_peap_eap_ms_chap_v2                    = try(each.value.allow_peap, local.defaults.ise.network_access.policy_elements.allowed_protocols.allow_peap, false) ? try(each.value.peap.eap_ms_chap_v2, local.defaults.ise.network_access.policy_elements.allowed_protocols.peap.eap_ms_chap_v2, null) : null
   peap_allow_peap_eap_ms_chap_v2_pwd_change         = try(each.value.allow_peap, local.defaults.ise.network_access.policy_elements.allowed_protocols.allow_peap, false) && try(each.value.peap.eap_ms_chap_v2, local.defaults.ise.network_access.policy_elements.allowed_protocols.peap.eap_ms_chap_v2, false) ? try(each.value.peap.eap_ms_chap_v2_pwd_change, local.defaults.ise.network_access.policy_elements.allowed_protocols.peap.eap_ms_chap_v2_pwd_change, null) : null
   peap_allow_peap_eap_ms_chap_v2_pwd_change_retries = try(each.value.allow_peap, local.defaults.ise.network_access.policy_elements.allowed_protocols.allow_peap, false) && try(each.value.peap.eap_ms_chap_v2, local.defaults.ise.network_access.policy_elements.allowed_protocols.peap.eap_ms_chap_v2, false) ? try(each.value.peap.eap_ms_chap_v2_pwd_change_retries, local.defaults.ise.network_access.policy_elements.allowed_protocols.peap.eap_ms_chap_v2_pwd_change_retries, null) : null
@@ -823,7 +826,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_1" {
-  for_each = { for rule in coalesce(local.network_access_authentication_rules, []) : rule.key => rule if rule.rank == 1 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 1 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -847,7 +850,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_2" {
-  for_each = { for rule in coalesce(local.network_access_authentication_rules, []) : rule.key => rule if rule.rank == 2 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 2 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -871,7 +874,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_3" {
-  for_each = { for rule in coalesce(local.network_access_authentication_rules, []) : rule.key => rule if rule.rank == 3 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 3 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -895,7 +898,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_4" {
-  for_each = { for rule in coalesce(local.network_access_authentication_rules, []) : rule.key => rule if rule.rank == 4 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 4 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -919,7 +922,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_5" {
-  for_each = { for rule in coalesce(local.network_access_authentication_rules, []) : rule.key => rule if rule.rank == 5 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 5 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -943,7 +946,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_6" {
-  for_each = { for rule in coalesce(local.network_access_authentication_rules, []) : rule.key => rule if rule.rank == 6 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 6 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -967,7 +970,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_7" {
-  for_each = { for rule in coalesce(local.network_access_authentication_rules, []) : rule.key => rule if rule.rank == 7 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 7 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -991,7 +994,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_8" {
-  for_each = { for rule in coalesce(local.network_access_authentication_rules, []) : rule.key => rule if rule.rank == 8 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 8 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1015,7 +1018,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_9" {
-  for_each = { for rule in coalesce(local.network_access_authentication_rules, []) : rule.key => rule if rule.rank == 9 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 9 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1039,7 +1042,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_10" {
-  for_each = { for rule in coalesce(local.network_access_authentication_rules, []) : rule.key => rule if rule.rank == 10 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 10 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1063,7 +1066,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_11" {
-  for_each = { for rule in coalesce(local.network_access_authentication_rules, []) : rule.key => rule if rule.rank == 11 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 11 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1087,7 +1090,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_12" {
-  for_each = { for rule in coalesce(local.network_access_authentication_rules, []) : rule.key => rule if rule.rank == 12 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 12 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1111,7 +1114,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_13" {
-  for_each = { for rule in coalesce(local.network_access_authentication_rules, []) : rule.key => rule if rule.rank == 13 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 13 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1135,7 +1138,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_14" {
-  for_each = { for rule in coalesce(local.network_access_authentication_rules, []) : rule.key => rule if rule.rank == 14 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 14 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1159,7 +1162,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_15" {
-  for_each = { for rule in coalesce(local.network_access_authentication_rules, []) : rule.key => rule if rule.rank == 15 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 15 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1183,7 +1186,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_16" {
-  for_each = { for rule in coalesce(local.network_access_authentication_rules, []) : rule.key => rule if rule.rank == 16 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 16 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1207,7 +1210,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_17" {
-  for_each = { for rule in coalesce(local.network_access_authentication_rules, []) : rule.key => rule if rule.rank == 17 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 17 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1231,7 +1234,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_18" {
-  for_each = { for rule in coalesce(local.network_access_authentication_rules, []) : rule.key => rule if rule.rank == 18 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 18 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1255,7 +1258,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_19" {
-  for_each = { for rule in coalesce(local.network_access_authentication_rules, []) : rule.key => rule if rule.rank == 19 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 19 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1809,7 +1812,7 @@ locals {
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_0" {
-  for_each = { for rule in coalesce(local.network_access_authorization_exception_rules, []) : rule.key => rule && (rule.rank == 0 || rule.rank == null) }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule && (rule.rank == 0 || rule.rank == null) }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1831,7 +1834,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_1" {
-  for_each = { for rule in coalesce(local.network_access_authorization_exception_rules, []) : rule.key => rule if rule.rank == 1 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 1 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1853,7 +1856,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_2" {
-  for_each = { for rule in coalesce(local.network_access_authorization_exception_rules, []) : rule.key => rule if rule.rank == 2 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 2 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1875,7 +1878,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_3" {
-  for_each = { for rule in coalesce(local.network_access_authorization_exception_rules, []) : rule.key => rule if rule.rank == 3 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 3 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1897,7 +1900,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_4" {
-  for_each = { for rule in coalesce(local.network_access_authorization_exception_rules, []) : rule.key => rule if rule.rank == 4 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 4 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1919,7 +1922,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_5" {
-  for_each = { for rule in coalesce(local.network_access_authorization_exception_rules, []) : rule.key => rule if rule.rank == 5 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 5 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1941,7 +1944,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_6" {
-  for_each = { for rule in coalesce(local.network_access_authorization_exception_rules, []) : rule.key => rule if rule.rank == 6 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 6 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1963,7 +1966,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_7" {
-  for_each = { for rule in coalesce(local.network_access_authorization_exception_rules, []) : rule.key => rule if rule.rank == 7 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 7 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1985,7 +1988,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_8" {
-  for_each = { for rule in coalesce(local.network_access_authorization_exception_rules, []) : rule.key => rule if rule.rank == 8 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 8 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2007,7 +2010,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_9" {
-  for_each = { for rule in coalesce(local.network_access_authorization_exception_rules, []) : rule.key => rule if rule.rank == 9 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 9 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2029,7 +2032,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_10" {
-  for_each = { for rule in coalesce(local.network_access_authorization_exception_rules, []) : rule.key => rule if rule.rank == 10 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 10 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2051,7 +2054,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_11" {
-  for_each = { for rule in coalesce(local.network_access_authorization_exception_rules, []) : rule.key => rule if rule.rank == 11 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 11 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2073,7 +2076,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_12" {
-  for_each = { for rule in coalesce(local.network_access_authorization_exception_rules, []) : rule.key => rule if rule.rank == 12 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 12 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2095,7 +2098,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_13" {
-  for_each = { for rule in coalesce(local.network_access_authorization_exception_rules, []) : rule.key => rule if rule.rank == 13 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 13 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2117,7 +2120,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_14" {
-  for_each = { for rule in coalesce(local.network_access_authorization_exception_rules, []) : rule.key => rule if rule.rank == 14 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 14 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2139,7 +2142,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_15" {
-  for_each = { for rule in coalesce(local.network_access_authorization_exception_rules, []) : rule.key => rule if rule.rank == 15 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 15 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2161,7 +2164,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_16" {
-  for_each = { for rule in coalesce(local.network_access_authorization_exception_rules, []) : rule.key => rule if rule.rank == 16 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 16 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2183,7 +2186,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_17" {
-  for_each = { for rule in coalesce(local.network_access_authorization_exception_rules, []) : rule.key => rule if rule.rank == 17 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 17 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2205,7 +2208,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_18" {
-  for_each = { for rule in coalesce(local.network_access_authorization_exception_rules, []) : rule.key => rule if rule.rank == 18 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 18 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2227,7 +2230,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_19" {
-  for_each = { for rule in coalesce(local.network_access_authorization_exception_rules, []) : rule.key => rule if rule.rank == 19 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 19 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name

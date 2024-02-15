@@ -7,7 +7,7 @@ locals {
 }
 
 resource "ise_network_device_group" "network_device_group_0" {
-  for_each = { for group in local.network_device_groups : group.name => group if var.manage_network_resources }
+  for_each = { for group in local.network_device_groups : group.name => group }
 
   name        = each.value.name
   description = each.value.description
@@ -25,7 +25,7 @@ locals {
 }
 
 resource "ise_network_device_group" "network_device_group_1" {
-  for_each = { for group in local.network_device_groups_children : group.name => group if var.manage_network_resources }
+  for_each = { for group in local.network_device_groups_children : group.name => group }
 
   name        = each.value.name
   description = each.value.description
@@ -47,7 +47,7 @@ locals {
 }
 
 resource "ise_network_device_group" "network_device_group_2" {
-  for_each = { for group in local.network_device_groups_children_children : group.name => group if var.manage_network_resources }
+  for_each = { for group in local.network_device_groups_children_children : group.name => group }
 
   name        = each.value.name
   description = each.value.description
@@ -71,7 +71,7 @@ locals {
 }
 
 resource "ise_network_device_group" "network_device_group_3" {
-  for_each = { for group in local.network_device_groups_children_children_children : group.name => group if var.manage_network_resources }
+  for_each = { for group in local.network_device_groups_children_children_children : group.name => group }
 
   name        = each.value.name
   description = each.value.description
@@ -97,7 +97,7 @@ locals {
 }
 
 resource "ise_network_device_group" "network_device_group_4" {
-  for_each = { for group in local.network_device_groups_children_children_children_children : group.name => group if var.manage_network_resources }
+  for_each = { for group in local.network_device_groups_children_children_children_children : group.name => group }
 
   name        = each.value.name
   description = each.value.description
@@ -125,7 +125,7 @@ locals {
 }
 
 resource "ise_network_device_group" "network_device_group_5" {
-  for_each = { for group in local.network_device_groups_children_children_children_children_children : group.name => group if var.manage_network_resources }
+  for_each = { for group in local.network_device_groups_children_children_children_children_children : group.name => group }
 
   name        = each.value.name
   description = each.value.description
@@ -136,7 +136,7 @@ resource "ise_network_device_group" "network_device_group_5" {
 
 # Workaround for ISE API issue where creating/deleting a network device immediately after creating/deleting a network device group fails
 resource "time_sleep" "network_device_group_wait" {
-  count = var.manage_network_resources ? 1 : 0
+  count = length(try(local.network_device_groups, [])) > 0 ? 1 : 0
 
   create_duration  = "5s"
   destroy_duration = "5s"
@@ -145,7 +145,7 @@ resource "time_sleep" "network_device_group_wait" {
 }
 
 resource "ise_network_device" "network_device" {
-  for_each = { for nd in try(local.ise.network_resources.network_devices, []) : nd.name => nd if var.manage_network_resources }
+  for_each = { for nd in try(local.ise.network_resources.network_devices, []) : nd.name => nd }
 
   name                                          = each.value.name
   description                                   = try(each.value.description, local.defaults.ise.network_resources.network_devices.description, null)

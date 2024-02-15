@@ -22,7 +22,8 @@ ise:
         - name: CertificateNotExpired
           type: LibraryConditionAttributes
           is_negate: false
-          attribute_name: CERTIFICATE:Is Expired
+          dictionary_name: CERTIFICATE
+          attribute_name: Is Expired
           operator: equals
           attribute_value: "False"
 ```
@@ -35,8 +36,6 @@ module "ise" {
   version = ">= 0.1.0"
 
   yaml_files = ["network_access_condition.yaml"]
-
-  manage_network_access = true
 }
 ```
 
@@ -53,12 +52,6 @@ module "ise" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_manage_device_administration"></a> [manage\_device\_administration](#input\_manage\_device\_administration) | Flag to indicate if device administration configuration should be managed. | `bool` | `false` | no |
-| <a name="input_manage_identity_management"></a> [manage\_identity\_management](#input\_manage\_identity\_management) | Flag to indicate if identity management configuration should be managed. | `bool` | `false` | no |
-| <a name="input_manage_network_access"></a> [manage\_network\_access](#input\_manage\_network\_access) | Flag to indicate if network access configuration should be managed. | `bool` | `false` | no |
-| <a name="input_manage_network_resources"></a> [manage\_network\_resources](#input\_manage\_network\_resources) | Flag to indicate if network resources configuration should be managed. | `bool` | `false` | no |
-| <a name="input_manage_system"></a> [manage\_system](#input\_manage\_system) | Flag to indicate if system configuration should be managed. | `bool` | `false` | no |
-| <a name="input_manage_trust_sec"></a> [manage\_trust\_sec](#input\_manage\_trust\_sec) | Flag to indicate if TrustSec configuration should be managed. | `bool` | `false` | no |
 | <a name="input_model"></a> [model](#input\_model) | As an alternative to YAML files, a native Terraform data structure can be provided as well. | `map(any)` | `{}` | no |
 | <a name="input_write_default_values_file"></a> [write\_default\_values\_file](#input\_write\_default\_values\_file) | Write all default values to a YAML file. Value is a path pointing to the file to be created. | `string` | `""` | no |
 | <a name="input_yaml_directories"></a> [yaml\_directories](#input\_yaml\_directories) | List of paths to YAML directories. | `list(string)` | `[]` | no |
@@ -184,6 +177,7 @@ module "ise" {
 | [ise_device_admin_time_and_date_condition.device_admin_time_and_date_condition](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_time_and_date_condition) | resource |
 | [ise_downloadable_acl.downloadable_acl](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/downloadable_acl) | resource |
 | [ise_endpoint_identity_group.endpoint_identity_group](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/endpoint_identity_group) | resource |
+| [ise_identity_source_sequence.identity_source_sequences](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/identity_source_sequence) | resource |
 | [ise_internal_user.internal_user](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/internal_user) | resource |
 | [ise_license_tier_state.license_tier_state](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/license_tier_state) | resource |
 | [ise_network_access_authentication_rule.network_access_authentication_rule_0](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_authentication_rule) | resource |

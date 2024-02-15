@@ -1,5 +1,5 @@
 locals {
-  trustsec_matrix = { for cell in try(local.ise.trust_sec.matrix_entries, []) : "${cell.source_sgt}-${cell.destination_sgt}" => cell if var.manage_trust_sec }
+  trustsec_matrix = { for cell in try(local.ise.trust_sec.matrix_entries, []) : "${cell.source_sgt}-${cell.destination_sgt}" => cell }
   unique_sgts     = distinct(concat([for key, value in local.trustsec_matrix : value.source_sgt], [for key, value in local.trustsec_matrix : value.destination_sgt], [for map in try(local.ise.trust_sec.ip_sgt_mappings, []) : try(map.sgt, null) if try(map.sgt, null) != null], [for map in try(local.ise.trust_sec.ip_sgt_mapping_groups, []) : try(map.sgt, null) if try(map.sgt, null) != null]))
   known_sgts      = [for group in try(local.ise.trust_sec.security_groups, []) : group.name]
   unknown_sgts    = setsubtract(local.unique_sgts, local.known_sgts)
@@ -21,7 +21,7 @@ data "ise_trustsec_security_group_acl" "trustsec_security_group_acl" {
 }
 
 resource "ise_trustsec_security_group" "trustsec_security_group" {
-  for_each = { for group in try(local.ise.trust_sec.security_groups, []) : group.name => group if var.manage_trust_sec }
+  for_each = { for group in try(local.ise.trust_sec.security_groups, []) : group.name => group }
 
   name              = each.key
   description       = try(each.value.description, local.defaults.ise.trust_sec.security_groups.description, null)
@@ -30,7 +30,7 @@ resource "ise_trustsec_security_group" "trustsec_security_group" {
 }
 
 resource "ise_trustsec_security_group_acl" "trustsec_security_group_acl" {
-  for_each = { for acl in try(local.ise.trust_sec.security_group_acls, []) : acl.name => acl if var.manage_trust_sec }
+  for_each = { for acl in try(local.ise.trust_sec.security_group_acls, []) : acl.name => acl }
 
   name        = each.key
   acl_content = try(each.value.acl_content, local.defaults.ise.trust_sec.security_group_acls.acl_content, null)
@@ -41,7 +41,7 @@ resource "ise_trustsec_security_group_acl" "trustsec_security_group_acl" {
 }
 
 resource "ise_trustsec_ip_to_sgt_mapping_group" "trustsec_ip_to_sgt_mapping_group" {
-  for_each = { for group in try(local.ise.trust_sec.ip_sgt_mapping_groups, []) : group.name => group if var.manage_trust_sec }
+  for_each = { for group in try(local.ise.trust_sec.ip_sgt_mapping_groups, []) : group.name => group }
 
   name        = each.key
   sgt         = contains(local.known_sgts, each.value.sgt) ? ise_trustsec_security_group.trustsec_security_group[each.value.sgt].id : data.ise_trustsec_security_group.trustsec_security_group[each.value.sgt].id
@@ -52,7 +52,7 @@ resource "ise_trustsec_ip_to_sgt_mapping_group" "trustsec_ip_to_sgt_mapping_grou
 }
 
 resource "ise_trustsec_ip_to_sgt_mapping" "trustsec_ip_to_sgt_mapping" {
-  for_each = { for map in try(local.ise.trust_sec.ip_sgt_mappings, []) : try(map.host_name, map.host_ip) => map if var.manage_trust_sec }
+  for_each = { for map in try(local.ise.trust_sec.ip_sgt_mappings, []) : try(map.host_name, map.host_ip) => map }
 
   name          = each.key
   host_ip       = try(each.value.host_ip, local.defaults.ise.trust_sec.ip_sgt_mappings.host_ip, null)
@@ -67,7 +67,7 @@ resource "ise_trustsec_ip_to_sgt_mapping" "trustsec_ip_to_sgt_mapping" {
 
 # Workaround for ISE API issue where deleting an SGT immediately after deleting an object using this SGT fails
 resource "time_sleep" "sgt_wait" {
-  count = var.manage_trust_sec ? 1 : 0
+  count = length(try(local.ise.trust_sec.security_groups, [])) > 0 ? 1 : 0
 
   destroy_duration = "10s"
 

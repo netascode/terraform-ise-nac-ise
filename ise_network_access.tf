@@ -1,5 +1,5 @@
 resource "ise_allowed_protocols" "allowed_protocols" {
-  for_each = { for protocol in try(local.ise.network_access.policy_elements.allowed_protocols, []) : protocol.name => protocol if var.manage_network_access }
+  for_each = { for protocol in try(local.ise.network_access.policy_elements.allowed_protocols, []) : protocol.name => protocol }
 
   description                                       = try(each.value.description, "")
   name                                              = each.key
@@ -22,6 +22,9 @@ resource "ise_allowed_protocols" "allowed_protocols" {
   require_message_auth                              = try(each.value.require_message_auth, local.defaults.ise.network_access.policy_elements.allowed_protocols.require_message_auth, null)
   eap_tls_allow_auth_of_expired_certs               = try(each.value.allow_eap_tls, local.defaults.ise.network_access.policy_elements.allowed_protocols.allow_eap_tls, false) ? try(each.value.eap_tls.auth_of_expired_certs, local.defaults.ise.network_access.policy_elements.allowed_protocols.eap_tls.auth_of_expired_certs, null) : null
   eap_tls_enable_stateless_session_resume           = try(each.value.allow_eap_tls, local.defaults.ise.network_access.policy_elements.allowed_protocols.allow_eap_tls, false) ? try(each.value.eap_tls.enable_stateless_session_resume, local.defaults.ise.network_access.policy_elements.allowed_protocols.eap_tls.enable_stateless_session_resume, null) : null
+  eap_tls_session_ticket_ttl                        = try(each.value.eap_tls.enable_stateless_session_resume, local.defaults.ise.network_access.policy_elements.allowed_protocols.eap_tls.enable_stateless_session_resume, false) ? try(each.value.eap_tls.session_ticket_ttl, local.defaults.ise.network_access.policy_elements.allowed_protocols.eap_tls.session_ticket_ttl, null) : null
+  eap_tls_session_ticket_ttl_unit                   = try(each.value.eap_tls.enable_stateless_session_resume, local.defaults.ise.network_access.policy_elements.allowed_protocols.eap_tls.enable_stateless_session_resume, false) ? try(each.value.eap_tls.session_ticket_ttl_unit, local.defaults.ise.network_access.policy_elements.allowed_protocols.eap_tls.session_ticket_ttl_unit, null) : null
+  eap_tls_session_ticket_percentage                 = try(each.value.eap_tls.enable_stateless_session_resume, local.defaults.ise.network_access.policy_elements.allowed_protocols.eap_tls.enable_stateless_session_resume, false) ? try(each.value.eap_tls.session_ticket_percentage, local.defaults.ise.network_access.policy_elements.allowed_protocols.eap_tls.session_ticket_percentage, null) : null
   peap_allow_peap_eap_ms_chap_v2                    = try(each.value.allow_peap, local.defaults.ise.network_access.policy_elements.allowed_protocols.allow_peap, false) ? try(each.value.peap.eap_ms_chap_v2, local.defaults.ise.network_access.policy_elements.allowed_protocols.peap.eap_ms_chap_v2, null) : null
   peap_allow_peap_eap_ms_chap_v2_pwd_change         = try(each.value.allow_peap, local.defaults.ise.network_access.policy_elements.allowed_protocols.allow_peap, false) && try(each.value.peap.eap_ms_chap_v2, local.defaults.ise.network_access.policy_elements.allowed_protocols.peap.eap_ms_chap_v2, false) ? try(each.value.peap.eap_ms_chap_v2_pwd_change, local.defaults.ise.network_access.policy_elements.allowed_protocols.peap.eap_ms_chap_v2_pwd_change, null) : null
   peap_allow_peap_eap_ms_chap_v2_pwd_change_retries = try(each.value.allow_peap, local.defaults.ise.network_access.policy_elements.allowed_protocols.allow_peap, false) && try(each.value.peap.eap_ms_chap_v2, local.defaults.ise.network_access.policy_elements.allowed_protocols.peap.eap_ms_chap_v2, false) ? try(each.value.peap.eap_ms_chap_v2_pwd_change_retries, local.defaults.ise.network_access.policy_elements.allowed_protocols.peap.eap_ms_chap_v2_pwd_change_retries, null) : null
@@ -75,7 +78,7 @@ resource "ise_allowed_protocols" "allowed_protocols" {
 }
 
 resource "ise_authorization_profile" "authorization_profile" {
-  for_each = { for profile in try(local.ise.network_access.policy_elements.authorization_profiles, []) : profile.name => profile if var.manage_network_access }
+  for_each = { for profile in try(local.ise.network_access.policy_elements.authorization_profiles, []) : profile.name => profile }
 
   name                                                  = each.key
   description                                           = try(each.value.description, local.defaults.ise.network_access.policy_elements.authorization_profiles.description, null)
@@ -142,32 +145,32 @@ data "ise_network_access_condition" "network_access_condition_circular" {
 }
 
 resource "ise_network_access_condition" "network_access_condition" {
-  for_each = { for condition in try(local.ise.network_access.policy_elements.conditions, []) : condition.name => condition if var.manage_network_access }
+  for_each = { for condition in try(local.ise.network_access.policy_elements.conditions, []) : condition.name => condition }
 
   condition_type   = try(each.value.type, local.defaults.ise.network_access.policy_elements.conditions.type, null)
   is_negate        = try(each.value.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
-  attribute_name   = strcontains(try(each.value.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, ""), ":") ? split(":", try(each.value.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null))[1] : try(each.value.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
-  attribute_value  = strcontains(try(each.value.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, ""), ":") ? split(":", try(each.value.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null))[1] : try(each.value.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
-  dictionary_name  = strcontains(try(each.value.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, ""), ":") ? split(":", try(each.value.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null))[0] : null
-  dictionary_value = strcontains(try(each.value.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, ""), ":") ? split(":", try(each.value.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null))[0] : null
+  attribute_name   = try(each.value.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
+  attribute_value  = try(each.value.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
+  dictionary_name  = try(each.value.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
+  dictionary_value = try(each.value.dictionary_value, local.defaults.ise.network_access.policy_elements.conditions.dictionary_value, null)
   operator         = try(each.value.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
   description      = try(each.value.description, local.defaults.ise.network_access.policy_elements.conditions.description, null)
   name             = each.key
   children = [for c in try(each.value.children, []) : {
-    attribute_name   = strcontains(try(c.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, ""), ":") ? split(":", try(c.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null))[1] : try(c.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
-    attribute_value  = strcontains(try(c.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, ""), ":") ? split(":", try(c.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null))[1] : try(c.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
-    dictionary_name  = strcontains(try(c.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, ""), ":") ? split(":", try(c.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null))[0] : null
-    dictionary_value = strcontains(try(c.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, ""), ":") ? split(":", try(c.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null))[0] : null
+    attribute_name   = try(c.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
+    attribute_value  = try(c.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
+    dictionary_name  = try(c.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
+    dictionary_value = try(c.dictionary_value, local.defaults.ise.network_access.policy_elements.conditions.dictionary_value, null)
     condition_type   = try(c.type, local.defaults.ise.network_access.policy_elements.conditions.type, null)
     is_negate        = try(c.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
     operator         = try(c.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
     name             = try(c.name, null)
     id               = try(c.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? data.ise_network_access_condition.network_access_condition_circular[c.name].id : null
     children = [for c2 in try(c.children, []) : {
-      attribute_name   = strcontains(try(c2.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, ""), ":") ? split(":", try(c2.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null))[1] : try(c2.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
-      attribute_value  = strcontains(try(c2.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, ""), ":") ? split(":", try(c2.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null))[1] : try(c2.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
-      dictionary_name  = strcontains(try(c2.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, ""), ":") ? split(":", try(c2.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null))[0] : null
-      dictionary_value = strcontains(try(c2.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, ""), ":") ? split(":", try(c2.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null))[0] : null
+      attribute_name   = try(c2.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
+      attribute_value  = try(c2.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
+      dictionary_name  = try(c2.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
+      dictionary_value = try(c2.dictionary_value, local.defaults.ise.network_access.policy_elements.conditions.dictionary_value, null)
       condition_type   = try(c2.type, local.defaults.ise.network_access.policy_elements.conditions.type, null)
       is_negate        = try(c2.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
       operator         = try(c2.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
@@ -180,7 +183,7 @@ resource "ise_network_access_condition" "network_access_condition" {
 }
 
 resource "ise_downloadable_acl" "downloadable_acl" {
-  for_each = { for dacl in try(local.ise.network_access.policy_elements.downloadable_acls, []) : dacl.name => dacl if var.manage_network_access }
+  for_each = { for dacl in try(local.ise.network_access.policy_elements.downloadable_acls, []) : dacl.name => dacl }
 
   name        = each.key
   description = try(each.value.description, local.defaults.ise.network_access.policy_elements.downloadable_acls.description, null)
@@ -189,7 +192,7 @@ resource "ise_downloadable_acl" "downloadable_acl" {
 }
 
 resource "ise_network_access_dictionary" "network_access_dictionary" {
-  for_each = { for d in try(local.ise.network_access.policy_elements.dictionaries, []) : d.name => d if var.manage_network_access }
+  for_each = { for d in try(local.ise.network_access.policy_elements.dictionaries, []) : d.name => d }
 
   name                 = each.key
   description          = try(each.value.description, local.defaults.ise.network_access.policy_elements.dictionaries.description, null)
@@ -198,7 +201,7 @@ resource "ise_network_access_dictionary" "network_access_dictionary" {
 }
 
 resource "ise_network_access_time_and_date_condition" "network_access_time_and_date_condition" {
-  for_each = { for c in try(local.ise.network_access.policy_elements.time_date_conditions, []) : c.name => c if var.manage_network_access }
+  for_each = { for c in try(local.ise.network_access.policy_elements.time_date_conditions, []) : c.name => c }
 
   name                 = each.key
   description          = try(each.value.description, local.defaults.ise.network_access.policy_elements.time_date_conditions.description, null)
@@ -272,10 +275,10 @@ locals {
     for ps in try(local.ise.network_access.policy_sets, []) : {
       condition_type             = try(ps.condition.type, local.defaults.ise.network_access.policy_sets.condition.type, null)
       condition_is_negate        = try(ps.condition.is_negate, local.defaults.ise.network_access.policy_sets.condition.is_negate, null)
-      condition_attribute_name   = strcontains(try(ps.condition.attribute_name, local.defaults.ise.network_access.policy_sets.condition.attribute_name, ""), ":") ? split(":", try(ps.condition.attribute_name, local.defaults.ise.network_access.policy_sets.condition.attribute_name, null))[1] : try(ps.condition.attribute_name, local.defaults.ise.network_access.policy_sets.condition.attribute_name, null)
-      condition_attribute_value  = strcontains(try(ps.condition.attribute_value, local.defaults.ise.network_access.policy_sets.condition.attribute_value, ""), ":") ? split(":", try(ps.condition.attribute_value, local.defaults.ise.network_access.policy_sets.condition.attribute_value, null))[1] : try(ps.condition.attribute_value, local.defaults.ise.network_access.policy_sets.condition.attribute_value, null)
-      condition_dictionary_name  = strcontains(try(ps.condition.attribute_name, local.defaults.ise.network_access.policy_sets.condition.attribute_name, ""), ":") ? split(":", try(ps.condition.attribute_name, local.defaults.ise.network_access.policy_sets.condition.attribute_name, null))[0] : null
-      condition_dictionary_value = strcontains(try(ps.condition.attribute_value, local.defaults.ise.network_access.policy_sets.condition.attribute_value, ""), ":") ? split(":", try(ps.condition.attribute_value, local.defaults.ise.network_access.policy_sets.condition.attribute_value, null))[0] : null
+      condition_attribute_name   = try(ps.condition.attribute_name, local.defaults.ise.network_access.policy_sets.condition.attribute_name, null)
+      condition_attribute_value  = try(ps.condition.attribute_value, local.defaults.ise.network_access.policy_sets.condition.attribute_value, null)
+      condition_dictionary_name  = try(ps.condition.dictionary_name, local.defaults.ise.network_access.policy_sets.condition.dictionary_name, null)
+      condition_dictionary_value = try(ps.condition.dictionary_value, local.defaults.ise.network_access.policy_sets.condition.dictionary_value, null)
       condition_id               = contains(local.known_conditions_network_access, try(ps.condition.name, "")) ? ise_network_access_condition.network_access_condition[ps.condition.name].id : try(data.ise_network_access_condition.network_access_condition[ps.condition.name].id, null)
       condition_operator         = try(ps.condition.operator, local.defaults.ise.network_access.policy_sets.condition.operator, null)
       description                = try(ps.description, local.defaults.ise.network_access.policy_sets.description, null)
@@ -285,19 +288,19 @@ locals {
       state                      = try(ps.state, local.defaults.ise.network_access.policy_sets.state)
       rank                       = try(ps.rank, local.defaults.ise.network_access.policy_sets.rank, null)
       children = try([for i in ps.condition.children : {
-        attribute_name   = strcontains(try(i.attribute_name, local.defaults.ise.network_access.policy_sets.condition.attribute_name, ""), ":") ? split(":", try(i.attribute_name, local.defaults.ise.network_access.policy_sets.condition.attribute_name, null))[1] : try(i.attribute_name, local.defaults.ise.network_access.policy_sets.condition.attribute_name, null)
-        attribute_value  = strcontains(try(i.attribute_value, local.defaults.ise.network_access.policy_sets.condition.attribute_value, ""), ":") ? split(":", try(i.attribute_value, local.defaults.ise.network_access.policy_sets.condition.attribute_value, null))[1] : try(i.attribute_value, local.defaults.ise.network_access.policy_sets.condition.attribute_value, null)
-        dictionary_name  = strcontains(try(i.attribute_name, local.defaults.ise.network_access.policy_sets.condition.attribute_name, ""), ":") ? split(":", try(i.attribute_name, local.defaults.ise.network_access.policy_sets.condition.attribute_name, null))[0] : null
-        dictionary_value = strcontains(try(i.attribute_value, local.defaults.ise.network_access.policy_sets.condition.attribute_value, ""), ":") ? split(":", try(i.attribute_value, local.defaults.ise.network_access.policy_sets.condition.attribute_value, null))[0] : null
+        attribute_name   = try(i.attribute_name, local.defaults.ise.network_access.policy_sets.condition.attribute_name, null),
+        attribute_value  = try(i.attribute_value, local.defaults.ise.network_access.policy_sets.condition.attribute_value, null)
+        dictionary_name  = try(i.dictionary_name, local.defaults.ise.network_access.policy_sets.condition.dictionary_name, null)
+        dictionary_value = try(i.dictionary_value, local.defaults.ise.network_access.policy_sets.condition.dictionary_value, null)
         condition_type   = try(i.type, local.defaults.ise.network_access.policy_sets.condition.type, null)
         is_negate        = try(i.is_negate, local.defaults.ise.network_access.policy_sets.condition.is_negate, null)
         operator         = try(i.operator, local.defaults.ise.network_access.policy_sets.condition.operator, null)
         id               = contains(local.known_conditions_network_access, try(i.name, "")) ? ise_network_access_condition.network_access_condition[i.name].id : try(data.ise_network_access_condition.network_access_condition[i.name].id, null)
         children = try([for j in i.children : {
-          attribute_name   = strcontains(try(j.attribute_name, local.defaults.ise.network_access.policy_sets.condition.attribute_name, ""), ":") ? split(":", try(j.attribute_name, local.defaults.ise.network_access.policy_sets.condition.attribute_name, null))[1] : try(j.attribute_name, local.defaults.ise.network_access.policy_sets.condition.attribute_name, null)
-          attribute_value  = strcontains(try(j.attribute_value, local.defaults.ise.network_access.policy_sets.condition.attribute_value, ""), ":") ? split(":", try(j.attribute_value, local.defaults.ise.network_access.policy_sets.condition.attribute_value, null))[1] : try(j.attribute_value, local.defaults.ise.network_access.policy_sets.condition.attribute_value, null)
-          dictionary_name  = strcontains(try(j.attribute_name, local.defaults.ise.network_access.policy_sets.condition.attribute_name, ""), ":") ? split(":", try(j.attribute_name, local.defaults.ise.network_access.policy_sets.condition.attribute_name, null))[0] : null
-          dictionary_value = strcontains(try(j.attribute_value, local.defaults.ise.network_access.policy_sets.condition.attribute_value, ""), ":") ? split(":", try(j.attribute_value, local.defaults.ise.network_access.policy_sets.condition.attribute_value, null))[0] : null
+          attribute_name   = try(j.attribute_name, local.defaults.ise.network_access.policy_sets.condition.attribute_name, null)
+          attribute_value  = try(j.attribute_value, local.defaults.ise.network_access.policy_sets.condition.attribute_value, null)
+          dictionary_name  = try(j.dictionary_name, local.defaults.ise.network_access.policy_sets.condition.dictionary_name, null)
+          dictionary_value = try(j.dictionary_value, local.defaults.ise.network_access.policy_sets.condition.dictionary_value, null)
           condition_type   = try(j.type, local.defaults.ise.network_access.policy_sets.condition.type, null)
           is_negate        = try(j.is_negate, local.defaults.ise.network_access.policy_sets.condition.is_negate, null)
           operator         = try(j.operator, local.defaults.ise.network_access.policy_sets.condition.operator, null)
@@ -309,7 +312,7 @@ locals {
 }
 
 resource "ise_network_access_policy_set" "network_access_policy_set_0" {
-  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if var.manage_network_access && (ps.rank == 0 || ps.rank == null) }
+  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if(ps.rank == 0 || ps.rank == null) }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -330,7 +333,7 @@ resource "ise_network_access_policy_set" "network_access_policy_set_0" {
 }
 
 resource "ise_network_access_policy_set" "network_access_policy_set_1" {
-  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if var.manage_network_access && ps.rank == 1 }
+  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if ps.rank == 1 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -351,7 +354,7 @@ resource "ise_network_access_policy_set" "network_access_policy_set_1" {
 }
 
 resource "ise_network_access_policy_set" "network_access_policy_set_2" {
-  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if var.manage_network_access && ps.rank == 2 }
+  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if ps.rank == 2 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -372,7 +375,7 @@ resource "ise_network_access_policy_set" "network_access_policy_set_2" {
 }
 
 resource "ise_network_access_policy_set" "network_access_policy_set_3" {
-  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if var.manage_network_access && ps.rank == 3 }
+  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if ps.rank == 3 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -393,7 +396,7 @@ resource "ise_network_access_policy_set" "network_access_policy_set_3" {
 }
 
 resource "ise_network_access_policy_set" "network_access_policy_set_4" {
-  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if var.manage_network_access && ps.rank == 4 }
+  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if ps.rank == 4 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -414,7 +417,7 @@ resource "ise_network_access_policy_set" "network_access_policy_set_4" {
 }
 
 resource "ise_network_access_policy_set" "network_access_policy_set_5" {
-  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if var.manage_network_access && ps.rank == 5 }
+  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if ps.rank == 5 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -435,7 +438,7 @@ resource "ise_network_access_policy_set" "network_access_policy_set_5" {
 }
 
 resource "ise_network_access_policy_set" "network_access_policy_set_6" {
-  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if var.manage_network_access && ps.rank == 6 }
+  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if ps.rank == 6 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -456,7 +459,7 @@ resource "ise_network_access_policy_set" "network_access_policy_set_6" {
 }
 
 resource "ise_network_access_policy_set" "network_access_policy_set_7" {
-  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if var.manage_network_access && ps.rank == 7 }
+  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if ps.rank == 7 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -477,7 +480,7 @@ resource "ise_network_access_policy_set" "network_access_policy_set_7" {
 }
 
 resource "ise_network_access_policy_set" "network_access_policy_set_8" {
-  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if var.manage_network_access && ps.rank == 8 }
+  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if ps.rank == 8 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -498,7 +501,7 @@ resource "ise_network_access_policy_set" "network_access_policy_set_8" {
 }
 
 resource "ise_network_access_policy_set" "network_access_policy_set_9" {
-  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if var.manage_network_access && ps.rank == 9 }
+  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if ps.rank == 9 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -519,7 +522,7 @@ resource "ise_network_access_policy_set" "network_access_policy_set_9" {
 }
 
 resource "ise_network_access_policy_set" "network_access_policy_set_10" {
-  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if var.manage_network_access && ps.rank == 10 }
+  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if ps.rank == 10 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -540,7 +543,7 @@ resource "ise_network_access_policy_set" "network_access_policy_set_10" {
 }
 
 resource "ise_network_access_policy_set" "network_access_policy_set_11" {
-  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if var.manage_network_access && ps.rank == 11 }
+  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if ps.rank == 11 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -561,7 +564,7 @@ resource "ise_network_access_policy_set" "network_access_policy_set_11" {
 }
 
 resource "ise_network_access_policy_set" "network_access_policy_set_12" {
-  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if var.manage_network_access && ps.rank == 12 }
+  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if ps.rank == 12 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -582,7 +585,7 @@ resource "ise_network_access_policy_set" "network_access_policy_set_12" {
 }
 
 resource "ise_network_access_policy_set" "network_access_policy_set_13" {
-  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if var.manage_network_access && ps.rank == 13 }
+  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if ps.rank == 13 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -603,7 +606,7 @@ resource "ise_network_access_policy_set" "network_access_policy_set_13" {
 }
 
 resource "ise_network_access_policy_set" "network_access_policy_set_14" {
-  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if var.manage_network_access && ps.rank == 14 }
+  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if ps.rank == 14 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -624,7 +627,7 @@ resource "ise_network_access_policy_set" "network_access_policy_set_14" {
 }
 
 resource "ise_network_access_policy_set" "network_access_policy_set_15" {
-  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if var.manage_network_access && ps.rank == 15 }
+  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if ps.rank == 15 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -645,7 +648,7 @@ resource "ise_network_access_policy_set" "network_access_policy_set_15" {
 }
 
 resource "ise_network_access_policy_set" "network_access_policy_set_16" {
-  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if var.manage_network_access && ps.rank == 16 }
+  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if ps.rank == 16 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -666,7 +669,7 @@ resource "ise_network_access_policy_set" "network_access_policy_set_16" {
 }
 
 resource "ise_network_access_policy_set" "network_access_policy_set_17" {
-  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if var.manage_network_access && ps.rank == 17 }
+  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if ps.rank == 17 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -687,7 +690,7 @@ resource "ise_network_access_policy_set" "network_access_policy_set_17" {
 }
 
 resource "ise_network_access_policy_set" "network_access_policy_set_18" {
-  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if var.manage_network_access && ps.rank == 18 }
+  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if ps.rank == 18 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -708,7 +711,7 @@ resource "ise_network_access_policy_set" "network_access_policy_set_18" {
 }
 
 resource "ise_network_access_policy_set" "network_access_policy_set_19" {
-  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if var.manage_network_access && ps.rank == 19 }
+  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if ps.rank == 19 }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -751,6 +754,7 @@ locals {
     { for ps in local.network_access_policy_sets : ps.name => ise_network_access_policy_set.network_access_policy_set_18[ps.name].id if ps.rank == 18 },
     { for ps in local.network_access_policy_sets : ps.name => ise_network_access_policy_set.network_access_policy_set_19[ps.name].id if ps.rank == 19 },
   )
+
   network_access_authentication_rules = flatten([
     for ps in try(local.ise.network_access.policy_sets, []) : [
       for rule in try(ps.authentication_rules, []) : {
@@ -763,29 +767,29 @@ locals {
         condition_type             = try(rule.condition.type, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.type, null)
         condition_id               = contains(local.known_conditions_network_access, try(rule.condition.name, "")) ? ise_network_access_condition.network_access_condition[rule.condition.name].id : try(data.ise_network_access_condition.network_access_condition[rule.condition.name].id, null)
         condition_is_negate        = try(rule.condition.is_negate, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.is_negate, null)
-        condition_attribute_name   = strcontains(try(rule.condition.attribute_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_name, ""), ":") ? split(":", try(rule.condition.attribute_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_name, null))[1] : try(rule.condition.attribute_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_name, null)
-        condition_attribute_value  = strcontains(try(rule.condition.attribute_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_value, ""), ":") ? split(":", try(rule.condition.attribute_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_value, null))[1] : try(rule.condition.attribute_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_value, null)
-        condition_dictionary_name  = strcontains(try(rule.condition.attribute_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_name, ""), ":") ? split(":", try(rule.condition.attribute_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_name, null))[0] : null
-        condition_dictionary_value = strcontains(try(rule.condition.attribute_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_value, ""), ":") ? split(":", try(rule.condition.attribute_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_value, null))[0] : null
+        condition_attribute_name   = try(rule.condition.attribute_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_name, null)
+        condition_attribute_value  = try(rule.condition.attribute_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_value, null)
+        condition_dictionary_name  = try(rule.condition.dictionary_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.dictionary_name, null)
+        condition_dictionary_value = try(rule.condition.dictionary_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.dictionary_value, null)
         condition_operator         = try(rule.condition.operator, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.operator, null)
         identity_source_name       = try(rule.identity_source_name, local.defaults.ise.network_access.policy_sets.authentication_rules.identity_source_name, null)
         if_auth_fail               = try(rule.if_auth_fail, local.defaults.ise.network_access.policy_sets.authentication_rules.if_auth_fail, null)
         if_process_fail            = try(rule.if_process_fail, local.defaults.ise.network_access.policy_sets.authentication_rules.if_process_fail, null)
         if_user_not_found          = try(rule.if_user_not_found, local.defaults.ise.network_access.policy_sets.authentication_rules.if_user_not_found, null)
         children = try([for i in rule.condition.children : {
-          attribute_name   = strcontains(try(i.attribute_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_name, ""), ":") ? split(":", try(i.attribute_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_name, null))[1] : try(i.attribute_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_name, null)
-          attribute_value  = strcontains(try(i.attribute_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_value, ""), ":") ? split(":", try(i.attribute_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_value, null))[1] : try(i.attribute_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_value, null)
-          dictionary_name  = strcontains(try(i.attribute_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_name, ""), ":") ? split(":", try(i.attribute_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_name, null))[0] : null
-          dictionary_value = strcontains(try(i.attribute_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_value, ""), ":") ? split(":", try(i.attribute_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_value, null))[0] : null
+          attribute_name   = try(i.attribute_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_name, null)
+          attribute_value  = try(i.attribute_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_value, null)
+          dictionary_name  = try(i.dictionary_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.dictionary_name, null)
+          dictionary_value = try(i.dictionary_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.dictionary_value, null)
           condition_type   = try(i.type, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.type, null)
           is_negate        = try(i.is_negate, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.is_negate, null)
           operator         = try(i.operator, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.operator, null)
           id               = contains(local.known_conditions_network_access, try(i.name, "")) ? ise_network_access_condition.network_access_condition[i.name].id : try(data.ise_network_access_condition.network_access_condition[i.name].id, null)
           children = try([for j in i.children : {
-            attribute_name   = strcontains(try(j.attribute_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_name, ""), ":") ? split(":", try(j.attribute_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_name, null))[1] : try(j.attribute_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_name, null)
-            attribute_value  = strcontains(try(j.attribute_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_value, ""), ":") ? split(":", try(j.attribute_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_value, null))[1] : try(j.attribute_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_value, null)
-            dictionary_name  = strcontains(try(j.attribute_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_name, ""), ":") ? split(":", try(j.attribute_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_name, null))[0] : null
-            dictionary_value = strcontains(try(j.attribute_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_value, ""), ":") ? split(":", try(j.attribute_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_value, null))[0] : null
+            attribute_name   = try(j.attribute_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_name, null)
+            attribute_value  = try(j.attribute_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_value, null)
+            dictionary_name  = try(j.dictionary_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.dictionary_name, null)
+            dictionary_value = try(j.dictionary_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.dictionary_value, null)
             condition_type   = try(j.type, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.type, null)
             is_negate        = try(j.is_negate, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.is_negate, null)
             operator         = try(j.operator, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.operator, null)
@@ -798,7 +802,7 @@ locals {
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_0" {
-  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if var.manage_network_access && (rule.rank == 0 || rule.rank == null) }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if(rule.rank == 0 || rule.rank == null) }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -822,7 +826,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_1" {
-  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if var.manage_network_access && rule.rank == 1 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 1 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -846,7 +850,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_2" {
-  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if var.manage_network_access && rule.rank == 2 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 2 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -870,7 +874,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_3" {
-  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if var.manage_network_access && rule.rank == 3 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 3 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -894,7 +898,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_4" {
-  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if var.manage_network_access && rule.rank == 4 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 4 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -918,7 +922,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_5" {
-  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if var.manage_network_access && rule.rank == 5 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 5 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -942,7 +946,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_6" {
-  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if var.manage_network_access && rule.rank == 6 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 6 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -966,7 +970,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_7" {
-  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if var.manage_network_access && rule.rank == 7 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 7 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -990,7 +994,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_8" {
-  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if var.manage_network_access && rule.rank == 8 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 8 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1014,7 +1018,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_9" {
-  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if var.manage_network_access && rule.rank == 9 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 9 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1038,7 +1042,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_10" {
-  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if var.manage_network_access && rule.rank == 10 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 10 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1062,7 +1066,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_11" {
-  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if var.manage_network_access && rule.rank == 11 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 11 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1086,7 +1090,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_12" {
-  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if var.manage_network_access && rule.rank == 12 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 12 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1110,7 +1114,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_13" {
-  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if var.manage_network_access && rule.rank == 13 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 13 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1134,7 +1138,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_14" {
-  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if var.manage_network_access && rule.rank == 14 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 14 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1158,7 +1162,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_15" {
-  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if var.manage_network_access && rule.rank == 15 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 15 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1182,7 +1186,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_16" {
-  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if var.manage_network_access && rule.rank == 16 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 16 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1206,7 +1210,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_17" {
-  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if var.manage_network_access && rule.rank == 17 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 17 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1230,7 +1234,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_18" {
-  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if var.manage_network_access && rule.rank == 18 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 18 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1254,7 +1258,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_19" {
-  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if var.manage_network_access && rule.rank == 19 }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.rank == 19 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1290,27 +1294,27 @@ locals {
         condition_type             = try(rule.condition.type, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.type, null)
         condition_id               = contains(local.known_conditions_network_access, try(rule.condition.name, "")) ? ise_network_access_condition.network_access_condition[rule.condition.name].id : try(data.ise_network_access_condition.network_access_condition[rule.condition.name].id, null)
         condition_is_negate        = try(rule.condition.is_negate, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.is_negate, null)
-        condition_attribute_name   = strcontains(try(rule.condition.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, ""), ":") ? split(":", try(rule.condition.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, null))[1] : try(rule.condition.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, null)
-        condition_attribute_value  = strcontains(try(rule.condition.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, ""), ":") ? split(":", try(rule.condition.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, null))[1] : try(rule.condition.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, null)
-        condition_dictionary_name  = strcontains(try(rule.condition.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, ""), ":") ? split(":", try(rule.condition.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, null))[0] : null
-        condition_dictionary_value = strcontains(try(rule.condition.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, ""), ":") ? split(":", try(rule.condition.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, null))[0] : null
+        condition_attribute_name   = try(rule.condition.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, null)
+        condition_attribute_value  = try(rule.condition.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, null)
+        condition_dictionary_name  = try(rule.condition.dictionary_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.dictionary_name, null)
+        condition_dictionary_value = try(rule.condition.dictionary_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.dictionary_value, null)
         condition_operator         = try(rule.condition.operator, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.operator, null)
         profiles                   = try(rule.profiles, local.defaults.ise.network_access.policy_sets.authorization_rules.profiles, null)
         security_group             = try(rule.security_group, local.defaults.ise.network_access.policy_sets.authorization_rules.security_group, null)
         children = try([for i in rule.condition.children : {
-          attribute_name   = strcontains(try(i.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, ""), ":") ? split(":", try(i.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, null))[1] : try(i.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, null)
-          attribute_value  = strcontains(try(i.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, ""), ":") ? split(":", try(i.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, null))[1] : try(i.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, null)
-          dictionary_name  = strcontains(try(i.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, ""), ":") ? split(":", try(i.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, null))[0] : null
-          dictionary_value = strcontains(try(i.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, ""), ":") ? split(":", try(i.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, null))[0] : null
+          attribute_name   = try(i.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, null)
+          attribute_value  = try(i.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, null)
+          dictionary_name  = try(i.dictionary_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.dictionary_name, null)
+          dictionary_value = try(i.dictionary_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.dictionary_value, null)
           condition_type   = try(i.type, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.type, null)
           is_negate        = try(i.is_negate, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.is_negate, null)
           operator         = try(i.operator, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.operator, null)
           id               = contains(local.known_conditions_network_access, try(i.name, "")) ? ise_network_access_condition.network_access_condition[i.name].id : try(data.ise_network_access_condition.network_access_condition[i.name].id, null)
           children = try([for j in i.children : {
-            attribute_name   = strcontains(try(j.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, ""), ":") ? split(":", try(j.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, null))[1] : try(j.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, null)
-            attribute_value  = strcontains(try(j.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, ""), ":") ? split(":", try(j.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, null))[1] : try(j.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, null)
-            dictionary_name  = strcontains(try(j.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, ""), ":") ? split(":", try(j.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, null))[0] : null
-            dictionary_value = strcontains(try(j.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, ""), ":") ? split(":", try(j.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, null))[0] : null
+            attribute_name   = try(j.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, null)
+            attribute_value  = try(j.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, null)
+            dictionary_name  = try(j.dictionary_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.dictionary_name, null)
+            dictionary_value = try(j.dictionary_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.dictionary_value, null)
             condition_type   = try(j.type, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.type, null)
             is_negate        = try(j.is_negate, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.is_negate, null)
             operator         = try(j.operator, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.operator, null)
@@ -1323,7 +1327,7 @@ locals {
 }
 
 resource "ise_network_access_authorization_rule" "network_access_authorization_rule_0" {
-  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if var.manage_network_access && (rule.rank == 0 || rule.rank == null) }
+  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if(rule.rank == 0 || rule.rank == null) }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1345,7 +1349,7 @@ resource "ise_network_access_authorization_rule" "network_access_authorization_r
 }
 
 resource "ise_network_access_authorization_rule" "network_access_authorization_rule_1" {
-  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if var.manage_network_access && rule.rank == 1 }
+  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if rule.rank == 1 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1367,7 +1371,7 @@ resource "ise_network_access_authorization_rule" "network_access_authorization_r
 }
 
 resource "ise_network_access_authorization_rule" "network_access_authorization_rule_2" {
-  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if var.manage_network_access && rule.rank == 2 }
+  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if rule.rank == 2 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1389,7 +1393,7 @@ resource "ise_network_access_authorization_rule" "network_access_authorization_r
 }
 
 resource "ise_network_access_authorization_rule" "network_access_authorization_rule_3" {
-  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if var.manage_network_access && rule.rank == 3 }
+  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if rule.rank == 3 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1411,7 +1415,7 @@ resource "ise_network_access_authorization_rule" "network_access_authorization_r
 }
 
 resource "ise_network_access_authorization_rule" "network_access_authorization_rule_4" {
-  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if var.manage_network_access && rule.rank == 4 }
+  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if rule.rank == 4 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1433,7 +1437,7 @@ resource "ise_network_access_authorization_rule" "network_access_authorization_r
 }
 
 resource "ise_network_access_authorization_rule" "network_access_authorization_rule_5" {
-  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if var.manage_network_access && rule.rank == 5 }
+  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if rule.rank == 5 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1455,7 +1459,7 @@ resource "ise_network_access_authorization_rule" "network_access_authorization_r
 }
 
 resource "ise_network_access_authorization_rule" "network_access_authorization_rule_6" {
-  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if var.manage_network_access && rule.rank == 6 }
+  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if rule.rank == 6 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1477,7 +1481,7 @@ resource "ise_network_access_authorization_rule" "network_access_authorization_r
 }
 
 resource "ise_network_access_authorization_rule" "network_access_authorization_rule_7" {
-  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if var.manage_network_access && rule.rank == 7 }
+  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if rule.rank == 7 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1499,7 +1503,7 @@ resource "ise_network_access_authorization_rule" "network_access_authorization_r
 }
 
 resource "ise_network_access_authorization_rule" "network_access_authorization_rule_8" {
-  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if var.manage_network_access && rule.rank == 8 }
+  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if rule.rank == 8 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1521,7 +1525,7 @@ resource "ise_network_access_authorization_rule" "network_access_authorization_r
 }
 
 resource "ise_network_access_authorization_rule" "network_access_authorization_rule_9" {
-  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if var.manage_network_access && rule.rank == 9 }
+  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if rule.rank == 9 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1543,7 +1547,7 @@ resource "ise_network_access_authorization_rule" "network_access_authorization_r
 }
 
 resource "ise_network_access_authorization_rule" "network_access_authorization_rule_10" {
-  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if var.manage_network_access && rule.rank == 10 }
+  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if rule.rank == 10 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1565,7 +1569,7 @@ resource "ise_network_access_authorization_rule" "network_access_authorization_r
 }
 
 resource "ise_network_access_authorization_rule" "network_access_authorization_rule_11" {
-  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if var.manage_network_access && rule.rank == 11 }
+  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if rule.rank == 11 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1587,7 +1591,7 @@ resource "ise_network_access_authorization_rule" "network_access_authorization_r
 }
 
 resource "ise_network_access_authorization_rule" "network_access_authorization_rule_12" {
-  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if var.manage_network_access && rule.rank == 12 }
+  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if rule.rank == 12 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1609,7 +1613,7 @@ resource "ise_network_access_authorization_rule" "network_access_authorization_r
 }
 
 resource "ise_network_access_authorization_rule" "network_access_authorization_rule_13" {
-  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if var.manage_network_access && rule.rank == 13 }
+  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if rule.rank == 13 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1631,7 +1635,7 @@ resource "ise_network_access_authorization_rule" "network_access_authorization_r
 }
 
 resource "ise_network_access_authorization_rule" "network_access_authorization_rule_14" {
-  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if var.manage_network_access && rule.rank == 14 }
+  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if rule.rank == 14 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1653,7 +1657,7 @@ resource "ise_network_access_authorization_rule" "network_access_authorization_r
 }
 
 resource "ise_network_access_authorization_rule" "network_access_authorization_rule_15" {
-  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if var.manage_network_access && rule.rank == 15 }
+  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if rule.rank == 15 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1675,7 +1679,7 @@ resource "ise_network_access_authorization_rule" "network_access_authorization_r
 }
 
 resource "ise_network_access_authorization_rule" "network_access_authorization_rule_16" {
-  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if var.manage_network_access && rule.rank == 16 }
+  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if rule.rank == 16 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1697,7 +1701,7 @@ resource "ise_network_access_authorization_rule" "network_access_authorization_r
 }
 
 resource "ise_network_access_authorization_rule" "network_access_authorization_rule_17" {
-  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if var.manage_network_access && rule.rank == 17 }
+  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if rule.rank == 17 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1719,7 +1723,7 @@ resource "ise_network_access_authorization_rule" "network_access_authorization_r
 }
 
 resource "ise_network_access_authorization_rule" "network_access_authorization_rule_18" {
-  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if var.manage_network_access && rule.rank == 18 }
+  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if rule.rank == 18 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1741,7 +1745,7 @@ resource "ise_network_access_authorization_rule" "network_access_authorization_r
 }
 
 resource "ise_network_access_authorization_rule" "network_access_authorization_rule_19" {
-  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if var.manage_network_access && rule.rank == 19 }
+  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if rule.rank == 19 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1775,27 +1779,27 @@ locals {
         condition_type             = try(rule.condition.type, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.type, null)
         condition_id               = contains(local.known_conditions_network_access, try(rule.condition.name, "")) ? ise_network_access_condition.network_access_condition[rule.condition.name].id : try(data.ise_network_access_condition.network_access_condition[rule.condition.name].id, null)
         condition_is_negate        = try(rule.condition.is_negate, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.is_negate, null)
-        condition_attribute_name   = strcontains(try(rule.condition.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, ""), ":") ? split(":", try(rule.condition.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, null))[1] : try(rule.condition.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, null)
-        condition_attribute_value  = strcontains(try(rule.condition.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, ""), ":") ? split(":", try(rule.condition.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, null))[1] : try(rule.condition.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, null)
-        condition_dictionary_name  = strcontains(try(rule.condition.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, ""), ":") ? split(":", try(rule.condition.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, null))[0] : null
-        condition_dictionary_value = strcontains(try(rule.condition.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, ""), ":") ? split(":", try(rule.condition.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, null))[0] : null
+        condition_attribute_name   = try(rule.condition.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, null)
+        condition_attribute_value  = try(rule.condition.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, null)
+        condition_dictionary_name  = try(rule.condition.dictionary_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.dictionary_name, null)
+        condition_dictionary_value = try(rule.condition.dictionary_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.dictionary_value, null)
         condition_operator         = try(rule.condition.operator, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.operator, null)
         profiles                   = try(rule.profiles, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.profiles, null)
         security_group             = try(rule.security_group, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.security_group, null)
         children = try([for i in rule.condition.children : {
-          attribute_name   = strcontains(try(i.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, ""), ":") ? split(":", try(i.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, null))[1] : try(i.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, null)
-          attribute_value  = strcontains(try(i.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, ""), ":") ? split(":", try(i.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, null))[1] : try(i.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, null)
-          dictionary_name  = strcontains(try(i.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, ""), ":") ? split(":", try(i.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, null))[0] : null
-          dictionary_value = strcontains(try(i.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, ""), ":") ? split(":", try(i.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, null))[0] : null
+          attribute_name   = try(i.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, null)
+          attribute_value  = try(i.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, null)
+          dictionary_name  = try(i.dictionary_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.dictionary_name, null)
+          dictionary_value = try(i.dictionary_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.dictionary_value, null)
           condition_type   = try(i.type, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.type, null)
           is_negate        = try(i.is_negate, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.is_negate, null)
           operator         = try(i.operator, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.operator, null)
           id               = contains(local.known_conditions_network_access, try(i.name, "")) ? ise_network_access_condition.network_access_condition[i.name].id : try(data.ise_network_access_condition.network_access_condition[i.name].id, null)
           children = try([for j in i.children : {
-            attribute_name   = strcontains(try(j.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, ""), ":") ? split(":", try(j.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, null))[1] : try(j.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, null)
-            attribute_value  = strcontains(try(j.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, ""), ":") ? split(":", try(j.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, null))[1] : try(j.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, null)
-            dictionary_name  = strcontains(try(j.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, ""), ":") ? split(":", try(j.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, null))[0] : null
-            dictionary_value = strcontains(try(j.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, ""), ":") ? split(":", try(j.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, null))[0] : null
+            attribute_name   = try(j.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, null)
+            attribute_value  = try(j.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, null)
+            dictionary_name  = try(j.dictionary_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.dictionary_name, null)
+            dictionary_value = try(j.dictionary_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.dictionary_value, null)
             condition_type   = try(j.type, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.type, null)
             is_negate        = try(j.is_negate, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.is_negate, null)
             operator         = try(j.operator, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.operator, null)
@@ -1808,7 +1812,7 @@ locals {
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_0" {
-  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if var.manage_network_access && (rule.rank == 0 || rule.rank == null) }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule && (rule.rank == 0 || rule.rank == null) }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1830,7 +1834,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_1" {
-  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if var.manage_network_access && rule.rank == 1 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 1 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1852,7 +1856,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_2" {
-  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if var.manage_network_access && rule.rank == 2 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 2 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1874,7 +1878,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_3" {
-  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if var.manage_network_access && rule.rank == 3 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 3 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1896,7 +1900,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_4" {
-  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if var.manage_network_access && rule.rank == 4 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 4 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1918,7 +1922,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_5" {
-  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if var.manage_network_access && rule.rank == 5 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 5 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1940,7 +1944,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_6" {
-  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if var.manage_network_access && rule.rank == 6 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 6 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1962,7 +1966,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_7" {
-  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if var.manage_network_access && rule.rank == 7 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 7 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -1984,7 +1988,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_8" {
-  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if var.manage_network_access && rule.rank == 8 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 8 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2006,7 +2010,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_9" {
-  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if var.manage_network_access && rule.rank == 9 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 9 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2028,7 +2032,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_10" {
-  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if var.manage_network_access && rule.rank == 10 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 10 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2050,7 +2054,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_11" {
-  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if var.manage_network_access && rule.rank == 11 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 11 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2072,7 +2076,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_12" {
-  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if var.manage_network_access && rule.rank == 12 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 12 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2094,7 +2098,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_13" {
-  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if var.manage_network_access && rule.rank == 13 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 13 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2116,7 +2120,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_14" {
-  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if var.manage_network_access && rule.rank == 14 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 14 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2138,7 +2142,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_15" {
-  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if var.manage_network_access && rule.rank == 15 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 15 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2160,7 +2164,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_16" {
-  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if var.manage_network_access && rule.rank == 16 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 16 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2182,7 +2186,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_17" {
-  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if var.manage_network_access && rule.rank == 17 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 17 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2204,7 +2208,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_18" {
-  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if var.manage_network_access && rule.rank == 18 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 18 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2226,7 +2230,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_19" {
-  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if var.manage_network_access && rule.rank == 19 }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 19 }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2257,27 +2261,27 @@ locals {
       condition_type             = try(rule.condition.type, local.defaults.ise.network_access.authorization_global_exception_rules.condition.type, null)
       condition_id               = contains(local.known_conditions_network_access, try(rule.condition.name, "")) ? ise_network_access_condition.network_access_condition[rule.condition.name].id : try(data.ise_network_access_condition.network_access_condition[rule.condition.name].id, null)
       condition_is_negate        = try(rule.condition.is_negate, local.defaults.ise.network_access.authorization_global_exception_rules.condition.is_negate, null)
-      condition_attribute_name   = strcontains(try(rule.condition.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, ""), ":") ? split(":", try(rule.condition.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, null))[1] : try(rule.condition.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, null)
-      condition_attribute_value  = strcontains(try(rule.condition.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, ""), ":") ? split(":", try(rule.condition.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, null))[1] : try(rule.condition.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, null)
-      condition_dictionary_name  = strcontains(try(rule.condition.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, ""), ":") ? split(":", try(rule.condition.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, null))[0] : null
-      condition_dictionary_value = strcontains(try(rule.condition.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, ""), ":") ? split(":", try(rule.condition.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, null))[0] : null
+      condition_attribute_name   = try(rule.condition.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, null)
+      condition_attribute_value  = try(rule.condition.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, null)
+      condition_dictionary_name  = try(rule.condition.dictionary_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.dictionary_name, null)
+      condition_dictionary_value = try(rule.condition.dictionary_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.dictionary_value, null)
       condition_operator         = try(rule.condition.operator, local.defaults.ise.network_access.authorization_global_exception_rules.condition.operator, null)
       profiles                   = try(rule.profiles, local.defaults.ise.network_access.authorization_global_exception_rules.profiles, null)
       security_group             = try(rule.security_group, local.defaults.ise.network_access.authorization_global_exception_rules.security_group, null)
       children = try([for i in rule.condition.children : {
-        attribute_name   = strcontains(try(i.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, ""), ":") ? split(":", try(i.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, null))[1] : try(i.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, null)
-        attribute_value  = strcontains(try(i.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, ""), ":") ? split(":", try(i.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, null))[1] : try(i.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, null)
-        dictionary_name  = strcontains(try(i.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, ""), ":") ? split(":", try(i.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, null))[0] : null
-        dictionary_value = strcontains(try(i.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, ""), ":") ? split(":", try(i.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, null))[0] : null
+        attribute_name   = try(i.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, null)
+        attribute_value  = try(i.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, null)
+        dictionary_name  = try(i.dictionary_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.dictionary_name, null)
+        dictionary_value = try(i.dictionary_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.dictionary_value, null)
         condition_type   = try(i.type, local.defaults.ise.network_access.authorization_global_exception_rules.condition.type, null)
         is_negate        = try(i.is_negate, local.defaults.ise.network_access.authorization_global_exception_rules.condition.is_negate, null)
         operator         = try(i.operator, local.defaults.ise.network_access.authorization_global_exception_rules.condition.operator, null)
         id               = contains(local.known_conditions_network_access, try(i.name, "")) ? ise_network_access_condition.network_access_condition[i.name].id : try(data.ise_network_access_condition.network_access_condition[i.name].id, null)
         children = try([for j in i.children : {
-          attribute_name   = strcontains(try(j.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, ""), ":") ? split(":", try(j.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, null))[1] : try(j.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, null)
-          attribute_value  = strcontains(try(j.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, ""), ":") ? split(":", try(j.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, null))[1] : try(j.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, null)
-          dictionary_name  = strcontains(try(j.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, ""), ":") ? split(":", try(j.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, null))[0] : null
-          dictionary_value = strcontains(try(j.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, ""), ":") ? split(":", try(j.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, null))[0] : null
+          attribute_name   = try(j.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, null)
+          attribute_value  = try(j.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, null)
+          dictionary_name  = try(j.dictionary_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.dictionary_name, null)
+          dictionary_value = try(j.dictionary_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.dictionary_value, null)
           condition_type   = try(j.type, local.defaults.ise.network_access.authorization_global_exception_rules.condition.type, null)
           is_negate        = try(j.is_negate, local.defaults.ise.network_access.authorization_global_exception_rules.condition.is_negate, null)
           operator         = try(j.operator, local.defaults.ise.network_access.authorization_global_exception_rules.condition.operator, null)
@@ -2289,7 +2293,7 @@ locals {
 }
 
 resource "ise_network_access_authorization_global_exception_rule" "network_access_authorization_global_exception_rule_0" {
-  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if var.manage_network_access && (rule.rank == 0 || rule.rank == null) }
+  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule && (rule.rank == 0 || rule.rank == null) }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2310,7 +2314,7 @@ resource "ise_network_access_authorization_global_exception_rule" "network_acces
 }
 
 resource "ise_network_access_authorization_global_exception_rule" "network_access_authorization_global_exception_rule_1" {
-  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if var.manage_network_access && rule.rank == 1 }
+  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if rule.rank == 1 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2331,7 +2335,7 @@ resource "ise_network_access_authorization_global_exception_rule" "network_acces
 }
 
 resource "ise_network_access_authorization_global_exception_rule" "network_access_authorization_global_exception_rule_2" {
-  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if var.manage_network_access && rule.rank == 2 }
+  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if rule.rank == 2 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2352,7 +2356,7 @@ resource "ise_network_access_authorization_global_exception_rule" "network_acces
 }
 
 resource "ise_network_access_authorization_global_exception_rule" "network_access_authorization_global_exception_rule_3" {
-  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if var.manage_network_access && rule.rank == 3 }
+  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if rule.rank == 3 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2373,7 +2377,7 @@ resource "ise_network_access_authorization_global_exception_rule" "network_acces
 }
 
 resource "ise_network_access_authorization_global_exception_rule" "network_access_authorization_global_exception_rule_4" {
-  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if var.manage_network_access && rule.rank == 4 }
+  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if rule.rank == 4 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2394,7 +2398,7 @@ resource "ise_network_access_authorization_global_exception_rule" "network_acces
 }
 
 resource "ise_network_access_authorization_global_exception_rule" "network_access_authorization_global_exception_rule_5" {
-  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if var.manage_network_access && rule.rank == 5 }
+  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if rule.rank == 5 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2415,7 +2419,7 @@ resource "ise_network_access_authorization_global_exception_rule" "network_acces
 }
 
 resource "ise_network_access_authorization_global_exception_rule" "network_access_authorization_global_exception_rule_6" {
-  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if var.manage_network_access && rule.rank == 6 }
+  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if rule.rank == 6 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2436,7 +2440,7 @@ resource "ise_network_access_authorization_global_exception_rule" "network_acces
 }
 
 resource "ise_network_access_authorization_global_exception_rule" "network_access_authorization_global_exception_rule_7" {
-  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if var.manage_network_access && rule.rank == 7 }
+  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if rule.rank == 7 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2457,7 +2461,7 @@ resource "ise_network_access_authorization_global_exception_rule" "network_acces
 }
 
 resource "ise_network_access_authorization_global_exception_rule" "network_access_authorization_global_exception_rule_8" {
-  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if var.manage_network_access && rule.rank == 8 }
+  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if rule.rank == 8 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2478,7 +2482,7 @@ resource "ise_network_access_authorization_global_exception_rule" "network_acces
 }
 
 resource "ise_network_access_authorization_global_exception_rule" "network_access_authorization_global_exception_rule_9" {
-  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if var.manage_network_access && rule.rank == 9 }
+  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if rule.rank == 9 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2499,7 +2503,7 @@ resource "ise_network_access_authorization_global_exception_rule" "network_acces
 }
 
 resource "ise_network_access_authorization_global_exception_rule" "network_access_authorization_global_exception_rule_10" {
-  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if var.manage_network_access && rule.rank == 10 }
+  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if rule.rank == 10 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2520,7 +2524,7 @@ resource "ise_network_access_authorization_global_exception_rule" "network_acces
 }
 
 resource "ise_network_access_authorization_global_exception_rule" "network_access_authorization_global_exception_rule_11" {
-  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if var.manage_network_access && rule.rank == 11 }
+  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if rule.rank == 11 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2541,7 +2545,7 @@ resource "ise_network_access_authorization_global_exception_rule" "network_acces
 }
 
 resource "ise_network_access_authorization_global_exception_rule" "network_access_authorization_global_exception_rule_12" {
-  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if var.manage_network_access && rule.rank == 12 }
+  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if rule.rank == 12 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2562,7 +2566,7 @@ resource "ise_network_access_authorization_global_exception_rule" "network_acces
 }
 
 resource "ise_network_access_authorization_global_exception_rule" "network_access_authorization_global_exception_rule_13" {
-  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if var.manage_network_access && rule.rank == 13 }
+  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if rule.rank == 13 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2583,7 +2587,7 @@ resource "ise_network_access_authorization_global_exception_rule" "network_acces
 }
 
 resource "ise_network_access_authorization_global_exception_rule" "network_access_authorization_global_exception_rule_14" {
-  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if var.manage_network_access && rule.rank == 14 }
+  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if rule.rank == 14 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2604,7 +2608,7 @@ resource "ise_network_access_authorization_global_exception_rule" "network_acces
 }
 
 resource "ise_network_access_authorization_global_exception_rule" "network_access_authorization_global_exception_rule_15" {
-  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if var.manage_network_access && rule.rank == 15 }
+  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if rule.rank == 15 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2625,7 +2629,7 @@ resource "ise_network_access_authorization_global_exception_rule" "network_acces
 }
 
 resource "ise_network_access_authorization_global_exception_rule" "network_access_authorization_global_exception_rule_16" {
-  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if var.manage_network_access && rule.rank == 16 }
+  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if rule.rank == 16 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2646,7 +2650,7 @@ resource "ise_network_access_authorization_global_exception_rule" "network_acces
 }
 
 resource "ise_network_access_authorization_global_exception_rule" "network_access_authorization_global_exception_rule_17" {
-  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if var.manage_network_access && rule.rank == 17 }
+  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if rule.rank == 17 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2667,7 +2671,7 @@ resource "ise_network_access_authorization_global_exception_rule" "network_acces
 }
 
 resource "ise_network_access_authorization_global_exception_rule" "network_access_authorization_global_exception_rule_18" {
-  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if var.manage_network_access && rule.rank == 18 }
+  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if rule.rank == 18 }
 
   name                      = each.value.name
   rank                      = each.value.rank
@@ -2688,7 +2692,7 @@ resource "ise_network_access_authorization_global_exception_rule" "network_acces
 }
 
 resource "ise_network_access_authorization_global_exception_rule" "network_access_authorization_global_exception_rule_19" {
-  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if var.manage_network_access && rule.rank == 19 }
+  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if rule.rank == 19 }
 
   name                      = each.value.name
   rank                      = each.value.rank

@@ -1812,7 +1812,7 @@ locals {
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_0" {
-  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule && (rule.rank == 0 || rule.rank == null) }
+  for_each = { for rule in local.network_access_authorization_exception_rules : rule.key => rule if rule.rank == 0 || rule.rank == null }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -2293,7 +2293,7 @@ locals {
 }
 
 resource "ise_network_access_authorization_global_exception_rule" "network_access_authorization_global_exception_rule_0" {
-  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule && (rule.rank == 0 || rule.rank == null) }
+  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule if rule.rank == 0 || rule.rank == null }
 
   name                      = each.value.name
   rank                      = each.value.rank

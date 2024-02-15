@@ -173,6 +173,7 @@ locals {
       name                       = ps.name
       service_name               = try(ps.service_name, local.defaults.ise.device_administration.policy_sets.service_name)
       state                      = try(ps.state, local.defaults.ise.device_administration.policy_sets.state)
+      default                    = ps.name == "Default" ? true : null
       rank                       = try(ps.rank, local.defaults.ise.device_administration.policy_sets.rank, null)
       children = try([for i in ps.condition.children : {
         attribute_name   = try(i.attribute_name, local.defaults.ise.device_administration.policy_sets.condition.attribute_name, null)
@@ -213,6 +214,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_0" {
   name                      = each.value.name
   service_name              = each.value.service_name
   state                     = each.value.state
+  default                   = each.value.default
   rank                      = each.value.rank
   children                  = each.value.children
 
@@ -234,6 +236,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_1" {
   name                      = each.value.name
   service_name              = each.value.service_name
   state                     = each.value.state
+  default                   = each.value.default
   rank                      = each.value.rank
   children                  = each.value.children
 
@@ -255,6 +258,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_2" {
   name                      = each.value.name
   service_name              = each.value.service_name
   state                     = each.value.state
+  default                   = each.value.default
   rank                      = each.value.rank
   children                  = each.value.children
 
@@ -276,6 +280,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_3" {
   name                      = each.value.name
   service_name              = each.value.service_name
   state                     = each.value.state
+  default                   = each.value.default
   rank                      = each.value.rank
   children                  = each.value.children
 
@@ -297,6 +302,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_4" {
   name                      = each.value.name
   service_name              = each.value.service_name
   state                     = each.value.state
+  default                   = each.value.default
   rank                      = each.value.rank
   children                  = each.value.children
 
@@ -318,6 +324,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_5" {
   name                      = each.value.name
   service_name              = each.value.service_name
   state                     = each.value.state
+  default                   = each.value.default
   rank                      = each.value.rank
   children                  = each.value.children
 
@@ -339,6 +346,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_6" {
   name                      = each.value.name
   service_name              = each.value.service_name
   state                     = each.value.state
+  default                   = each.value.default
   rank                      = each.value.rank
   children                  = each.value.children
 
@@ -360,6 +368,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_7" {
   name                      = each.value.name
   service_name              = each.value.service_name
   state                     = each.value.state
+  default                   = each.value.default
   rank                      = each.value.rank
   children                  = each.value.children
 
@@ -381,6 +390,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_8" {
   name                      = each.value.name
   service_name              = each.value.service_name
   state                     = each.value.state
+  default                   = each.value.default
   rank                      = each.value.rank
   children                  = each.value.children
 
@@ -402,6 +412,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_9" {
   name                      = each.value.name
   service_name              = each.value.service_name
   state                     = each.value.state
+  default                   = each.value.default
   rank                      = each.value.rank
   children                  = each.value.children
 
@@ -423,6 +434,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_10" {
   name                      = each.value.name
   service_name              = each.value.service_name
   state                     = each.value.state
+  default                   = each.value.default
   rank                      = each.value.rank
   children                  = each.value.children
 
@@ -444,6 +456,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_11" {
   name                      = each.value.name
   service_name              = each.value.service_name
   state                     = each.value.state
+  default                   = each.value.default
   rank                      = each.value.rank
   children                  = each.value.children
 
@@ -465,6 +478,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_12" {
   name                      = each.value.name
   service_name              = each.value.service_name
   state                     = each.value.state
+  default                   = each.value.default
   rank                      = each.value.rank
   children                  = each.value.children
 
@@ -486,6 +500,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_13" {
   name                      = each.value.name
   service_name              = each.value.service_name
   state                     = each.value.state
+  default                   = each.value.default
   rank                      = each.value.rank
   children                  = each.value.children
 
@@ -507,6 +522,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_14" {
   name                      = each.value.name
   service_name              = each.value.service_name
   state                     = each.value.state
+  default                   = each.value.default
   rank                      = each.value.rank
   children                  = each.value.children
 
@@ -528,6 +544,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_15" {
   name                      = each.value.name
   service_name              = each.value.service_name
   state                     = each.value.state
+  default                   = each.value.default
   rank                      = each.value.rank
   children                  = each.value.children
 
@@ -549,6 +566,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_16" {
   name                      = each.value.name
   service_name              = each.value.service_name
   state                     = each.value.state
+  default                   = each.value.default
   rank                      = each.value.rank
   children                  = each.value.children
 
@@ -570,6 +588,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_17" {
   name                      = each.value.name
   service_name              = each.value.service_name
   state                     = each.value.state
+  default                   = each.value.default
   rank                      = each.value.rank
   children                  = each.value.children
 
@@ -591,6 +610,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_18" {
   name                      = each.value.name
   service_name              = each.value.service_name
   state                     = each.value.state
+  default                   = each.value.default
   rank                      = each.value.rank
   children                  = each.value.children
 
@@ -612,6 +632,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_19" {
   name                      = each.value.name
   service_name              = each.value.service_name
   state                     = each.value.state
+  default                   = each.value.default
   rank                      = each.value.rank
   children                  = each.value.children
 
@@ -648,7 +669,7 @@ locals {
         policy_set_id              = local.device_admin_policy_set_ids[ps.name]
         name                       = rule.name
         rank                       = try(rule.rank, local.defaults.ise.device_administration.policy_sets.authentication_rules.rank, null)
-        default                    = try(rule.default, local.defaults.ise.device_administration.policy_sets.authentication_rules.default, null)
+        default                    = rule.name == "Default" ? true : null
         state                      = try(rule.state, local.defaults.ise.device_administration.policy_sets.authentication_rules.state, null)
         condition_type             = try(rule.condition.type, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.type, null)
         condition_id               = contains(local.known_conditions_device_admin, try(rule.condition.name, "")) ? ise_device_admin_condition.device_admin_condition[rule.condition.name].id : try(data.ise_device_admin_condition.device_admin_condition[rule.condition.name].id, null)
@@ -1187,7 +1208,7 @@ locals {
         policy_set_id              = local.device_admin_policy_set_ids[ps.name]
         name                       = rule.name
         rank                       = try(rule.rank, local.defaults.ise.device_administration.policy_sets.authorization_rules.rank, null)
-        default                    = try(rule.default, local.defaults.ise.device_administration.policy_sets.authorization_rules.default, null)
+        default                    = rule.name == "Default" ? true : null
         state                      = try(rule.state, local.defaults.ise.device_administration.policy_sets.authorization_rules.state, null)
         condition_type             = try(rule.condition.type, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.type, null)
         condition_id               = contains(local.known_conditions_device_admin, try(rule.condition.name, "")) ? ise_device_admin_condition.device_admin_condition[rule.condition.name].id : try(data.ise_device_admin_condition.device_admin_condition[rule.condition.name].id, null)
@@ -1672,7 +1693,6 @@ locals {
         policy_set_id              = local.device_admin_policy_set_ids[ps.name]
         name                       = rule.name
         rank                       = try(rule.rank, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.rank, null)
-        default                    = try(rule.default, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.default, null)
         state                      = try(rule.state, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.state, null)
         condition_type             = try(rule.condition.type, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.type, null)
         condition_id               = contains(local.known_conditions_device_admin, try(rule.condition.name, "")) ? ise_device_admin_condition.device_admin_condition[rule.condition.name].id : try(data.ise_device_admin_condition.device_admin_condition[rule.condition.name].id, null)
@@ -1715,7 +1735,6 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -1737,7 +1756,6 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -1759,7 +1777,6 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -1781,7 +1798,6 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -1803,7 +1819,6 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -1825,7 +1840,6 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -1847,7 +1861,6 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -1869,7 +1882,6 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -1891,7 +1903,6 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -1913,7 +1924,6 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -1935,7 +1945,6 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -1957,7 +1966,6 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -1979,7 +1987,6 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2001,7 +2008,6 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2023,7 +2029,6 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2045,7 +2050,6 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2067,7 +2071,6 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2089,7 +2092,6 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2111,7 +2113,6 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2133,7 +2134,6 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2154,7 +2154,6 @@ locals {
     for rule in try(local.ise.device_administration.authorization_global_exception_rules, []) : {
       name                       = rule.name
       rank                       = try(rule.rank, local.defaults.ise.device_administration.authorization_global_exception_rules.rank, null)
-      default                    = try(rule.default, local.defaults.ise.device_administration.authorization_global_exception_rules.default, null)
       state                      = try(rule.state, local.defaults.ise.device_administration.authorization_global_exception_rules.state, null)
       condition_type             = try(rule.condition.type, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.type, null)
       condition_id               = contains(local.known_conditions_device_admin, try(rule.condition.name, "")) ? ise_device_admin_condition.device_admin_condition[rule.condition.name].id : try(data.ise_device_admin_condition.device_admin_condition[rule.condition.name].id, null)
@@ -2195,7 +2194,6 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2216,7 +2214,6 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2237,7 +2234,6 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2258,7 +2254,6 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2279,7 +2274,6 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2300,7 +2294,6 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2321,7 +2314,6 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2342,7 +2334,6 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2363,7 +2354,6 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2384,7 +2374,6 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2405,7 +2394,6 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2426,7 +2414,6 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2447,7 +2434,6 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2468,7 +2454,6 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2489,7 +2474,6 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2510,7 +2494,6 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2531,7 +2514,6 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2552,7 +2534,6 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2573,7 +2554,6 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id
@@ -2594,7 +2574,6 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 
   name                      = each.value.name
   rank                      = each.value.rank
-  default                   = each.value.default
   state                     = each.value.state
   condition_type            = each.value.condition_type
   condition_id              = each.value.condition_id

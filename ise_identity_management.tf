@@ -21,6 +21,8 @@ resource "ise_internal_user" "internal_user" {
   identity_groups        = length(try(each.value.user_identity_groups, [])) > 0 ? join(",", [for i in try(each.value.user_identity_groups, []) : ise_user_identity_group.user_identity_group[i].id]) : null
   password_never_expires = try(each.value.password_never_expires, local.defaults.ise.identity_management.internal_users.password_never_expires, null)
   password_id_store      = try(each.value.password_id_store, local.defaults.ise.identity_management.internal_users.password_id_store, null)
+
+  depends_on = [ise_user_identity_group.user_identity_group]
 }
 
 locals {

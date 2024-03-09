@@ -49,7 +49,7 @@ resource "ise_device_admin_condition" "device_admin_condition" {
     }]
   }]
 
-  depends_on = [ise_active_directory_add_groups.active_directory_groups]
+  depends_on = [ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_allowed_protocols_tacacs" "allowed_protocols_tacacs" {
@@ -218,7 +218,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_0" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_allowed_protocols_tacacs.allowed_protocols_tacacs, ise_active_directory_add_groups.active_directory_groups]
+  depends_on = [ise_allowed_protocols_tacacs.allowed_protocols_tacacs, ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_1" {
@@ -240,7 +240,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_1" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_0, ise_active_directory_add_groups.active_directory_groups]
+  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_0, ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_2" {
@@ -729,7 +729,7 @@ resource "ise_device_admin_authentication_rule" "device_admin_authentication_rul
   if_user_not_found         = each.value.if_user_not_found
   children                  = each.value.children
 
-  depends_on = [ise_active_directory_add_groups.active_directory_groups]
+  depends_on = [ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule_1" {
@@ -1264,7 +1264,7 @@ resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_tacacs_profile.tacacs_profile, ise_tacacs_command_set.tacacs_command_set, time_sleep.device_admin_policy_object_wait, ise_active_directory_add_groups.active_directory_groups]
+  depends_on = [ise_tacacs_profile.tacacs_profile, ise_tacacs_command_set.tacacs_command_set, time_sleep.device_admin_policy_object_wait, ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule_1" {
@@ -1747,7 +1747,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_tacacs_profile.tacacs_profile, ise_tacacs_command_set.tacacs_command_set, time_sleep.device_admin_policy_object_wait, ise_active_directory_add_groups.active_directory_groups]
+  depends_on = [ise_tacacs_profile.tacacs_profile, ise_tacacs_command_set.tacacs_command_set, time_sleep.device_admin_policy_object_wait, ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule_1" {
@@ -2206,7 +2206,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
   command_sets              = each.value.command_sets
   children                  = each.value.children
 
-  depends_on = [ise_tacacs_profile.tacacs_profile, ise_tacacs_command_set.tacacs_command_set, time_sleep.device_admin_policy_object_wait, ise_active_directory_add_groups.active_directory_groups]
+  depends_on = [ise_tacacs_profile.tacacs_profile, ise_tacacs_command_set.tacacs_command_set, time_sleep.device_admin_policy_object_wait, ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule_1" {

@@ -125,7 +125,7 @@ resource "ise_authorization_profile" "authorization_profile" {
     create_before_destroy = true
   }
 
-  depends_on = [ise_downloadable_acl.downloadable_acl, ise_active_directory_add_groups.active_directory_groups]
+  depends_on = [ise_downloadable_acl.downloadable_acl, ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
 locals {
@@ -179,7 +179,7 @@ resource "ise_network_access_condition" "network_access_condition" {
     }]
   }]
 
-  depends_on = [ise_active_directory_add_groups.active_directory_groups]
+  depends_on = [ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_downloadable_acl" "downloadable_acl" {
@@ -331,7 +331,7 @@ resource "ise_network_access_policy_set" "network_access_policy_set_0" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_authorization_profile.authorization_profile, ise_allowed_protocols.allowed_protocols, ise_active_directory_add_groups.active_directory_groups]
+  depends_on = [ise_authorization_profile.authorization_profile, ise_allowed_protocols.allowed_protocols, ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_network_access_policy_set" "network_access_policy_set_1" {
@@ -843,7 +843,7 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
   if_user_not_found         = each.value.if_user_not_found
   children                  = each.value.children
 
-  depends_on = [ise_active_directory_add_groups.active_directory_groups]
+  depends_on = [ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule_1" {
@@ -1366,7 +1366,7 @@ resource "ise_network_access_authorization_rule" "network_access_authorization_r
   security_group            = each.value.security_group
   children                  = each.value.children
 
-  depends_on = [ise_authorization_profile.authorization_profile, ise_trustsec_security_group.trustsec_security_group, time_sleep.sgt_wait, ise_endpoint_identity_group.endpoint_identity_group, ise_user_identity_group.user_identity_group, ise_active_directory_add_groups.active_directory_groups]
+  depends_on = [ise_authorization_profile.authorization_profile, ise_trustsec_security_group.trustsec_security_group, time_sleep.sgt_wait, ise_endpoint_identity_group.endpoint_identity_group, ise_user_identity_group.user_identity_group, ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_network_access_authorization_rule" "network_access_authorization_rule_1" {
@@ -1849,7 +1849,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
   security_group            = each.value.security_group
   children                  = each.value.children
 
-  depends_on = [ise_authorization_profile.authorization_profile, ise_trustsec_security_group.trustsec_security_group, time_sleep.sgt_wait, ise_endpoint_identity_group.endpoint_identity_group, ise_user_identity_group.user_identity_group, ise_active_directory_add_groups.active_directory_groups]
+  depends_on = [ise_authorization_profile.authorization_profile, ise_trustsec_security_group.trustsec_security_group, time_sleep.sgt_wait, ise_endpoint_identity_group.endpoint_identity_group, ise_user_identity_group.user_identity_group, ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_network_access_authorization_exception_rule" "network_access_authorization_exception_rule_1" {
@@ -2308,7 +2308,7 @@ resource "ise_network_access_authorization_global_exception_rule" "network_acces
   security_group            = each.value.security_group
   children                  = each.value.children
 
-  depends_on = [ise_authorization_profile.authorization_profile, ise_trustsec_security_group.trustsec_security_group, time_sleep.sgt_wait, ise_endpoint_identity_group.endpoint_identity_group, ise_user_identity_group.user_identity_group, ise_active_directory_add_groups.active_directory_groups]
+  depends_on = [ise_authorization_profile.authorization_profile, ise_trustsec_security_group.trustsec_security_group, time_sleep.sgt_wait, ise_endpoint_identity_group.endpoint_identity_group, ise_user_identity_group.user_identity_group, ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_network_access_authorization_global_exception_rule" "network_access_authorization_global_exception_rule_1" {

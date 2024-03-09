@@ -240,7 +240,7 @@ resource "ise_device_admin_policy_set" "device_admin_policy_set_1" {
   rank                      = each.value.rank
   children                  = each.value.children
 
-  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_0, ise_network_device_group.network_device_group_0, ise_network_device_group.network_device_group_1, ise_network_device_group.network_device_group_2, ise_network_device_group.network_device_group_3, ise_network_device_group.network_device_group_4, ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups]
+  depends_on = [ise_device_admin_policy_set.device_admin_policy_set_0, ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_device_admin_policy_set" "device_admin_policy_set_2" {

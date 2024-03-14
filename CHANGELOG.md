@@ -1,4 +1,4 @@
-## 0.1.1 (unreleased)
+## 0.1.1
 
 - Fix issue with error due to missing settings for `allowed_protocols` and EAP-TLS stateless session resume
 - Add support for active directory configuration

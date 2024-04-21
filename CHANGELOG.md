@@ -1,7 +1,8 @@
 ## 0.1.2 (unreleased)
 
-- Fix description attribute for network_device_groups_children_children
+- Added Endpoints resource support
 - Added support for default user identity groups assignment under internal users
+- Fix description attribute for network_device_groups_children_children
 
 ## 0.1.1
 

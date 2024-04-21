@@ -42,22 +42,54 @@ resource "ise_internal_user" "internal_user" {
 }
 
 locals {
-  endpoint_identity_groups             = { for group in try(local.ise.identity_management.endpoint_identity_groups, []) : group.name => group }
-  endpoint_identity_groups_with_parent = { for k, v in local.endpoint_identity_groups : k => v if try(v.parent_group, "") != "" }
+  endpoint_identity_groups              = { for group in try(local.ise.identity_management.endpoint_identity_groups, []) : group.name => group }
+  endpoint_identity_groups_with_parent  = [for k, v in local.endpoint_identity_groups : v.parent_group if try(v.parent_group, "") != ""]
+  endpoint_identity_groups_in_endpoints = [for endpoint in try(local.ise.identity_management.endpoints, []) : endpoint.endpoint_identity_group if try(endpoint.endpoint_identity_group, "") != ""]
 }
 
 data "ise_endpoint_identity_group" "endpoint_identity_group" {
-  for_each = local.endpoint_identity_groups_with_parent
+  for_each = toset(concat(local.endpoint_identity_groups_with_parent, local.endpoint_identity_groups_in_endpoints))
 
-  name = each.value.parent_group
+  name = each.value
 }
 
 resource "ise_endpoint_identity_group" "endpoint_identity_group" {
   for_each = local.endpoint_identity_groups
 
   name                              = each.key
-  parent_endpoint_identity_group_id = try(data.ise_endpoint_identity_group.endpoint_identity_group[each.key].id, null)
+  parent_endpoint_identity_group_id = try(data.ise_endpoint_identity_group.endpoint_identity_group[each.value.parent_group].id, null)
   description                       = try(each.value.description, local.defaults.ise.identity_management.endpoint_identity_groups.description, null)
+}
+
+resource "ise_endpoint" "endpoint" {
+  for_each = { for endpoint in try(local.ise.identity_management.endpoints, []) : endpoint.mac => endpoint }
+
+  name                              = each.key
+  mac                               = each.key
+  description                       = try(each.value.description, local.defaults.ise.identity_management.endpoints.description, null)
+  static_profile_assignment         = try(each.value.static_profile_assignment, local.defaults.ise.identity_management.endpoints.static_profile_assignment, null)
+  static_group_assignment           = try(each.value.static_group_assignment, local.defaults.ise.identity_management.endpoints.static_group_assignment, null)
+  group_id                          = try(ise_endpoint_identity_group.endpoint_identity_group[each.value.endpoint_identity_group].id, data.ise_endpoint_identity_group.endpoint_identity_group[each.value.endpoint_identity_group].id, null)
+  static_profile_assignment_defined = try(each.value.static_profile_assignment_defined, local.defaults.ise.identity_management.endpoints.static_profile_assignment_defined, null)
+  static_group_assignment_defined   = try(each.value.static_group_assignment_defined, local.defaults.ise.identity_management.endpoints.static_group_assignment_defined, null)
+  identity_store                    = try(each.value.identity_store, local.defaults.ise.identity_management.endpoints.identity_store, null)
+  identity_store_id                 = try(each.value.identity_store_id, local.defaults.ise.identity_management.endpoints.identity_store_id, null)
+  portal_user                       = try(each.value.portal_user, local.defaults.ise.identity_management.endpoints.portal_user, null)
+  profile_id                        = try(each.value.profile_id, local.defaults.ise.identity_management.endpoints.profile_id, null)
+  custom_attributes                 = try(each.value.custom_attributes, local.defaults.ise.identity_management.endpoints.custom_attributes, null)
+  mdm_compliance_status             = try(each.value.mdm_attributes.mdm_compliance_status, local.defaults.ise.identity_management.mdm_attributes.endpoints.mdm_compliance_status, null)
+  mdm_encrypted                     = try(each.value.mdm_attributes.mdm_encrypted, local.defaults.ise.identity_management.mdm_attributes.endpoints.mdm_encrypted, null)
+  mdm_enrolled                      = try(each.value.mdm_attributes.mdm_enrolled, local.defaults.ise.identity_management.mdm_attributes.endpoints.mdm_enrolled, null)
+  mdm_imei                          = try(each.value.mdm_attributes.mdm_imei, local.defaults.ise.identity_management.mdm_attributes.endpoints.mdm_imei, null)
+  mdm_jail_broken                   = try(each.value.mdm_attributes.mdm_jail_broken, local.defaults.ise.identity_management.mdm_attributes.endpoints.mdm_jail_broken, null)
+  mdm_manufacturer                  = try(each.value.mdm_attributes.mdm_manufacturer, local.defaults.ise.identity_management.mdm_attributes.endpoints.mdm_manufacturer, null)
+  mdm_model                         = try(each.value.mdm_attributes.mdm_model, local.defaults.ise.identity_management.mdm_attributes.endpoints.mdm_model, null)
+  mdm_os                            = try(each.value.mdm_attributes.mdm_os, local.defaults.ise.identity_management.mdm_attributes.endpoints.mdm_os, null)
+  mdm_phone_number                  = try(each.value.mdm_attributes.mdm_phone_number, local.defaults.ise.identity_management.mdm_attributes.endpoints.mdm_phone_number, null)
+  mdm_pinlock                       = try(each.value.mdm_attributes.mdm_pinlock, local.defaults.ise.identity_management.mdm_attributes.endpoints.mdm_pinlock, null)
+  mdm_reachable                     = try(each.value.mdm_attributes.mdm_reachable, local.defaults.ise.identity_management.mdm_attributes.endpoints.mdm_reachable, null)
+  mdm_serial                        = try(each.value.mdm_attributes.mdm_serial, local.defaults.ise.identity_management.mdm_attributes.endpoints.mdm_serial, null)
+  mdm_server_name                   = try(each.value.mdm_attributes.mdm_server_name, local.defaults.ise.identity_management.mdm_attributes.endpoints.mdm_server_name, null)
 }
 
 resource "ise_certificate_authentication_profile" "certificate_authentication_profile" {

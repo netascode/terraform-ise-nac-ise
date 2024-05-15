@@ -1,3 +1,9 @@
+## 0.1.2 (unreleased)
+
+- Added endpoints resource support
+- Added support for default user identity groups assignment under internal users
+- Fix description attribute of `network_device_groups_children_children`
+
 ## 0.1.1
 
 - Fix issue with error due to missing settings for `allowed_protocols` and EAP-TLS stateless session resume

@@ -29,9 +29,6 @@ defaults:
           send_configuration_to_device_using: DISABLE_ALL
           include_when_deploying_sgt_updates: false
     identity_management:
-      endpoints:
-        static_group_assignment_defined: true
-        static_profile_assignment_defined: true
       internal_users:
         enabled: true
         change_password: true

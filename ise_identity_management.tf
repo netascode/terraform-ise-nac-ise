@@ -186,7 +186,7 @@ locals {
 
   active_directory_groups = {
     for ad in try(local.ise.identity_management.active_directories, []) : ad.name => [
-      for group in ad.groups : {
+      for group in try(ad.groups, []) : {
         name = group
         type = try(local.active_directory_groups_all[ad.name][group].type, null)
         sid  = try(local.active_directory_groups_all[ad.name][group].sid, null)

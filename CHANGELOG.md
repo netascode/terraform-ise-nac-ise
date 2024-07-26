@@ -1,5 +1,6 @@
 ## 0.1.2 (unreleased)
 
+- Fix active directory group optional
 - Added endpoints resource support
 - Added support for default user identity groups assignment under internal users
 - Fix description attribute of `network_device_groups_children_children`

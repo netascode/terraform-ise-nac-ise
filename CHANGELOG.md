@@ -1,5 +1,6 @@
 ## 0.1.2 (unreleased)
 
+- Modify network_access_authentication_rules update rank
 - Fix active directory group optional
 - Added endpoints resource support
 - Added support for default user identity groups assignment under internal users

@@ -3,6 +3,7 @@ resource "ise_user_identity_group" "user_identity_group" {
 
   name        = each.key
   description = try(each.value.description, local.defaults.ise.identity_management.user_identity_groups.description, null)
+  parent      = try(each.value.parent, local.defaults.ise.identity_management.user_identity_groups.parent, null)
 }
 
 locals {

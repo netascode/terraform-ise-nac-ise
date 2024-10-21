@@ -1,5 +1,6 @@
 ## 0.1.2 (unreleased)
 
+- Modify update rank on device admin and network access resources
 - Fix active directory group optional
 - Added endpoints resource support
 - Added support for default user identity groups assignment under internal users

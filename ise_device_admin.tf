@@ -555,8 +555,8 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 }
 
 resource "ise_device_admin_authorization_global_exception_rule_update_rank" "device_admin_authorization_global_exception_rule_update_rank" {
-  for_each = { for rule in local.device_admin_authorization_global_exception_rules_with_ranks : rule.key => rule }
+  for_each = { for rule in local.device_admin_authorization_global_exception_rules_with_ranks : rule.name => rule }
 
   rule_id = ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule[each.value.name].id
-  rank    = each.value.rank
+  rank    = each.value.generated_rank
 }

@@ -1,6 +1,6 @@
 ## 0.1.2 (unreleased)
 
-- Add parent parameter to `user_identity_group`
+- Add `parent` attribute to `user_identity_group`
 - Modify update rank on device admin and network access resources
 - Fix active directory group optional
 - Added endpoints resource support

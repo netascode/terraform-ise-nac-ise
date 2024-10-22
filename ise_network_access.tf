@@ -319,7 +319,7 @@ locals {
 }
 
 resource "ise_network_access_policy_set" "network_access_policy_set" {
-  for_each = { for ps in local.network_access_policy_sets : ps.name => ps }
+  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if ps.name != "Default" }
 
   condition_type            = each.value.condition_type
   condition_is_negate       = each.value.condition_is_negate
@@ -339,15 +339,30 @@ resource "ise_network_access_policy_set" "network_access_policy_set" {
   depends_on = [ise_authorization_profile.authorization_profile, ise_allowed_protocols.allowed_protocols, ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
+resource "ise_network_access_policy_set" "default_network_access_policy_set" {
+  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if ps.name == "Default" }
+
+  is_proxy     = each.value.is_proxy
+  name         = each.value.name
+  service_name = each.value.service_name
+  state        = each.value.state
+  default      = true
+
+  depends_on = [ise_network_access_policy_set.network_access_policy_set]
+}
+
 resource "ise_network_access_policy_set_update_rank" "network_access_policy_set_update_rank" {
-  for_each = { for ps in local.network_access_policy_sets_with_ranks : ps.name => ps }
+  for_each = { for ps in local.network_access_policy_sets_with_ranks : ps.name => ps if ps.name != "Default" }
 
   policy_set_id = ise_network_access_policy_set.network_access_policy_set[each.key].id
   rank          = each.value.generated_rank
 }
 
 locals {
-  network_access_policy_set_ids = { for ps in local.network_access_policy_sets : ps.name => ise_network_access_policy_set.network_access_policy_set[ps.name].id }
+  network_access_policy_set_ids = merge(
+    { for ps in local.network_access_policy_sets : ps.name => ise_network_access_policy_set.network_access_policy_set[ps.name].id if ps.name != "Default" },
+    { for ps in local.network_access_policy_sets : ps.name => ise_network_access_policy_set.default_network_access_policy_set[ps.name].id if ps.name == "Default" }
+  )
 
   network_access_authentication_rules = flatten([
     for ps in try(local.ise.network_access.policy_sets, []) : [
@@ -402,7 +417,7 @@ locals {
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule" {
-  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.name != "Default" }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -424,8 +439,23 @@ resource "ise_network_access_authentication_rule" "network_access_authentication
   depends_on = [ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
+resource "ise_network_access_authentication_rule" "default_network_access_authentication_rule" {
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.name == "Default" }
+
+  name                 = each.value.name
+  state                = each.value.state
+  policy_set_id        = each.value.policy_set_id
+  default              = true
+  identity_source_name = each.value.identity_source_name
+  if_auth_fail         = each.value.if_auth_fail
+  if_process_fail      = each.value.if_process_fail
+  if_user_not_found    = each.value.if_user_not_found
+
+  depends_on = [ise_network_access_authentication_rule.network_access_authentication_rule]
+}
+
 resource "ise_network_access_authentication_rule_update_rank" "network_access_authentication_rule_update_rank" {
-  for_each = { for rule in local.network_access_authentication_rules_with_ranks : rule.key => rule }
+  for_each = { for rule in local.network_access_authentication_rules_with_ranks : rule.key => rule if rule.name != "Default" }
 
   policy_set_id = each.value.policy_set_id
   rule_id       = ise_network_access_authentication_rule.network_access_authentication_rule[each.value.key].id
@@ -484,7 +514,7 @@ locals {
 }
 
 resource "ise_network_access_authorization_rule" "network_access_authorization_rule" {
-  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule }
+  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if rule.name != "Default" }
 
   policy_set_id             = each.value.policy_set_id
   name                      = each.value.name
@@ -504,8 +534,21 @@ resource "ise_network_access_authorization_rule" "network_access_authorization_r
   depends_on = [ise_authorization_profile.authorization_profile, ise_trustsec_security_group.trustsec_security_group, time_sleep.sgt_wait, ise_endpoint_identity_group.endpoint_identity_group, ise_user_identity_group.user_identity_group, ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
+resource "ise_network_access_authorization_rule" "default_network_access_authorization_rule" {
+  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if rule.name == "Default" }
+
+  name           = each.value.name
+  state          = each.value.state
+  policy_set_id  = each.value.policy_set_id
+  default        = true
+  profiles       = each.value.profiles
+  security_group = each.value.security_group
+
+  depends_on = [ise_network_access_authorization_rule.network_access_authorization_rule]
+}
+
 resource "ise_network_access_authorization_rule_update_rank" "network_access_authorization_rule_update_rank" {
-  for_each = { for rule in local.network_access_authorization_rules_with_ranks : rule.key => rule }
+  for_each = { for rule in local.network_access_authorization_rules_with_ranks : rule.key => rule if rule.name != "Default" }
 
   policy_set_id = each.value.policy_set_id
   rule_id       = ise_network_access_authorization_rule.network_access_authorization_rule[each.value.key].id

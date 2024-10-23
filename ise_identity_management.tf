@@ -1,9 +1,9 @@
-resource "ise_user_identity_group" "user_identity_group" {
+resource "ise_user_identity_group" "user_identity_group_0" {
   for_each = { for group in try(local.ise.identity_management.user_identity_groups, []) : group.name => group }
 
   name        = each.key
   description = try(each.value.description, local.defaults.ise.identity_management.user_identity_groups.description, null)
-  parent      = try(each.value.parent, local.defaults.ise.identity_management.user_identity_groups.parent, null)
+  parent      = try(each.value.parent_group, local.defaults.ise.identity_management.user_identity_groups.parent_group, null)
 }
 
 locals {
@@ -14,12 +14,132 @@ locals {
   ]))
 }
 
+locals {
+  user_identity_groups_children = flatten([for p in try(local.ise.identity_management.user_identity_groups, []) : [
+    for c in try(p.children, []) : {
+      name        = try(c.name, null)
+      description = try(c.description, local.defaults.ise.identity_management.user_identity_groups.children.description, null)
+      parent      = "${local.defaults.ise.identity_management.user_identity_groups.parent_group}:${p.name}"
+    }
+  ]])
+}
+
+resource "ise_user_identity_group" "user_identity_group_1" {
+  for_each = { for group in local.user_identity_groups_children : group.name => group }
+
+  name        = each.value.name
+  description = each.value.description
+  parent      = each.value.parent
+
+  depends_on = [ise_user_identity_group.user_identity_group_0]
+}
+
+locals {
+  user_identity_groups_children_children = flatten([for p in try(local.ise.identity_management.user_identity_groups, []) : [
+    for c in try(p.children, []) : [
+      for c2 in try(c.children, []) : {
+        name        = try(c2.name, null)
+        description = try(c2.description, local.defaults.ise.identity_management.user_identity_groups.children.description, null)
+        parent      = "${local.defaults.ise.identity_management.user_identity_groups.parent_group}:${p.name}:${c.name}"
+      }
+    ]
+  ]])
+}
+
+resource "ise_user_identity_group" "user_identity_group_2" {
+  for_each = { for group in local.user_identity_groups_children_children : group.name => group }
+
+  name        = each.value.name
+  description = each.value.description
+  parent      = each.value.parent
+
+  depends_on = [ise_user_identity_group.user_identity_group_1]
+}
+
+locals {
+  user_identity_groups_children_children_children = flatten([for p in try(local.ise.identity_management.user_identity_groups, []) : [
+    for c in try(p.children, []) : [
+      for c2 in try(c.children, []) : [
+        for c3 in try(c2.children, []) : {
+          name        = try(c3.name, null)
+          description = try(c3.description, local.defaults.ise.identity_management.user_identity_groups.children.description, null)
+          parent      = "${local.defaults.ise.identity_management.user_identity_groups.parent_group}:${p.name}:${c.name}:${c2.name}"
+        }
+      ]
+    ]
+  ]])
+}
+
+resource "ise_user_identity_group" "user_identity_group_3" {
+  for_each = { for group in local.user_identity_groups_children_children_children : group.name => group }
+
+  name        = each.value.name
+  description = each.value.description
+  parent      = each.value.parent
+
+  depends_on = [ise_user_identity_group.user_identity_group_2]
+}
+
+locals {
+  user_identity_groups_children_children_children_children = flatten([for p in try(local.ise.identity_management.user_identity_groups, []) : [
+    for c in try(p.children, []) : [
+      for c2 in try(c.children, []) : [
+        for c3 in try(c2.children, []) : [
+          for c4 in try(c3.children, []) : {
+            name        = try(c4.name, null)
+            description = try(c4.description, local.defaults.ise.identity_management.user_identity_groups.children.description, null)
+            parent      = "${local.defaults.ise.identity_management.user_identity_groups.parent_group}:${p.name}:${c.name}:${c2.name}:${c3.name}"
+          }
+        ]
+      ]
+    ]
+  ]])
+}
+
+resource "ise_user_identity_group" "user_identity_group_4" {
+  for_each = { for group in local.user_identity_groups_children_children_children_children : group.name => group }
+
+  name        = each.value.name
+  description = each.value.description
+  parent      = each.value.parent
+
+  depends_on = [ise_user_identity_group.user_identity_group_3]
+}
+
+locals {
+  user_identity_groups_children_children_children_children_children = flatten([for p in try(local.ise.identity_management.user_identity_groups, []) : [
+    for c in try(p.children, []) : [
+      for c2 in try(c.children, []) : [
+        for c3 in try(c2.children, []) : [
+          for c4 in try(c3.children, []) : [
+            for c5 in try(c4.children, []) : {
+              name        = try(c5.name, null)
+              description = try(c5.description, local.defaults.ise.identity_management.user_identity_groups.children.description, null)
+              parent      = "${local.defaults.ise.identity_management.user_identity_groups.parent_group}:${p.name}:${c.name}:${c2.name}:${c3.name}:${c4.name}"
+            }
+          ]
+        ]
+      ]
+    ]
+  ]])
+}
+
+resource "ise_user_identity_group" "user_identity_group_5" {
+  for_each = { for group in local.user_identity_groups_children_children_children_children_children : group.name => group }
+
+  name        = each.value.name
+  description = each.value.description
+  parent      = each.value.parent
+
+  depends_on = [ise_user_identity_group.user_identity_group_4]
+}
+
 data "ise_user_identity_group" "user_identity_group" {
   for_each = toset(local.user_identity_groups)
 
   name = each.value
 
-  depends_on = [ise_user_identity_group.user_identity_group]
+  depends_on = [ise_user_identity_group.user_identity_group_5]
 }
 
 resource "ise_internal_user" "internal_user" {
@@ -39,27 +159,158 @@ resource "ise_internal_user" "internal_user" {
   password_never_expires = try(each.value.password_never_expires, local.defaults.ise.identity_management.internal_users.password_never_expires, null)
   password_id_store      = try(each.value.password_id_store, local.defaults.ise.identity_management.internal_users.password_id_store, null)
 
-  depends_on = [ise_user_identity_group.user_identity_group]
+  depends_on = [ise_user_identity_group.user_identity_group_5]
 }
 
 locals {
-  endpoint_identity_groups              = { for group in try(local.ise.identity_management.endpoint_identity_groups, []) : group.name => group }
-  endpoint_identity_groups_with_parent  = [for k, v in local.endpoint_identity_groups : v.parent_group if try(v.parent_group, "") != ""]
-  endpoint_identity_groups_in_endpoints = [for endpoint in try(local.ise.identity_management.endpoints, []) : endpoint.endpoint_identity_group if try(endpoint.endpoint_identity_group, "") != ""]
+  endpoint_identity_groups             = { for group in try(local.ise.identity_management.endpoint_identity_groups, []) : group.name => group }
+  endpoint_identity_groups_with_parent = [for k, v in local.endpoint_identity_groups : v.parent_group if try(v.parent_group, "") != ""]
 }
 
+
 data "ise_endpoint_identity_group" "endpoint_identity_group" {
-  for_each = toset(concat(local.endpoint_identity_groups_with_parent, local.endpoint_identity_groups_in_endpoints))
+  for_each = toset(local.endpoint_identity_groups_with_parent)
 
   name = each.value
 }
 
-resource "ise_endpoint_identity_group" "endpoint_identity_group" {
+resource "ise_endpoint_identity_group" "endpoint_identity_group_0" {
   for_each = local.endpoint_identity_groups
 
   name                              = each.key
   parent_endpoint_identity_group_id = try(data.ise_endpoint_identity_group.endpoint_identity_group[each.value.parent_group].id, null)
   description                       = try(each.value.description, local.defaults.ise.identity_management.endpoint_identity_groups.description, null)
+}
+
+locals {
+  endpoint_identity_groups_children = flatten([for p in try(local.ise.identity_management.endpoint_identity_groups, []) : [
+    for c in try(p.children, []) : {
+      name        = try(c.name, null)
+      description = try(c.description, local.defaults.ise.identity_management.user_identity_groups.children.description, null)
+      parent      = try(p.name, null)
+    }
+  ]])
+}
+
+resource "ise_endpoint_identity_group" "endpoint_identity_group_1" {
+  for_each = { for group in local.endpoint_identity_groups_children : group.name => group }
+
+  name                              = each.key
+  parent_endpoint_identity_group_id = try(ise_endpoint_identity_group.endpoint_identity_group_0[each.value.parent].id, null)
+  description                       = each.value.description
+
+  depends_on = [ise_endpoint_identity_group.endpoint_identity_group_0]
+}
+
+locals {
+  endpoint_identity_groups_children_children = flatten([for p in try(local.ise.identity_management.endpoint_identity_groups, []) : [
+    for c in try(p.children, []) : [
+      for c2 in try(c.children, []) : {
+        name        = try(c2.name, null)
+        description = try(c2.description, local.defaults.ise.identity_management.endpoint_identity_groups.children.description, null)
+        parent      = try(c.name, null)
+      }
+    ]
+  ]])
+}
+
+resource "ise_endpoint_identity_group" "endpoint_identity_group_2" {
+  for_each = { for group in local.endpoint_identity_groups_children_children : group.name => group }
+
+  name                              = each.key
+  parent_endpoint_identity_group_id = try(ise_endpoint_identity_group.endpoint_identity_group_1[each.value.parent].id, null)
+  description                       = each.value.description
+
+  depends_on = [ise_endpoint_identity_group.endpoint_identity_group_1]
+}
+
+locals {
+  endpoint_identity_groups_children_children_children = flatten([for p in try(local.ise.identity_management.endpoint_identity_groups, []) : [
+    for c in try(p.children, []) : [
+      for c2 in try(c.children, []) : [
+        for c3 in try(c2.children, []) : {
+          name        = try(c3.name, null)
+          description = try(c3.description, local.defaults.ise.identity_management.endpoint_identity_groups.children.description, null)
+          parent      = try(c2.name, null)
+        }
+      ]
+    ]
+  ]])
+}
+
+resource "ise_endpoint_identity_group" "endpoint_identity_group_3" {
+  for_each = { for group in local.endpoint_identity_groups_children_children_children : group.name => group }
+
+  name                              = each.key
+  parent_endpoint_identity_group_id = try(ise_endpoint_identity_group.endpoint_identity_group_2[each.value.parent].id, null)
+  description                       = each.value.description
+
+  depends_on = [ise_endpoint_identity_group.endpoint_identity_group_2]
+}
+
+locals {
+  endpoint_identity_groups_children_children_children_children = flatten([for p in try(local.ise.identity_management.endpoint_identity_groups, []) : [
+    for c in try(p.children, []) : [
+      for c2 in try(c.children, []) : [
+        for c3 in try(c2.children, []) : [
+          for c4 in try(c3.children, []) : {
+            name        = try(c4.name, null)
+            description = try(c4.description, local.defaults.ise.identity_management.user_identity_groups.children.description, null)
+            parent      = try(c3.name, null)
+          }
+        ]
+      ]
+    ]
+  ]])
+}
+
+resource "ise_endpoint_identity_group" "endpoint_identity_group_4" {
+  for_each = { for group in local.endpoint_identity_groups_children_children_children_children : group.name => group }
+
+  name                              = each.key
+  parent_endpoint_identity_group_id = try(ise_endpoint_identity_group.endpoint_identity_group_3[each.value.parent].id, null)
+  description                       = each.value.description
+
+  depends_on = [ise_endpoint_identity_group.endpoint_identity_group_3]
+}
+
+locals {
+  endpoint_identity_groups_children_children_children_children_children = flatten([for p in try(local.ise.identity_management.endpoint_identity_groups, []) : [
+    for c in try(p.children, []) : [
+      for c2 in try(c.children, []) : [
+        for c3 in try(c2.children, []) : [
+          for c4 in try(c3.children, []) : [
+            for c5 in try(c4.children, []) : {
+              name        = try(c5.name, null)
+              description = try(c5.description, local.defaults.ise.identity_management.user_identity_groups.children.description, null)
+              parent      = try(c4.name, null)
+            }
+          ]
+        ]
+      ]
+    ]
+  ]])
+}
+
+resource "ise_endpoint_identity_group" "endpoint_identity_group_5" {
+  for_each = { for group in local.endpoint_identity_groups_children_children_children_children_children : group.name => group }
+
+  name                              = each.key
+  parent_endpoint_identity_group_id = try(ise_endpoint_identity_group.endpoint_identity_group_4[each.value.parent].id, null)
+  description                       = each.value.description
+
+  depends_on = [ise_endpoint_identity_group.endpoint_identity_group_4]
+}
+
+locals {
+  endpoint_identity_groups_all = merge(
+    { for k, v in ise_endpoint_identity_group.endpoint_identity_group_0 : k => v.id },
+    { for k, v in ise_endpoint_identity_group.endpoint_identity_group_1 : k => v.id },
+    { for k, v in ise_endpoint_identity_group.endpoint_identity_group_2 : k => v.id },
+    { for k, v in ise_endpoint_identity_group.endpoint_identity_group_3 : k => v.id },
+    { for k, v in ise_endpoint_identity_group.endpoint_identity_group_4 : k => v.id },
+    { for k, v in ise_endpoint_identity_group.endpoint_identity_group_5 : k => v.id }
+  )
 }
 
 resource "ise_endpoint" "endpoint" {
@@ -70,7 +321,7 @@ resource "ise_endpoint" "endpoint" {
   description                       = try(each.value.description, local.defaults.ise.identity_management.endpoints.description, null)
   static_profile_assignment         = try(each.value.static_profile_assignment, local.defaults.ise.identity_management.endpoints.static_profile_assignment, null)
   static_group_assignment           = try(each.value.static_group_assignment, local.defaults.ise.identity_management.endpoints.static_group_assignment, null)
-  group_id                          = try(each.value.static_group_assignment, false) ? try(ise_endpoint_identity_group.endpoint_identity_group[each.value.endpoint_identity_group].id, data.ise_endpoint_identity_group.endpoint_identity_group[each.value.endpoint_identity_group].id, null) : null
+  group_id                          = try(each.value.static_group_assignment, false) ? try(local.endpoint_identity_groups_all[each.value.endpoint_identity_group], data.ise_endpoint_identity_group.endpoint_identity_group[each.value.endpoint_identity_group].id, null) : null
   static_profile_assignment_defined = try(each.value.static_profile_assignment_defined, local.defaults.ise.identity_management.endpoints.static_profile_assignment_defined, null)
   static_group_assignment_defined   = try(each.value.static_group_assignment_defined, local.defaults.ise.identity_management.endpoints.static_group_assignment_defined, null)
   identity_store                    = try(each.value.identity_store, local.defaults.ise.identity_management.endpoints.identity_store, null)
@@ -91,6 +342,8 @@ resource "ise_endpoint" "endpoint" {
   mdm_reachable                     = try(each.value.mdm_attributes.reachable, local.defaults.ise.identity_management.endpoints.mdm_attributes.reachable, null)
   mdm_serial                        = try(each.value.mdm_attributes.serial, local.defaults.ise.identity_management.endpoints.mdm_attributes.serial, null)
   mdm_server_name                   = try(each.value.mdm_attributes.server_name, local.defaults.ise.identity_management.endpoints.mdm_attributes.server_name, null)
+
+  depends_on = [ise_endpoint_identity_group.endpoint_identity_group_5]
 }
 
 resource "ise_certificate_authentication_profile" "certificate_authentication_profile" {

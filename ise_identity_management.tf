@@ -139,7 +139,7 @@ data "ise_user_identity_group" "user_identity_group" {
 
   name = each.value
 
-  depends_on = [ise_user_identity_group.user_identity_group_5]
+  depends_on = [ise_user_identity_group.user_identity_group_0, ise_user_identity_group.user_identity_group_1, ise_user_identity_group.user_identity_group_2, ise_user_identity_group.user_identity_group_3, ise_user_identity_group.user_identity_group_4, ise_user_identity_group.user_identity_group_5]
 }
 
 resource "ise_internal_user" "internal_user" {

@@ -354,7 +354,7 @@ resource "ise_device_admin_authentication_rule_update_rank" "device_admin_authen
 resource "time_sleep" "device_admin_policy_object_wait" {
   count = (length(try(local.ise.device_administration.policy_elements.tacacs_profiles, [])) > 0 || length(try(local.ise.device_administration.policy_elements.tacacs_command_sets, [])) > 0) ? 1 : 0
 
-  destroy_duration = "5s"
+  destroy_duration = "10s"
 
   depends_on = [
     ise_tacacs_profile.tacacs_profile,

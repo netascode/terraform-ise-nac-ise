@@ -90,7 +90,12 @@ module "ise" {
 | [ise_device_admin_time_and_date_condition.device_admin_time_and_date_condition](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_time_and_date_condition) | resource |
 | [ise_downloadable_acl.downloadable_acl](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/downloadable_acl) | resource |
 | [ise_endpoint.endpoint](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/endpoint) | resource |
-| [ise_endpoint_identity_group.endpoint_identity_group](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/endpoint_identity_group) | resource |
+| [ise_endpoint_identity_group.endpoint_identity_group_0](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/endpoint_identity_group) | resource |
+| [ise_endpoint_identity_group.endpoint_identity_group_1](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/endpoint_identity_group) | resource |
+| [ise_endpoint_identity_group.endpoint_identity_group_2](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/endpoint_identity_group) | resource |
+| [ise_endpoint_identity_group.endpoint_identity_group_3](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/endpoint_identity_group) | resource |
+| [ise_endpoint_identity_group.endpoint_identity_group_4](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/endpoint_identity_group) | resource |
+| [ise_endpoint_identity_group.endpoint_identity_group_5](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/endpoint_identity_group) | resource |
 | [ise_identity_source_sequence.identity_source_sequences](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/identity_source_sequence) | resource |
 | [ise_internal_user.internal_user](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/internal_user) | resource |
 | [ise_license_tier_state.license_tier_state](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/license_tier_state) | resource |
@@ -125,7 +130,12 @@ module "ise" {
 | [ise_trustsec_ip_to_sgt_mapping_group.trustsec_ip_to_sgt_mapping_group](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/trustsec_ip_to_sgt_mapping_group) | resource |
 | [ise_trustsec_security_group.trustsec_security_group](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/trustsec_security_group) | resource |
 | [ise_trustsec_security_group_acl.trustsec_security_group_acl](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/trustsec_security_group_acl) | resource |
-| [ise_user_identity_group.user_identity_group](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/user_identity_group) | resource |
+| [ise_user_identity_group.user_identity_group_0](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/user_identity_group) | resource |
+| [ise_user_identity_group.user_identity_group_1](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/user_identity_group) | resource |
+| [ise_user_identity_group.user_identity_group_2](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/user_identity_group) | resource |
+| [ise_user_identity_group.user_identity_group_3](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/user_identity_group) | resource |
+| [ise_user_identity_group.user_identity_group_4](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/user_identity_group) | resource |
+| [ise_user_identity_group.user_identity_group_5](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/user_identity_group) | resource |
 | [local_sensitive_file.defaults](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/sensitive_file) | resource |
 | [time_sleep.device_admin_policy_object_wait](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [time_sleep.network_device_group_wait](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |

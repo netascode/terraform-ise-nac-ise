@@ -1,4 +1,4 @@
-## 0.1.2 (unreleased)
+## 0.1.2
 
 - Add `parent_group` attribute to `user_identity_group`
 - Support new `*_update_rank` resources to allow changing the rank of policy sets or rules without impacting existing configurations

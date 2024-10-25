@@ -44,7 +44,7 @@ module "ise" {
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
-| <a name="requirement_ise"></a> [ise](#requirement\_ise) | >= 0.2.0 |
+| <a name="requirement_ise"></a> [ise](#requirement\_ise) | >= 0.2.4 |
 | <a name="requirement_local"></a> [local](#requirement\_local) | >= 2.3.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.10.0 |
 | <a name="requirement_utils"></a> [utils](#requirement\_utils) | >= 0.2.5 |

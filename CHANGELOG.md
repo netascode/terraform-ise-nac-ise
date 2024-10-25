@@ -1,11 +1,12 @@
 ## 0.1.2 (unreleased)
 
-- Add `parent` attribute to `user_identity_group`
-- Modify update rank on device admin and network access resources
-- Fix active directory group optional
-- Added endpoints resource support
+- Add `parent_group` attribute to `user_identity_group`
+- Support new `*_update_rank` resources to allow changing the rank of policy sets or rules without impacting existing configurations
+- Support active directory configurations without groups
+- Added support for managing endpoints
 - Added support for default user identity groups assignment under internal users
-- Fix description attribute of `network_device_groups_children_children`
+- Fix incorrect description attribute of `network_device_groups` configuration
+- BREAKING CHANGE: `endpoint_identity_groups` and `user_identity_groups` now support nested children in favor of `parent` references
 
 ## 0.1.1
 

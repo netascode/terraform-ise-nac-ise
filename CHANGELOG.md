@@ -1,3 +1,7 @@
+## 0.1.3 (unreleased)
+
+- Fix import in `ise_network_access_condition`, `ise_network_access_time_and_date_condition` and `network_access_policy_set`
+
 ## 0.1.2
 
 - Add `parent_group` attribute to `user_identity_group`

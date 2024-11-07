@@ -26,7 +26,7 @@ resource "ise_device_admin_condition" "device_admin_condition" {
   operator         = try(each.value.operator, local.defaults.ise.device_administration.policy_elements.conditions.operator, null)
   description      = try(each.value.description, local.defaults.ise.device_administration.policy_elements.conditions.description, null)
   name             = each.key
-  children = [for c in try(each.value.children, []) : {
+  children = length(try(each.value.children, [])) == 0 ? null : [for c in try(each.value.children, []) : {
     attribute_name   = try(c.attribute_name, local.defaults.ise.device_administration.policy_elements.conditions.attribute_name, null)
     attribute_value  = try(c.attribute_value, local.defaults.ise.device_administration.policy_elements.conditions.attribute_value, null)
     dictionary_name  = try(c.dictionary_name, local.defaults.ise.device_administration.policy_elements.conditions.dictionary_name, null)
@@ -36,7 +36,7 @@ resource "ise_device_admin_condition" "device_admin_condition" {
     operator         = try(c.operator, local.defaults.ise.device_administration.policy_elements.conditions.operator, null)
     name             = try(c.name, null)
     id               = try(c.type, local.defaults.ise.device_administration.policy_elements.conditions.type, null) == "ConditionReference" ? data.ise_device_admin_condition.device_admin_condition_circular[c.name].id : null
-    children = [for c2 in try(c.children, []) : {
+    children = length(try(c.children, [])) == 0 ? null : [for c2 in try(c.children, []) : {
       attribute_name   = try(c2.attribute_name, local.defaults.ise.device_administration.policy_elements.conditions.attribute_name, null)
       attribute_value  = try(c2.attribute_value, local.defaults.ise.device_administration.policy_elements.conditions.attribute_value, null)
       dictionary_name  = try(c2.dictionary_name, local.defaults.ise.device_administration.policy_elements.conditions.dictionary_name, null)

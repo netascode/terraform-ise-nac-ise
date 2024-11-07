@@ -173,7 +173,7 @@ locals {
       name                       = ps.name
       service_name               = try(ps.service_name, local.defaults.ise.device_administration.policy_sets.service_name)
       state                      = try(ps.state, local.defaults.ise.device_administration.policy_sets.state)
-      default                    = ps.name == "Default" ? true : null
+      default                    = ps.name == "Default" ? true : false
       rank                       = try(ps.rank, local.defaults.ise.device_administration.policy_sets.rank, null)
       children = try([for i in ps.condition.children : {
         attribute_name   = try(i.attribute_name, local.defaults.ise.device_administration.policy_sets.condition.attribute_name, null)
@@ -259,7 +259,7 @@ locals {
         policy_set_id              = local.device_admin_policy_set_ids[ps.name]
         name                       = rule.name
         rank                       = try(rule.rank, local.defaults.ise.device_administration.policy_sets.authentication_rules.rank, null)
-        default                    = rule.name == "Default" ? true : null
+        default                    = rule.name == "Default" ? true : false
         state                      = try(rule.state, local.defaults.ise.device_administration.policy_sets.authentication_rules.state, null)
         condition_type             = rule.name == "Default" ? null : try(rule.condition.type, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.type, null)
         condition_id               = contains(local.known_conditions_device_admin, try(rule.condition.name, "")) ? ise_device_admin_condition.device_admin_condition[rule.condition.name].id : try(data.ise_device_admin_condition.device_admin_condition[rule.condition.name].id, null)
@@ -370,7 +370,7 @@ locals {
         policy_set_id              = local.device_admin_policy_set_ids[ps.name]
         name                       = rule.name
         rank                       = try(rule.rank, local.defaults.ise.device_administration.policy_sets.authorization_rules.rank, null)
-        default                    = rule.name == "Default" ? true : null
+        default                    = rule.name == "Default" ? true : false
         state                      = try(rule.state, local.defaults.ise.device_administration.policy_sets.authorization_rules.state, null)
         condition_type             = rule.name == "Default" ? null : try(rule.condition.type, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.type, null)
         condition_id               = contains(local.known_conditions_device_admin, try(rule.condition.name, "")) ? ise_device_admin_condition.device_admin_condition[rule.condition.name].id : try(data.ise_device_admin_condition.device_admin_condition[rule.condition.name].id, null)

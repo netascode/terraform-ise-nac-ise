@@ -1,6 +1,7 @@
 ## 0.1.3 (unreleased)
 
-- Fix import in `ise_network_access_condition`, `ise_network_access_time_and_date_condition` and `network_access_policy_set`
+- Fix import in `ise_device_admin_condition`, `ise_device_admin_time_and_date_condition` and `ise_device_admin_policy_set`
+- Fix import in `ise_network_access_condition`, `ise_network_access_time_and_date_condition` and `ise_device_admin_policy_set`
 
 ## 0.1.2
 

@@ -18,7 +18,7 @@ locals {
   user_identity_groups_children = flatten([for p in try(local.ise.identity_management.user_identity_groups, []) : [
     for c in try(p.children, []) : {
       name        = try(c.name, null)
-      description = try(c.description, local.defaults.ise.identity_management.user_identity_groups.children.description, null)
+      description = try(c.description, local.defaults.ise.identity_management.user_identity_groups.description, null)
       parent      = "${local.defaults.ise.identity_management.user_identity_groups.parent_group}:${p.name}"
     }
   ]])
@@ -39,7 +39,7 @@ locals {
     for c in try(p.children, []) : [
       for c2 in try(c.children, []) : {
         name        = try(c2.name, null)
-        description = try(c2.description, local.defaults.ise.identity_management.user_identity_groups.children.description, null)
+        description = try(c2.description, local.defaults.ise.identity_management.user_identity_groups.description, null)
         parent      = "${local.defaults.ise.identity_management.user_identity_groups.parent_group}:${p.name}:${c.name}"
       }
     ]
@@ -62,7 +62,7 @@ locals {
       for c2 in try(c.children, []) : [
         for c3 in try(c2.children, []) : {
           name        = try(c3.name, null)
-          description = try(c3.description, local.defaults.ise.identity_management.user_identity_groups.children.description, null)
+          description = try(c3.description, local.defaults.ise.identity_management.user_identity_groups.description, null)
           parent      = "${local.defaults.ise.identity_management.user_identity_groups.parent_group}:${p.name}:${c.name}:${c2.name}"
         }
       ]
@@ -87,7 +87,7 @@ locals {
         for c3 in try(c2.children, []) : [
           for c4 in try(c3.children, []) : {
             name        = try(c4.name, null)
-            description = try(c4.description, local.defaults.ise.identity_management.user_identity_groups.children.description, null)
+            description = try(c4.description, local.defaults.ise.identity_management.user_identity_groups.description, null)
             parent      = "${local.defaults.ise.identity_management.user_identity_groups.parent_group}:${p.name}:${c.name}:${c2.name}:${c3.name}"
           }
         ]
@@ -114,7 +114,7 @@ locals {
           for c4 in try(c3.children, []) : [
             for c5 in try(c4.children, []) : {
               name        = try(c5.name, null)
-              description = try(c5.description, local.defaults.ise.identity_management.user_identity_groups.children.description, null)
+              description = try(c5.description, local.defaults.ise.identity_management.user_identity_groups.description, null)
               parent      = "${local.defaults.ise.identity_management.user_identity_groups.parent_group}:${p.name}:${c.name}:${c2.name}:${c3.name}:${c4.name}"
             }
           ]
@@ -180,14 +180,17 @@ resource "ise_endpoint_identity_group" "endpoint_identity_group_0" {
   name                              = each.key
   parent_endpoint_identity_group_id = try(data.ise_endpoint_identity_group.endpoint_identity_group[each.value.parent_group].id, null)
   description                       = try(each.value.description, local.defaults.ise.identity_management.endpoint_identity_groups.description, null)
+  system_defined                    = try(each.value.system_defined, local.defaults.ise.identity_management.endpoint_identity_groups.system_defined, null)
 }
 
 locals {
   endpoint_identity_groups_children = flatten([for p in try(local.ise.identity_management.endpoint_identity_groups, []) : [
     for c in try(p.children, []) : {
-      name        = try(c.name, null)
-      description = try(c.description, local.defaults.ise.identity_management.user_identity_groups.children.description, null)
-      parent      = try(p.name, null)
+      name           = try(c.name, null)
+      description    = try(c.description, local.defaults.ise.identity_management.endpoint_identity_groups.description, null)
+      system_defined = try(c.system_defined, local.defaults.ise.identity_management.endpoint_identity_groups.system_defined, null)
+
+      parent = try(p.name, null)
     }
   ]])
 }
@@ -198,6 +201,7 @@ resource "ise_endpoint_identity_group" "endpoint_identity_group_1" {
   name                              = each.key
   parent_endpoint_identity_group_id = try(ise_endpoint_identity_group.endpoint_identity_group_0[each.value.parent].id, null)
   description                       = each.value.description
+  system_defined                    = each.value.system_defined
 
   depends_on = [ise_endpoint_identity_group.endpoint_identity_group_0]
 }
@@ -206,9 +210,10 @@ locals {
   endpoint_identity_groups_children_children = flatten([for p in try(local.ise.identity_management.endpoint_identity_groups, []) : [
     for c in try(p.children, []) : [
       for c2 in try(c.children, []) : {
-        name        = try(c2.name, null)
-        description = try(c2.description, local.defaults.ise.identity_management.endpoint_identity_groups.children.description, null)
-        parent      = try(c.name, null)
+        name           = try(c2.name, null)
+        description    = try(c2.description, local.defaults.ise.identity_management.endpoint_identity_groups.description, null)
+        system_defined = try(c2.system_defined, local.defaults.ise.identity_management.endpoint_identity_groups.system_defined, null)
+        parent         = try(c.name, null)
       }
     ]
   ]])
@@ -220,6 +225,7 @@ resource "ise_endpoint_identity_group" "endpoint_identity_group_2" {
   name                              = each.key
   parent_endpoint_identity_group_id = try(ise_endpoint_identity_group.endpoint_identity_group_1[each.value.parent].id, null)
   description                       = each.value.description
+  system_defined                    = each.value.system_defined
 
   depends_on = [ise_endpoint_identity_group.endpoint_identity_group_1]
 }
@@ -229,9 +235,10 @@ locals {
     for c in try(p.children, []) : [
       for c2 in try(c.children, []) : [
         for c3 in try(c2.children, []) : {
-          name        = try(c3.name, null)
-          description = try(c3.description, local.defaults.ise.identity_management.endpoint_identity_groups.children.description, null)
-          parent      = try(c2.name, null)
+          name           = try(c3.name, null)
+          description    = try(c3.description, local.defaults.ise.identity_management.endpoint_identity_groups.description, null)
+          system_defined = try(c3.system_defined, local.defaults.ise.identity_management.endpoint_identity_groups.system_defined, null)
+          parent         = try(c2.name, null)
         }
       ]
     ]
@@ -244,6 +251,7 @@ resource "ise_endpoint_identity_group" "endpoint_identity_group_3" {
   name                              = each.key
   parent_endpoint_identity_group_id = try(ise_endpoint_identity_group.endpoint_identity_group_2[each.value.parent].id, null)
   description                       = each.value.description
+  system_defined                    = each.value.system_defined
 
   depends_on = [ise_endpoint_identity_group.endpoint_identity_group_2]
 }
@@ -254,9 +262,10 @@ locals {
       for c2 in try(c.children, []) : [
         for c3 in try(c2.children, []) : [
           for c4 in try(c3.children, []) : {
-            name        = try(c4.name, null)
-            description = try(c4.description, local.defaults.ise.identity_management.user_identity_groups.children.description, null)
-            parent      = try(c3.name, null)
+            name           = try(c4.name, null)
+            description    = try(c4.description, local.defaults.ise.identity_management.endpoint_identity_groups.description, null)
+            system_defined = try(c4.system_defined, local.defaults.ise.identity_management.endpoint_identity_groups.system_defined, null)
+            parent         = try(c3.name, null)
           }
         ]
       ]
@@ -270,6 +279,7 @@ resource "ise_endpoint_identity_group" "endpoint_identity_group_4" {
   name                              = each.key
   parent_endpoint_identity_group_id = try(ise_endpoint_identity_group.endpoint_identity_group_3[each.value.parent].id, null)
   description                       = each.value.description
+  system_defined                    = each.value.system_defined
 
   depends_on = [ise_endpoint_identity_group.endpoint_identity_group_3]
 }
@@ -281,9 +291,11 @@ locals {
         for c3 in try(c2.children, []) : [
           for c4 in try(c3.children, []) : [
             for c5 in try(c4.children, []) : {
-              name        = try(c5.name, null)
-              description = try(c5.description, local.defaults.ise.identity_management.user_identity_groups.children.description, null)
-              parent      = try(c4.name, null)
+              name           = try(c5.name, null)
+              description    = try(c5.description, local.defaults.ise.identity_management.endpoint_identity_groups.description, null)
+              parent         = try(c4.name, null)
+              system_defined = try(c5.system_defined, local.defaults.ise.identity_management.endpoint_identity_groups.system_defined, null)
+
             }
           ]
         ]
@@ -298,6 +310,7 @@ resource "ise_endpoint_identity_group" "endpoint_identity_group_5" {
   name                              = each.key
   parent_endpoint_identity_group_id = try(ise_endpoint_identity_group.endpoint_identity_group_4[each.value.parent].id, null)
   description                       = each.value.description
+  system_defined                    = each.value.system_defined
 
   depends_on = [ise_endpoint_identity_group.endpoint_identity_group_4]
 }

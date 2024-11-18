@@ -18,7 +18,7 @@ locals {
   network_device_groups_children = flatten([for p in try(local.ise.network_resources.network_device_groups, []) : [
     for c in try(p.children, []) : {
       name        = try(split("#", p.path)[0] == "All Device Types", false) ? "Device Type#${p.path}#${p.name}#${c.name}" : (try(split("#", p.path)[0] == "All Locations", false) ? "Location#${p.path}#${p.name}#${c.name}" : (try(split("#", p.path)[0] == "Is IPSEC Device", false) ? "IPSEC#${p.path}" : (try(p.path, null) == null ? "${p.name}#${p.name}#${c.name}" : "${split("#", p.path)[0]}#${p.path}#${p.name}#${c.name}")))
-      description = try(c.description, local.defaults.ise.network_resources.network_device_groups.children.description, null)
+      description = try(c.description, local.defaults.ise.network_resources.network_device_groups.description, null)
       root_group  = try(split("#", p.path)[0] == "All Device Types", false) ? "Device Type" : (try(split("#", p.path)[0] == "All Locations", false) ? "Location" : (try(split("#", p.path)[0] == "Is IPSEC Device", false) ? "IPSEC" : try(split("#", p.path)[0], p.name)))
     }
   ]])
@@ -39,7 +39,7 @@ locals {
     for c in try(p.children, []) : [
       for c2 in try(c.children, []) : {
         name        = try(split("#", p.path)[0] == "All Device Types", false) ? "Device Type#${p.path}#${p.name}#${c.name}#${c2.name}" : (try(split("#", p.path)[0] == "All Locations", false) ? "Location#${p.path}#${p.name}#${c.name}#${c2.name}" : (try(split("#", p.path)[0] == "Is IPSEC Device", false) ? "IPSEC#${p.path}" : (try(p.path, null) == null ? "${p.name}#${p.name}#${c.name}#${c2.name}" : "${split("#", p.path)[0]}#${p.path}#${p.name}#${c.name}#${c2.name}")))
-        description = try(c2.description, local.defaults.ise.network_resources.network_device_groups.children.description, null)
+        description = try(c2.description, local.defaults.ise.network_resources.network_device_groups.description, null)
         root_group  = try(split("#", p.path)[0] == "All Device Types", false) ? "Device Type" : (try(split("#", p.path)[0] == "All Locations", false) ? "Location" : (try(split("#", p.path)[0] == "Is IPSEC Device", false) ? "IPSEC" : try(split("#", p.path)[0], p.name)))
       }
     ]
@@ -62,7 +62,7 @@ locals {
       for c2 in try(c.children, []) : [
         for c3 in try(c2.children, []) : {
           name        = try(split("#", p.path)[0] == "All Device Types", false) ? "Device Type#${p.path}#${p.name}#${c.name}#${c2.name}#${c3.name}" : (try(split("#", p.path)[0] == "All Locations", false) ? "Location#${p.path}#${p.name}#${c.name}#${c2.name}#${c3.name}" : (try(split("#", p.path)[0] == "Is IPSEC Device", false) ? "IPSEC#${p.path}" : (try(p.path, null) == null ? "${p.name}#${p.name}#${c.name}#${c2.name}#${c3.name}" : "${split("#", p.path)[0]}#${p.path}#${p.name}#${c.name}#${c2.name}#${c3.name}")))
-          description = try(c.description, local.defaults.ise.network_resources.network_device_groups.children.description, null)
+          description = try(c.description, local.defaults.ise.network_resources.network_device_groups.description, null)
           root_group  = try(split("#", p.path)[0] == "All Device Types", false) ? "Device Type" : (try(split("#", p.path)[0] == "All Locations", false) ? "Location" : (try(split("#", p.path)[0] == "Is IPSEC Device", false) ? "IPSEC" : try(split("#", p.path)[0], p.name)))
         }
       ]
@@ -87,7 +87,7 @@ locals {
         for c3 in try(c2.children, []) : [
           for c4 in try(c3.children, []) : {
             name        = try(split("#", p.path)[0] == "All Device Types", false) ? "Device Type#${p.path}#${p.name}#${c.name}#${c2.name}#${c3.name}#${c4.name}" : (try(split("#", p.path)[0] == "All Locations", false) ? "Location#${p.path}#${p.name}#${c.name}#${c2.name}#${c3.name}#${c4.name}" : (try(split("#", p.path)[0] == "Is IPSEC Device", false) ? "IPSEC#${p.path}" : (try(p.path, null) == null ? "${p.name}#${p.name}#${c.name}#${c2.name}#${c3.name}#${c4.name}" : "${split("#", p.path)[0]}#${p.path}#${p.name}#${c.name}#${c2.name}#${c3.name}#${c4.name}")))
-            description = try(c.description, local.defaults.ise.network_resources.network_device_groups.children.description, null)
+            description = try(c.description, local.defaults.ise.network_resources.network_device_groups.description, null)
             root_group  = try(split("#", p.path)[0] == "All Device Types", false) ? "Device Type" : (try(split("#", p.path)[0] == "All Locations", false) ? "Location" : (try(split("#", p.path)[0] == "Is IPSEC Device", false) ? "IPSEC" : try(split("#", p.path)[0], p.name)))
           }
         ]
@@ -114,7 +114,7 @@ locals {
           for c4 in try(c3.children, []) : [
             for c5 in try(c4.children, []) : {
               name        = try(split("#", p.path)[0] == "All Device Types", false) ? "Device Type#${p.path}#${p.name}#${c.name}#${c2.name}#${c3.name}#${c4.name}#${c5.name}" : (try(split("#", p.path)[0] == "All Locations", false) ? "Location#${p.path}#${p.name}#${c.name}#${c2.name}#${c3.name}#${c4.name}#${c5.name}" : (try(split("#", p.path)[0] == "Is IPSEC Device", false) ? "IPSEC#${p.path}" : (try(p.path, null) == null ? "${p.name}#${p.name}#${c.name}#${c2.name}#${c3.name}#${c4.name}#${c5.name}" : "${split("#", p.path)[0]}#${p.path}#${p.name}#${c.name}#${c2.name}#${c3.name}#${c4.name}#${c5.name}")))
-              description = try(c.description, local.defaults.ise.network_resources.network_device_groups.children.description, null)
+              description = try(c.description, local.defaults.ise.network_resources.network_device_groups.description, null)
               root_group  = try(split("#", p.path)[0] == "All Device Types", false) ? "Device Type" : (try(split("#", p.path)[0] == "All Locations", false) ? "Location" : (try(split("#", p.path)[0] == "Is IPSEC Device", false) ? "IPSEC" : try(split("#", p.path)[0], p.name)))
             }
           ]

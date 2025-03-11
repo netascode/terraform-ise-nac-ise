@@ -536,15 +536,25 @@ resource "ise_network_access_authorization_rule" "default_network_access_authori
   depends_on = [ise_network_access_authorization_rule.network_access_authorization_rule]
 }
 
-resource "ise_network_access_authorization_rule_update_rank" "network_access_authorization_rule_update_rank" {
-  for_each = { for rule in local.network_access_authorization_rules : rule.key => rule if rule.name != "Default" }
-
-  policy_set_id = each.value.policy_set_id
-  rule_id       = ise_network_access_authorization_rule.network_access_authorization_rule[each.value.key].id
-  rank          = each.value.generated_rank
+resource "ise_network_access_authorization_rule_update_rank_bulk" "network_access_authorization_rule_update_rank_bulk" {
+  policy_set_id = values(local.network_access_authorization_rules_ranks)[0].policy_set_id
+  rules = [
+    for key, rule in local.network_access_authorization_rules_ranks :{
+      rule_id = ise_network_access_authorization_rule.network_access_authorization_rule[key].id
+      rank = rule.generated_rank
+    }
+  ]
 }
 
 locals {
+  network_access_authorization_rules_ranks = {
+    for rule in local.network_access_authorization_rules_with_ranks :
+    rule.key => {
+      policy_set_id = rule.policy_set_id
+      generated_rank = rule.generated_rank
+    } if rule.name != "Default"
+  }
+
   network_access_authorization_exception_rules = flatten([
     for ps in try(local.ise.network_access.policy_sets, []) : [
       for generated_rank, rule in try(ps.authorization_exception_rules, []) : {

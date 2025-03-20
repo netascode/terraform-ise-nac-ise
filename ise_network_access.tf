@@ -369,11 +369,12 @@ locals {
 
   network_access_authentication_rules = flatten([
     for ps in try(local.ise.network_access.policy_sets, []) : [
-      for rule in try(ps.authentication_rules, []) : {
+      for generated_rank, rule in try(ps.authentication_rules, []) : {
         key                        = format("%s/%s", ps.name, rule.name)
         policy_set_id              = local.network_access_policy_set_ids[ps.name]
         name                       = rule.name
         rank                       = try(rule.rank, local.defaults.ise.network_access.policy_sets.authentication_rules.rank, null)
+        generated_rank             = generated_rank
         default                    = rule.name == "Default" ? true : false
         state                      = try(rule.state, local.defaults.ise.network_access.policy_sets.authentication_rules.state, null)
         condition_type             = rule.name == "Default" ? null : try(rule.condition.type, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.type, null)
@@ -411,12 +412,6 @@ locals {
       }
     ]
   ])
-
-  network_access_authentication_rules_with_ranks = [
-    for idx, rule in local.network_access_authentication_rules : merge(rule, {
-      generated_rank = idx
-    })
-  ]
 }
 
 resource "ise_network_access_authentication_rule" "network_access_authentication_rule" {
@@ -458,7 +453,7 @@ resource "ise_network_access_authentication_rule" "default_network_access_authen
 }
 
 resource "ise_network_access_authentication_rule_update_rank" "network_access_authentication_rule_update_rank" {
-  for_each = { for rule in local.network_access_authentication_rules_with_ranks : rule.key => rule if rule.name != "Default" }
+  for_each = { for rule in local.network_access_authentication_rules : rule.key => rule if rule.name != "Default" }
 
   policy_set_id = each.value.policy_set_id
   rule_id       = ise_network_access_authentication_rule.network_access_authentication_rule[each.value.key].id

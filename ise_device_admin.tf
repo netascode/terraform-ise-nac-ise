@@ -254,11 +254,12 @@ locals {
 
   device_admin_authentication_rules = flatten([
     for ps in try(local.ise.device_administration.policy_sets, []) : [
-      for rule in try(ps.authentication_rules, []) : {
+      for generated_rank, rule in try(ps.authentication_rules, []) : {
         key                        = format("%s/%s", ps.name, rule.name)
         policy_set_id              = local.device_admin_policy_set_ids[ps.name]
         name                       = rule.name
         rank                       = try(rule.rank, local.defaults.ise.device_administration.policy_sets.authentication_rules.rank, null)
+        generated_rank             = generated_rank
         default                    = rule.name == "Default" ? true : false
         state                      = try(rule.state, local.defaults.ise.device_administration.policy_sets.authentication_rules.state, null)
         condition_type             = rule.name == "Default" ? null : try(rule.condition.type, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.type, null)
@@ -297,11 +298,6 @@ locals {
     ]
   ])
 
-  device_admin_authentication_rules_with_ranks = [
-    for idx, rule in local.device_admin_authentication_rules : merge(rule, {
-      generated_rank = idx
-    })
-  ]
 }
 
 resource "ise_device_admin_authentication_rule" "device_admin_authentication_rule" {
@@ -343,7 +339,7 @@ resource "ise_device_admin_authentication_rule" "default_device_admin_authentica
 }
 
 resource "ise_device_admin_authentication_rule_update_rank" "device_admin_authentication_rule_update_rank" {
-  for_each = { for rule in local.device_admin_authentication_rules_with_ranks : rule.key => rule if rule.name != "Default" }
+  for_each = { for rule in local.device_admin_authentication_rules : rule.key => rule if rule.name != "Default" }
 
   policy_set_id = each.value.policy_set_id
   rule_id       = ise_device_admin_authentication_rule.device_admin_authentication_rule[each.value.key].id
@@ -365,11 +361,12 @@ resource "time_sleep" "device_admin_policy_object_wait" {
 locals {
   device_admin_authorization_rules = flatten([
     for ps in try(local.ise.device_administration.policy_sets, []) : [
-      for rule in try(ps.authorization_rules, []) : {
+      for generated_rank, rule in try(ps.authorization_rules, []) : {
         key                        = format("%s/%s", ps.name, rule.name)
         policy_set_id              = local.device_admin_policy_set_ids[ps.name]
         name                       = rule.name
         rank                       = try(rule.rank, local.defaults.ise.device_administration.policy_sets.authorization_rules.rank, null)
+        generated_rank             = generated_rank
         default                    = rule.name == "Default" ? true : false
         state                      = try(rule.state, local.defaults.ise.device_administration.policy_sets.authorization_rules.state, null)
         condition_type             = rule.name == "Default" ? null : try(rule.condition.type, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.type, null)
@@ -406,11 +403,6 @@ locals {
     ]
   ])
 
-  device_admin_authorization_rules_with_ranks = [
-    for idx, rule in local.device_admin_authorization_rules : merge(rule, {
-      generated_rank = idx
-    })
-  ]
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule" {
@@ -448,7 +440,7 @@ resource "ise_device_admin_authorization_rule" "default_device_admin_authorizati
 }
 
 resource "ise_device_admin_authorization_rule_update_rank" "device_admin_authorization_rule_update_rank" {
-  for_each = { for rule in local.device_admin_authorization_rules_with_ranks : rule.key => rule if rule.name != "Default" }
+  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if rule.name != "Default" }
 
   policy_set_id = each.value.policy_set_id
   rule_id       = ise_device_admin_authorization_rule.device_admin_authorization_rule[each.value.key].id
@@ -458,11 +450,12 @@ resource "ise_device_admin_authorization_rule_update_rank" "device_admin_authori
 locals {
   device_admin_authorization_exception_rules = flatten([
     for ps in try(local.ise.device_administration.policy_sets, []) : [
-      for rule in try(ps.authorization_exception_rules, []) : {
+      for generated_rank, rule in try(ps.authorization_exception_rules, []) : {
         key                        = format("%s/%s", ps.name, rule.name)
         policy_set_id              = local.device_admin_policy_set_ids[ps.name]
         name                       = rule.name
         rank                       = try(rule.rank, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.rank, null)
+        generated_rank             = generated_rank
         state                      = try(rule.state, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.state, null)
         condition_type             = try(rule.condition.type, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.type, null)
         condition_id               = contains(local.known_conditions_device_admin, try(rule.condition.name, "")) ? ise_device_admin_condition.device_admin_condition[rule.condition.name].id : try(data.ise_device_admin_condition.device_admin_condition[rule.condition.name].id, null)
@@ -498,11 +491,6 @@ locals {
     ]
   ])
 
-  device_admin_authorization_exception_rules_with_ranks = [
-    for idx, rule in local.device_admin_authorization_exception_rules : merge(rule, {
-      generated_rank = idx
-    })
-  ]
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule" {
@@ -526,7 +514,7 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
 }
 
 resource "ise_device_admin_authorization_exception_rule_update_rank" "device_admin_authorization_exception_rule_update_rank" {
-  for_each = { for rule in local.device_admin_authorization_exception_rules_with_ranks : rule.key => rule }
+  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule }
 
   policy_set_id = each.value.policy_set_id
   rule_id       = ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule[each.value.key].id

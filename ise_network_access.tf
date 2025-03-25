@@ -540,7 +540,7 @@ resource "ise_network_access_authorization_rule_update_rank_bulk" "network_acces
   policy_set_id = values(local.network_access_authorization_rules_ranks)[0].policy_set_id
   rules = [
     for key, rule in local.network_access_authorization_rules_ranks :{
-      rule_id = ise_network_access_authorization_rule.network_access_authorization_rule[key].id
+      id = ise_network_access_authorization_rule.network_access_authorization_rule[key].id
       rank = rule.generated_rank
     }
   ]

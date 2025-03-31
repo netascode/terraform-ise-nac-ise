@@ -275,7 +275,7 @@ data "ise_network_access_condition" "network_access_condition" {
 
 locals {
   network_access_policy_sets = [
-    for ps in try(local.ise.network_access.policy_sets, []) : {
+    for generated_rank, ps in try(local.ise.network_access.policy_sets, []) : {
       condition_type             = ps.name == "Default" ? null : try(ps.condition.type, local.defaults.ise.network_access.policy_sets.condition.type, null)
       condition_is_negate        = ps.name == "Default" ? null : try(ps.condition.is_negate, local.defaults.ise.network_access.policy_sets.condition.is_negate, null)
       condition_attribute_name   = ps.name == "Default" ? null : try(ps.condition.attribute_name, local.defaults.ise.network_access.policy_sets.condition.attribute_name, null)
@@ -291,6 +291,7 @@ locals {
       state                      = try(ps.state, local.defaults.ise.network_access.policy_sets.state)
       default                    = ps.name == "Default" ? true : false
       rank                       = try(ps.rank, local.defaults.ise.network_access.policy_sets.rank, null)
+      generated_rank             = generated_rank
       children = try([for i in ps.condition.children : {
         attribute_name   = try(i.attribute_name, local.defaults.ise.network_access.policy_sets.condition.attribute_name, null),
         attribute_value  = try(i.attribute_value, local.defaults.ise.network_access.policy_sets.condition.attribute_value, null)
@@ -314,11 +315,6 @@ locals {
     }
   ]
 
-  network_access_policy_sets_with_ranks = [
-    for idx, ps in local.network_access_policy_sets : merge(ps, {
-      generated_rank = idx
-    })
-  ]
 }
 
 resource "ise_network_access_policy_set" "network_access_policy_set" {
@@ -355,7 +351,7 @@ resource "ise_network_access_policy_set" "default_network_access_policy_set" {
 }
 
 resource "ise_network_access_policy_set_update_rank" "network_access_policy_set_update_rank" {
-  for_each = { for ps in local.network_access_policy_sets_with_ranks : ps.name => ps if ps.name != "Default" }
+  for_each = { for ps in local.network_access_policy_sets : ps.name => ps if ps.name != "Default" }
 
   policy_set_id = ise_network_access_policy_set.network_access_policy_set[each.key].id
   rank          = each.value.generated_rank
@@ -625,9 +621,10 @@ resource "ise_network_access_authorization_exception_rule_update_rank" "network_
 
 locals {
   network_access_authorization_global_exception_rules = [
-    for rule in try(local.ise.network_access.authorization_global_exception_rules, []) : {
+    for generated_rank, rule in try(local.ise.network_access.authorization_global_exception_rules, []) : {
       name                       = rule.name
       rank                       = try(rule.rank, local.defaults.ise.network_access.authorization_global_exception_rules.rank, null)
+      generated_rank             = generated_rank
       state                      = try(rule.state, local.defaults.ise.network_access.authorization_global_exception_rules.state, null)
       condition_type             = try(rule.condition.type, local.defaults.ise.network_access.authorization_global_exception_rules.condition.type, null)
       condition_id               = contains(local.known_conditions_network_access, try(rule.condition.name, "")) ? ise_network_access_condition.network_access_condition[rule.condition.name].id : try(data.ise_network_access_condition.network_access_condition[rule.condition.name].id, null)
@@ -662,11 +659,6 @@ locals {
     }
   ]
 
-  network_access_authorization_global_exception_rules_with_ranks = [
-    for idx, rule in local.network_access_authorization_global_exception_rules : merge(rule, {
-      generated_rank = idx
-    })
-  ]
 }
 
 resource "ise_network_access_authorization_global_exception_rule" "network_access_authorization_global_exception_rule" {
@@ -689,7 +681,7 @@ resource "ise_network_access_authorization_global_exception_rule" "network_acces
 }
 
 resource "ise_network_access_authorization_global_exception_rule_update_rank" "network_access_authorization_global_exception_rule_update_rank" {
-  for_each = { for rule in local.network_access_authorization_global_exception_rules_with_ranks : rule.name => rule }
+  for_each = { for rule in local.network_access_authorization_global_exception_rules : rule.name => rule }
 
   rule_id = ise_network_access_authorization_global_exception_rule.network_access_authorization_global_exception_rule[each.value.name].id
   rank    = each.value.generated_rank

@@ -536,7 +536,7 @@ resource "ise_network_access_authorization_rule" "default_network_access_authori
   depends_on = [ise_network_access_authorization_rule.network_access_authorization_rule]
 }
 
-resource "ise_network_access_authorization_rule_update_rank_bulk" "network_access_authorization_rule_update_rank_bulk" {
+resource "ise_network_access_authorization_rule_update_ranks" "network_access_authorization_rule_update_ranks" {
   policy_set_id = values(local.network_access_authorization_rules_ranks)[0].policy_set_id
   rules = [
     for key, rule in local.network_access_authorization_rules_ranks :{

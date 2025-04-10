@@ -293,6 +293,14 @@ locals {
       }
     ]
   ])
+  
+  device_admin_authentication_rules_ranks = {
+    for rule in local.device_admin_authentication_rules :
+    rule.key => {
+      policy_set_id = rule.policy_set_id
+      generated_rank = rule.generated_rank
+    } if rule.name != "Default"
+  }
 
 }
 
@@ -334,13 +342,17 @@ resource "ise_device_admin_authentication_rule" "default_device_admin_authentica
   depends_on = [ise_device_admin_authentication_rule.device_admin_authentication_rule]
 }
 
-resource "ise_device_admin_authentication_rule_update_rank" "device_admin_authentication_rule_update_rank" {
-  for_each = { for rule in local.device_admin_authentication_rules : rule.key => rule if rule.name != "Default" }
+resource "ise_device_admin_authentication_rule_update_ranks" "device_admin_authentication_rule_update_ranks" {
+  count = length(local.device_admin_authentication_rules_ranks) > 0 ? 1 : 0
+  policy_set_id = try(values(local.device_admin_authentication_rules_ranks)[0].policy_set_id, 0)
+  rules = [
+    for key, rule in local.device_admin_authentication_rules_ranks :{
+      id = ise_device_admin_authentication_rule.device_admin_authentication_rule[key].id
+      rank = rule.generated_rank
+    }
+  ]
+} 
 
-  policy_set_id = each.value.policy_set_id
-  rule_id       = ise_device_admin_authentication_rule.device_admin_authentication_rule[each.value.key].id
-  rank          = each.value.generated_rank
-}
 
 # Workaround for ISE API issue where deleting a TACACS profile or command set immediately after deleting an object using it fails
 resource "time_sleep" "device_admin_policy_object_wait" {
@@ -398,7 +410,13 @@ locals {
       }
     ]
   ])
-
+  device_admin_authorization_rules_ranks = {
+    for rule in local.device_admin_authorization_rules :
+    rule.key => {
+      policy_set_id = rule.policy_set_id
+      generated_rank = rule.generated_rank
+    } if rule.name != "Default"
+  }
 }
 
 resource "ise_device_admin_authorization_rule" "device_admin_authorization_rule" {
@@ -435,13 +453,18 @@ resource "ise_device_admin_authorization_rule" "default_device_admin_authorizati
   depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule]
 }
 
-resource "ise_device_admin_authorization_rule_update_rank" "device_admin_authorization_rule_update_rank" {
-  for_each = { for rule in local.device_admin_authorization_rules : rule.key => rule if rule.name != "Default" }
-
-  policy_set_id = each.value.policy_set_id
-  rule_id       = ise_device_admin_authorization_rule.device_admin_authorization_rule[each.value.key].id
-  rank          = each.value.generated_rank
+resource "ise_device_admin_authorization_rule_update_ranks" "device_admin_authorization_rule_update_ranks" {
+  count = length(local.device_admin_authorization_rules_ranks) > 0 ? 1 : 0
+  policy_set_id = try(values(local.device_admin_authorization_rules_ranks)[0].policy_set_id, 0)
+  rules = [
+    for key, rule in local.device_admin_authorization_rules_ranks :{
+      id = ise_device_admin_authorization_rule.device_admin_authorization_rule[key].id
+      rank = rule.generated_rank
+    }
+  ]
+  depends_on = [ise_device_admin_authorization_rule.device_admin_authorization_rule]
 }
+
 
 locals {
   device_admin_authorization_exception_rules = flatten([
@@ -487,6 +510,14 @@ locals {
     ]
   ])
 
+  device_admin_authorization_exception_rules_ranks = {
+    for rule in local.device_admin_authorization_exception_rules :
+    rule.key => {
+      policy_set_id = rule.policy_set_id
+      generated_rank = rule.generated_rank
+    } if rule.name != "Default"
+  }
+
 }
 
 resource "ise_device_admin_authorization_exception_rule" "device_admin_authorization_exception_rule" {
@@ -509,12 +540,16 @@ resource "ise_device_admin_authorization_exception_rule" "device_admin_authoriza
   depends_on = [ise_tacacs_profile.tacacs_profile, ise_tacacs_command_set.tacacs_command_set, time_sleep.device_admin_policy_object_wait, ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
-resource "ise_device_admin_authorization_exception_rule_update_rank" "device_admin_authorization_exception_rule_update_rank" {
-  for_each = { for rule in local.device_admin_authorization_exception_rules : rule.key => rule }
-
-  policy_set_id = each.value.policy_set_id
-  rule_id       = ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule[each.value.key].id
-  rank          = each.value.generated_rank
+resource "ise_device_admin_authorization_exception_rule_update_ranks" "device_admin_authorization_exception_rule_update_ranks" {
+  count = length(local.device_admin_authorization_exception_rules_ranks) > 0 ? 1 : 0
+  policy_set_id = try(values(local.device_admin_authorization_exception_rules_ranks)[0].policy_set_id, 0)
+  rules = [
+    for key, rule in local.device_admin_authorization_exception_rules_ranks :{
+      id = ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule[key].id
+      rank = rule.generated_rank
+    }
+  ]
+  depends_on = [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule]
 }
 
 locals {
@@ -557,6 +592,12 @@ locals {
     }
   ]
 
+  device_admin_authorization_global_exception_rules_ranks = {
+    for rule in local.device_admin_authorization_global_exception_rules :
+    rule.key => {
+      generated_rank = rule.generated_rank
+    } if rule.name != "Default"
+  }
 }
 
 resource "ise_device_admin_authorization_global_exception_rule" "device_admin_authorization_global_exception_rule" {
@@ -578,9 +619,11 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
   depends_on = [ise_tacacs_profile.tacacs_profile, ise_tacacs_command_set.tacacs_command_set, time_sleep.device_admin_policy_object_wait, ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
-resource "ise_device_admin_authorization_global_exception_rule_update_rank" "device_admin_authorization_global_exception_rule_update_rank" {
-  for_each = { for rule in local.device_admin_authorization_global_exception_rules : rule.name => rule }
-
-  rule_id = ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule[each.value.name].id
-  rank    = each.value.generated_rank
+resource "ise_device_admin_authorization_global_exception_rule_update_ranks" "device_admin_authorization_global_exception_rule_update_ranks" {
+  rules = [
+    for key, rule in local.device_admin_authorization_global_exception_rules_ranks :{
+      id = ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule[key].id
+      rank = rule.generated_rank
+    }
+  ]
 }

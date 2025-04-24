@@ -200,7 +200,7 @@ locals {
   ]
 
   device_admin_policy_sets_ranks = {
-    for rule in local.device_admin_policy_sets:
+    for rule in local.device_admin_policy_sets :
     rule.name => {
       generated_rank = rule.generated_rank
     } if rule.name != "Default"
@@ -244,8 +244,8 @@ resource "ise_device_admin_policy_set" "default_device_admin_policy_set" {
 resource "ise_device_admin_policy_set_update_ranks" "ise_device_admin_policy_set_update_ranks" {
   count = length(local.device_admin_policy_sets_ranks) > 0 ? 1 : 0
   policies = [
-    for key, rule in local.device_admin_policy_sets_ranks :{
-      id = ise_device_admin_policy_set.device_admin_policy_set[key].id
+    for key, rule in local.device_admin_policy_sets_ranks : {
+      id   = ise_device_admin_policy_set.device_admin_policy_set[key].id
       rank = rule.generated_rank
     }
   ]
@@ -305,7 +305,7 @@ locals {
       }
     ]
   ])
-  
+
   device_admin_authentication_rules_by_policy_name = {
     for policy_name in distinct([
       for rule in local.device_admin_authentication_rules :
@@ -314,9 +314,9 @@ locals {
     policy_name => [
       for r in local.device_admin_authentication_rules :
       {
-        key = r.key
+        key  = r.key
         rank = r.generated_rank
-      } if r.policy_set_name == policy_name && r.name != "Default" 
+      } if r.policy_set_name == policy_name && r.name != "Default"
     ]
   }
 
@@ -367,7 +367,7 @@ resource "ise_device_admin_authentication_rule_update_ranks" "device_admin_authe
 
   rules = [
     for rule in each.value : {
-      id = ise_device_admin_authentication_rule.device_admin_authentication_rule[rule.key].id
+      id   = ise_device_admin_authentication_rule.device_admin_authentication_rule[rule.key].id
       rank = rule.rank
     }
   ]
@@ -441,9 +441,9 @@ locals {
     policy_name => [
       for r in local.device_admin_authorization_rules :
       {
-        key = r.key
+        key  = r.key
         rank = r.generated_rank
-      } if r.policy_set_name == policy_name && r.name != "Default" 
+      } if r.policy_set_name == policy_name && r.name != "Default"
     ]
   }
 
@@ -490,7 +490,7 @@ resource "ise_device_admin_authorization_rule_update_ranks" "device_admin_author
 
   rules = [
     for rule in each.value : {
-      id = ise_device_admin_authorization_rule.device_admin_authorization_rule[rule.key].id
+      id   = ise_device_admin_authorization_rule.device_admin_authorization_rule[rule.key].id
       rank = rule.rank
     }
   ]
@@ -550,9 +550,9 @@ locals {
     policy_name => [
       for r in local.device_admin_authorization_exception_rules :
       {
-        key = r.key
+        key  = r.key
         rank = r.generated_rank
-      } if r.policy_set_name == policy_name && r.name != "Default" 
+      } if r.policy_set_name == policy_name && r.name != "Default"
     ]
   }
 
@@ -585,7 +585,7 @@ resource "ise_device_admin_authorization_exception_rule_update_ranks" "device_ad
 
   rules = [
     for rule in each.value : {
-      id = ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule[rule.key].id
+      id   = ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule[rule.key].id
       rank = rule.rank
     }
   ]
@@ -661,8 +661,8 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 
 resource "ise_device_admin_authorization_global_exception_rule_update_ranks" "device_admin_authorization_global_exception_rule_update_ranks" {
   rules = [
-    for key, rule in local.device_admin_authorization_global_exception_rules_ranks :{
-      id = ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule[key].id
+    for key, rule in local.device_admin_authorization_global_exception_rules_ranks : {
+      id   = ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule[key].id
       rank = rule.generated_rank
     }
   ]

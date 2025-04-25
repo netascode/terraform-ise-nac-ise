@@ -44,7 +44,7 @@ module "ise" {
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
-| <a name="requirement_ise"></a> [ise](#requirement\_ise) | >= 0.2.4 |
+| <a name="requirement_ise"></a> [ise](#requirement\_ise) | >= 0.2.7 |
 | <a name="requirement_local"></a> [local](#requirement\_local) | >= 2.3.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.10.0 |
 | <a name="requirement_utils"></a> [utils](#requirement\_utils) | >= 0.2.5 |
@@ -75,18 +75,18 @@ module "ise" {
 | [ise_certificate_authentication_profile.certificate_authentication_profile](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/certificate_authentication_profile) | resource |
 | [ise_device_admin_authentication_rule.default_device_admin_authentication_rule](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_authentication_rule) | resource |
 | [ise_device_admin_authentication_rule.device_admin_authentication_rule](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_authentication_rule) | resource |
-| [ise_device_admin_authentication_rule_update_rank.device_admin_authentication_rule_update_rank](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_authentication_rule_update_rank) | resource |
+| [ise_device_admin_authentication_rule_update_ranks.device_admin_authentication_rule_update_ranks](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_authentication_rule_update_ranks) | resource |
 | [ise_device_admin_authorization_exception_rule.device_admin_authorization_exception_rule](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_authorization_exception_rule) | resource |
-| [ise_device_admin_authorization_exception_rule_update_rank.device_admin_authorization_exception_rule_update_rank](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_authorization_exception_rule_update_rank) | resource |
+| [ise_device_admin_authorization_exception_rule_update_ranks.device_admin_authorization_exception_rule_update_ranks](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_authorization_exception_rule_update_ranks) | resource |
 | [ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_authorization_global_exception_rule) | resource |
-| [ise_device_admin_authorization_global_exception_rule_update_rank.device_admin_authorization_global_exception_rule_update_rank](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_authorization_global_exception_rule_update_rank) | resource |
+| [ise_device_admin_authorization_global_exception_rule_update_ranks.device_admin_authorization_global_exception_rule_update_ranks](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_authorization_global_exception_rule_update_ranks) | resource |
 | [ise_device_admin_authorization_rule.default_device_admin_authorization_rule](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_authorization_rule) | resource |
 | [ise_device_admin_authorization_rule.device_admin_authorization_rule](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_authorization_rule) | resource |
-| [ise_device_admin_authorization_rule_update_rank.device_admin_authorization_rule_update_rank](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_authorization_rule_update_rank) | resource |
+| [ise_device_admin_authorization_rule_update_ranks.device_admin_authorization_rule_update_ranks](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_authorization_rule_update_ranks) | resource |
 | [ise_device_admin_condition.device_admin_condition](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_condition) | resource |
 | [ise_device_admin_policy_set.default_device_admin_policy_set](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_policy_set) | resource |
 | [ise_device_admin_policy_set.device_admin_policy_set](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_policy_set) | resource |
-| [ise_device_admin_policy_set_update_rank.device_admin_policy_set_update_rank](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_policy_set_update_rank) | resource |
+| [ise_device_admin_policy_set_update_ranks.ise_device_admin_policy_set_update_ranks](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_policy_set_update_ranks) | resource |
 | [ise_device_admin_time_and_date_condition.device_admin_time_and_date_condition](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_time_and_date_condition) | resource |
 | [ise_downloadable_acl.downloadable_acl](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/downloadable_acl) | resource |
 | [ise_endpoint.endpoint](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/endpoint) | resource |
@@ -101,19 +101,19 @@ module "ise" {
 | [ise_license_tier_state.license_tier_state](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/license_tier_state) | resource |
 | [ise_network_access_authentication_rule.default_network_access_authentication_rule](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_authentication_rule) | resource |
 | [ise_network_access_authentication_rule.network_access_authentication_rule](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_authentication_rule) | resource |
-| [ise_network_access_authentication_rule_update_rank.network_access_authentication_rule_update_rank](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_authentication_rule_update_rank) | resource |
+| [ise_network_access_authentication_rule_update_ranks.network_access_authentication_rule_update_ranks](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_authentication_rule_update_ranks) | resource |
 | [ise_network_access_authorization_exception_rule.network_access_authorization_exception_rule](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_authorization_exception_rule) | resource |
-| [ise_network_access_authorization_exception_rule_update_rank.network_access_authorization_exception_rule_update_rank](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_authorization_exception_rule_update_rank) | resource |
+| [ise_network_access_authorization_exception_rule_update_ranks.network_access_authorization_exception_rule_update_ranks](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_authorization_exception_rule_update_ranks) | resource |
 | [ise_network_access_authorization_global_exception_rule.network_access_authorization_global_exception_rule](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_authorization_global_exception_rule) | resource |
-| [ise_network_access_authorization_global_exception_rule_update_rank.network_access_authorization_global_exception_rule_update_rank](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_authorization_global_exception_rule_update_rank) | resource |
+| [ise_network_access_authorization_global_exception_rule_update_ranks.network_access_authorization_global_exception_rule_update_ranks](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_authorization_global_exception_rule_update_ranks) | resource |
 | [ise_network_access_authorization_rule.default_network_access_authorization_rule](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_authorization_rule) | resource |
 | [ise_network_access_authorization_rule.network_access_authorization_rule](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_authorization_rule) | resource |
-| [ise_network_access_authorization_rule_update_rank.network_access_authorization_rule_update_rank](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_authorization_rule_update_rank) | resource |
+| [ise_network_access_authorization_rule_update_ranks.network_access_authorization_rule_update_ranks](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_authorization_rule_update_ranks) | resource |
 | [ise_network_access_condition.network_access_condition](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_condition) | resource |
 | [ise_network_access_dictionary.network_access_dictionary](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_dictionary) | resource |
 | [ise_network_access_policy_set.default_network_access_policy_set](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_policy_set) | resource |
 | [ise_network_access_policy_set.network_access_policy_set](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_policy_set) | resource |
-| [ise_network_access_policy_set_update_rank.network_access_policy_set_update_rank](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_policy_set_update_rank) | resource |
+| [ise_network_access_policy_set_update_ranks.network_access_policy_set_update_ranks](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_policy_set_update_ranks) | resource |
 | [ise_network_access_time_and_date_condition.network_access_time_and_date_condition](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_time_and_date_condition) | resource |
 | [ise_network_device.network_device](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_device) | resource |
 | [ise_network_device_group.network_device_group_0](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_device_group) | resource |

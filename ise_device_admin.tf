@@ -660,6 +660,7 @@ resource "ise_device_admin_authorization_global_exception_rule" "device_admin_au
 }
 
 resource "ise_device_admin_authorization_global_exception_rule_update_ranks" "device_admin_authorization_global_exception_rule_update_ranks" {
+  count = length(local.device_admin_authorization_global_exception_rules_ranks) > 0 ? 1 : 0
   rules = [
     for key, rule in local.device_admin_authorization_global_exception_rules_ranks : {
       id   = ise_device_admin_authorization_global_exception_rule.device_admin_authorization_global_exception_rule[key].id

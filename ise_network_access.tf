@@ -763,6 +763,7 @@ resource "ise_network_access_authorization_global_exception_rule" "network_acces
 }
 
 resource "ise_network_access_authorization_global_exception_rule_update_ranks" "network_access_authorization_global_exception_rule_update_ranks" {
+  count = length(local.network_access_authorization_global_exception_rules_ranks) > 0 ? 1 : 0
   rules = [
     for key, rule in local.network_access_authorization_global_exception_rules_ranks : {
       id   = ise_network_access_authorization_global_exception_rule.network_access_authorization_global_exception_rule[key].id

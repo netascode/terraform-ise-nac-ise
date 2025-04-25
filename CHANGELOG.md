@@ -1,5 +1,7 @@
-## 0.1.3 (unreleased)
+## 0.2.0 (unreleased)
 
+- BREAKING CHANGE: Replace `network_access_*_update_rank` and `device_admin_*_update_rank` resources with `network_access_*_update_ranks` and `device_admin_*_update_ranks` resources to support bulk updates of ranks across (Policy Sets, Authentication Rules, Authorization Rules, Authorization Global Exception Rules and Authorization Exception Rules) under Network Access and Device Administration
+- BREAKING CHANGE: Rename `trustsec_download_enviroment_data_every_x_seconds` attribute of `ise_network_device` resource to `trustsec_download_environment_data_every_x_seconds`
 - Fix issue with incorrect generated ranks in multiple policies [link](https://github.com/netascode/terraform-ise-nac-ise/issues/21)
 - Fix update-in-place during import in `ise_user_identity_group`, `ise_endpoint_identity_group` and `network_device_group`
 - Fix update-in-place during `ise_device_admin_condition`, `ise_device_admin_time_and_date_condition` and `ise_device_admin_policy_set`

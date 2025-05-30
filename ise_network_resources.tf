@@ -167,7 +167,7 @@ resource "ise_network_device" "network_device" {
   }], null)
   model_name = try(each.value.model_name, local.defaults.ise.network_resources.network_devices.model_name, null)
   network_device_groups = try(each.value.network_device_groups, null) == null ? null : [
-    for group in try(each.value.network_device_groups, []) : split("#", group)[0] == "All Device Types" ? "Device Type#${group}" : (split("#", group)[0] == "All Locations" ? "Location#${group}" : (split("#", group)[0] == "Is IPSEC Device" ? "IPSEC#${group}" : "${split("#", group)[0]}#${group}"))
+    for group in try(each.value.network_device_groups, []) : split("#", group)[0] == "All Device Types" ? "Device Type#${group}" : (split("#", group)[0] == "All Locations" ? "Location#${group}" : (split("#", group)[0] == "Is IPSEC Device" ? "IPSEC#${group}" : split("#", group)[0] == "DNAC" ? group : "${split("#", group)[0]}#${group}"))
   ]
   software_version                                            = try(each.value.software_version, local.defaults.ise.network_resources.network_devices.software_version, null)
   profile_name                                                = try(each.value.profile_name, local.defaults.ise.network_resources.network_devices.profile_name, null)

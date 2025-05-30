@@ -1,3 +1,8 @@
+## 0.2.1 (unreleased)
+
+- Use Terraform functions to merge YAML content instead of data sources
+- Fix issue with idepotency when assigning device to DNAC network device group
+
 ## 0.2.0
 
 - BREAKING CHANGE: Replace `network_access_*_update_rank` and `device_admin_*_update_rank` resources with `network_access_*_update_ranks` and `device_admin_*_update_ranks` resources to support bulk updates of ranks across (Policy Sets, Authentication Rules, Authorization Rules, Authorization Global Exception Rules and Authorization Exception Rules) under Network Access and Device Administration

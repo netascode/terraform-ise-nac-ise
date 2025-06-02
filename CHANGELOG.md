@@ -1,4 +1,4 @@
-## 0.2.1 (unreleased)
+## 0.2.1
 
 - Use Terraform functions to merge YAML content instead of data sources
 - Fix issue with idepotency when assigning device to DNAC network device group

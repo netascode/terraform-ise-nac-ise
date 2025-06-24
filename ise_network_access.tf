@@ -118,7 +118,7 @@ resource "ise_authorization_profile" "authorization_profile" {
     attribute_right_value_type      = try(split(":", i.value)[1], null) != null ? "AdvancedDictionaryAttribute" : "AttributeValue"
     attribute_right_dictionary_name = try(split(":", i.value)[1], null) != null ? split(":", i.value)[0] : null
     attribute_right_name            = try(split(":", i.value)[1], null) != null ? split(":", i.value)[1] : null
-    attribute_right_value           = try(split(":", i.value)[1], null) != null ? null : i.attribute_value
+    attribute_right_value           = try(split(":", i.value)[1], null) != null ? null : i.value
   }], null)
 
   lifecycle {

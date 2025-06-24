@@ -1,3 +1,7 @@
+## 0.2.2 (unreleased)
+
+- Fix issue with Cisco AV pairs not working properly within an authorization profile [link](https://github.com/netascode/terraform-ise-nac-ise/issues/28)
+
 ## 0.2.1
 
 - Use Terraform functions to merge YAML content instead of data sources

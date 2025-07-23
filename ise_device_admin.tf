@@ -27,6 +27,7 @@ resource "ise_device_admin_condition" "device_admin_condition" {
   description      = try(each.value.description, local.defaults.ise.device_administration.policy_elements.conditions.description, null)
   name             = each.key
   children = length(try(each.value.children, [])) == 0 ? null : [for c in try(each.value.children, []) : {
+    description      = try(c.description, data.ise_device_admin_condition.device_admin_condition_circular[c.name].description, null)
     attribute_name   = try(c.attribute_name, local.defaults.ise.device_administration.policy_elements.conditions.attribute_name, null)
     attribute_value  = try(c.attribute_value, local.defaults.ise.device_administration.policy_elements.conditions.attribute_value, null)
     dictionary_name  = try(c.dictionary_name, local.defaults.ise.device_administration.policy_elements.conditions.dictionary_name, null)
@@ -41,6 +42,7 @@ resource "ise_device_admin_condition" "device_admin_condition" {
       attribute_value  = try(c2.attribute_value, local.defaults.ise.device_administration.policy_elements.conditions.attribute_value, null)
       dictionary_name  = try(c2.dictionary_name, local.defaults.ise.device_administration.policy_elements.conditions.dictionary_name, null)
       dictionary_value = try(c2.dictionary_value, local.defaults.ise.device_administration.policy_elements.conditions.dictionary_value, null)
+      description      = try(c2.description, data.ise_device_admin_condition.device_admin_condition_circular[c2.name].description, null)
       condition_type   = try(c2.type, local.defaults.ise.device_administration.policy_elements.conditions.type, null)
       is_negate        = try(c2.is_negate, local.defaults.ise.device_administration.policy_elements.conditions.is_negate, null)
       operator         = try(c2.operator, local.defaults.ise.device_administration.policy_elements.conditions.operator, null)

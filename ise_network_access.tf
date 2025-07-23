@@ -157,7 +157,7 @@ resource "ise_network_access_condition" "network_access_condition" {
   description      = try(each.value.description, local.defaults.ise.network_access.policy_elements.conditions.description, null)
   name             = each.key
   children = length(try(each.value.children, [])) == 0 ? null : [for c in try(each.value.children, []) : {
-    description      = try(c.description, local.defaults.ise.network_access.policy_elements.conditions.description, null)
+    description      = try(c.description, data.ise_network_access_condition.network_access_condition_circular[c.name].description, null)
     attribute_name   = try(c.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
     attribute_value  = try(c.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
     dictionary_name  = try(c.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
@@ -168,7 +168,7 @@ resource "ise_network_access_condition" "network_access_condition" {
     name             = try(c.name, null)
     id               = try(c.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? data.ise_network_access_condition.network_access_condition_circular[c.name].id : null
     children = length(try(c.children, [])) == 0 ? null : [for c2 in try(c.children, []) : {
-      description      = try(c2.description, local.defaults.ise.network_access.policy_elements.conditions.description, null)
+      description      = try(c2.description, data.ise_network_access_condition.network_access_condition_circular[c2.name].description, null)
       attribute_name   = try(c2.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
       attribute_value  = try(c2.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
       dictionary_name  = try(c2.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)

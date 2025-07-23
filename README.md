@@ -33,7 +33,7 @@ ise:
 ```hcl
 module "ise" {
   source  = "netascode/nac-ise/ise"
-  version = ">= 0.1.0"
+  version = ">= 0.2.0"
 
   yaml_files = ["network_access_condition.yaml"]
 }
@@ -44,10 +44,10 @@ module "ise" {
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.8.0 |
-| <a name="requirement_ise"></a> [ise](#requirement\_ise) | >= 0.2.7 |
+| <a name="requirement_ise"></a> [ise](#requirement\_ise) | >= 0.2.10 |
 | <a name="requirement_local"></a> [local](#requirement\_local) | >= 2.3.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.10.0 |
-| <a name="requirement_utils"></a> [utils](#requirement\_utils) | >= 1.0.0 |
+| <a name="requirement_utils"></a> [utils](#requirement\_utils) | 0.2.6 |
 ## Inputs
 
 | Name | Description | Type | Default | Required |

@@ -1,4 +1,4 @@
-## 0.2.2 (unreleased)
+## 0.2.2
 
 - Fix issue with incorrect merging of authorization rules [link](https://github.com/netascode/terraform-ise-nac-ise/issues/27)
 - Fix issue with Cisco AV pairs not working properly within an authorization profile [link](https://github.com/netascode/terraform-ise-nac-ise/issues/28)

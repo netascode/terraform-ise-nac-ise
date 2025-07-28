@@ -77,6 +77,13 @@ resource "ise_allowed_protocols" "allowed_protocols" {
   preferred_eap_protocol                            = try(each.value.preferred_eap_protocol, local.defaults.ise.network_access.policy_elements.allowed_protocols.preferred_eap_protocol, null)
 }
 
+locals {
+  # Define patterns that should be treated as AttributeValue despite containing colons
+  attribute_value_patterns = [
+    "shell:priv-lvl=",     # Matches shell:priv-lvl=15 and similar
+  ]
+}
+
 resource "ise_authorization_profile" "authorization_profile" {
   for_each = { for profile in try(local.ise.network_access.policy_elements.authorization_profiles, []) : profile.name => profile }
 
@@ -115,10 +122,10 @@ resource "ise_authorization_profile" "authorization_profile" {
   advanced_attributes = try([for i in each.value.advanced_attributes : {
     attribute_left_dictionary_name  = try(split(":", i.name)[0], null)
     attribute_left_name             = try(split(":", i.name)[1], null)
-    attribute_right_value_type      = try(split(":", i.value)[1], null) != null ? "AdvancedDictionaryAttribute" : "AttributeValue"
-    attribute_right_dictionary_name = try(split(":", i.value)[1], null) != null ? split(":", i.value)[0] : null
-    attribute_right_name            = try(split(":", i.value)[1], null) != null ? split(":", i.value)[1] : null
-    attribute_right_value           = try(split(":", i.value)[1], null) != null ? null : i.value
+    attribute_right_value_type      = anytrue([for pattern in local.attribute_value_patterns : can(regex(pattern, i.value))]) ? "AttributeValue" : (try(split(":", i.value)[1], null) != null ? "AdvancedDictionaryAttribute" : "AttributeValue"),
+    attribute_right_dictionary_name = anytrue([for pattern in local.attribute_value_patterns : can(regex(pattern, i.value))]) ? null : (try(split(":", i.value)[1], null) != null ? split(":", i.value)[0] : null),
+    attribute_right_name            = anytrue([for pattern in local.attribute_value_patterns : can(regex(pattern, i.value))]) ? null : (try(split(":", i.value)[1], null) != null ? split(":", i.value)[1] : null),
+    attribute_right_value           = anytrue([for pattern in local.attribute_value_patterns : can(regex(pattern, i.value))]) ? i.value : (try(split(":", i.value)[1], null) != null ? null : i.value)
   }], null)
 
   lifecycle {

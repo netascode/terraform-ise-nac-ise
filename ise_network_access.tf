@@ -122,9 +122,9 @@ resource "ise_authorization_profile" "authorization_profile" {
   advanced_attributes = try([for i in each.value.advanced_attributes : {
     attribute_left_dictionary_name  = try(split(":", i.name)[0], null)
     attribute_left_name             = try(split(":", i.name)[1], null)
-    attribute_right_value_type      = anytrue([for pattern in local.attribute_value_patterns : can(regex(pattern, i.value))]) ? "AttributeValue" : (try(split(":", i.value)[1], null) != null ? "AdvancedDictionaryAttribute" : "AttributeValue"),
-    attribute_right_dictionary_name = anytrue([for pattern in local.attribute_value_patterns : can(regex(pattern, i.value))]) ? null : (try(split(":", i.value)[1], null) != null ? split(":", i.value)[0] : null),
-    attribute_right_name            = anytrue([for pattern in local.attribute_value_patterns : can(regex(pattern, i.value))]) ? null : (try(split(":", i.value)[1], null) != null ? split(":", i.value)[1] : null),
+    attribute_right_value_type      = anytrue([for pattern in local.attribute_value_patterns : can(regex(pattern, i.value))]) ? "AttributeValue" : (try(split(":", i.value)[1], null) != null ? "AdvancedDictionaryAttribute" : "AttributeValue")
+    attribute_right_dictionary_name = anytrue([for pattern in local.attribute_value_patterns : can(regex(pattern, i.value))]) ? null : (try(split(":", i.value)[1], null) != null ? split(":", i.value)[0] : null)
+    attribute_right_name            = anytrue([for pattern in local.attribute_value_patterns : can(regex(pattern, i.value))]) ? null : (try(split(":", i.value)[1], null) != null ? split(":", i.value)[1] : null)
     attribute_right_value           = anytrue([for pattern in local.attribute_value_patterns : can(regex(pattern, i.value))]) ? i.value : (try(split(":", i.value)[1], null) != null ? null : i.value)
   }], null)
 

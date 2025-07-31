@@ -80,7 +80,7 @@ resource "ise_allowed_protocols" "allowed_protocols" {
 locals {
   # Define strings that should be treated as AttributeValue despite containing colons
   attribute_value_patterns = [
-    "shell:priv-lvl=",     # Matches shell:priv-lvl=15 and similar
+    "shell:priv-lvl=",
   ]
 }
 

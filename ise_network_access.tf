@@ -77,6 +77,13 @@ resource "ise_allowed_protocols" "allowed_protocols" {
   preferred_eap_protocol                            = try(each.value.preferred_eap_protocol, local.defaults.ise.network_access.policy_elements.allowed_protocols.preferred_eap_protocol, null)
 }
 
+locals {
+  # Define strings that should be treated as AttributeValue despite containing colons
+  attribute_value_patterns = [
+    "shell:priv-lvl=",
+  ]
+}
+
 resource "ise_authorization_profile" "authorization_profile" {
   for_each = { for profile in try(local.ise.network_access.policy_elements.authorization_profiles, []) : profile.name => profile }
 
@@ -112,14 +119,14 @@ resource "ise_authorization_profile" "authorization_profile" {
   reauthentication_connectivity                         = try(each.value.reauthentication_connectivity, local.defaults.ise.network_access.policy_elements.authorization_profiles.reauthentication_connectivity, null)
   reauthentication_timer                                = try(each.value.reauthentication_timer, local.defaults.ise.network_access.policy_elements.authorization_profiles.reauthentication_timer, null)
   airespace_ipv6_acl                                    = try(each.value.airespace_ipv6_acl, local.defaults.ise.network_access.policy_elements.authorization_profiles.airespace_ipv6_acl, null)
-  advanced_attributes = try([for i in each.value.advanced_attributes : {
+  advanced_attributes = length(try(each.value.advanced_attributes, [])) > 0 ? [for i in each.value.advanced_attributes : {
     attribute_left_dictionary_name  = try(split(":", i.name)[0], null)
     attribute_left_name             = try(split(":", i.name)[1], null)
-    attribute_right_value_type      = try(split(":", i.value)[1], null) != null ? "AdvancedDictionaryAttribute" : "AttributeValue"
-    attribute_right_dictionary_name = try(split(":", i.value)[1], null) != null ? split(":", i.value)[0] : null
-    attribute_right_name            = try(split(":", i.value)[1], null) != null ? split(":", i.value)[1] : null
-    attribute_right_value           = try(split(":", i.value)[1], null) != null ? null : i.value
-  }], null)
+    attribute_right_value_type      = anytrue([for pattern in local.attribute_value_patterns : strcontains(i.value, pattern)]) ? "AttributeValue" : (try(split(":", i.value)[1], null) != null ? "AdvancedDictionaryAttribute" : "AttributeValue")
+    attribute_right_dictionary_name = anytrue([for pattern in local.attribute_value_patterns : strcontains(i.value, pattern)]) ? null : (try(split(":", i.value)[1], null) != null ? split(":", i.value)[0] : null)
+    attribute_right_name            = anytrue([for pattern in local.attribute_value_patterns : strcontains(i.value, pattern)]) ? null : (try(split(":", i.value)[1], null) != null ? split(":", i.value)[1] : null)
+    attribute_right_value           = anytrue([for pattern in local.attribute_value_patterns : strcontains(i.value, pattern)]) ? i.value : (try(split(":", i.value)[1], null) != null ? null : i.value)
+  }] : null
 
   lifecycle {
     create_before_destroy = true

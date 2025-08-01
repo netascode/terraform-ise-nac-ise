@@ -1,3 +1,7 @@
+## 0.2.3 (unreleased)
+
+- Add support for shell profile av-pairs under authorization profiles
+
 ## 0.2.2
 
 - Fix issue with incorrect merging of authorization rules [link](https://github.com/netascode/terraform-ise-nac-ise/issues/27)

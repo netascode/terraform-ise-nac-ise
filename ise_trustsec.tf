@@ -88,3 +88,11 @@ resource "ise_trustsec_egress_matrix_cell" "trustsec_egress_matrix_cell" {
 
   depends_on = [time_sleep.sgt_wait]
 }
+
+resource "ise_trustsec_egress_push_matrix" "push_matrix" {
+  force = try(local.ise.trust_sec.matrix_push, local.defaults.ise.trust_sec.matrix_push, false)
+
+  depends_on = [
+    ise_trustsec_egress_matrix_cell.trustsec_egress_matrix_cell
+  ]
+}

@@ -1,5 +1,6 @@
 ## 0.2.3 (unreleased)
 
+- Add support for trustsec matrix push
 - Add support for shell profile av-pairs under authorization profiles
 
 ## 0.2.2

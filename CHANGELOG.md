@@ -1,5 +1,6 @@
 ## 0.2.3 (unreleased)
 
+- Add support for optional Active Directory join operation with `join_domain` flag, allowing creation of join points and addition of groups without executing join
 - Add support for automatic TrustSec policy push (SGTs, SGACLs, and egress matrix) to network devices with configurable `push_mode` (AUTO/DISABLED)
 - Add support for shell profile av-pairs under authorization profiles
 

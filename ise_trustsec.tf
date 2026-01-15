@@ -89,8 +89,22 @@ resource "ise_trustsec_egress_matrix_cell" "trustsec_egress_matrix_cell" {
   depends_on = [time_sleep.sgt_wait]
 }
 
-resource "ise_trustsec_egress_push_matrix" "push_matrix" {
-  force = try(local.ise.trust_sec.matrix_push, local.defaults.ise.trust_sec.matrix_push, false)
+# Terraform data resource to track changes to TrustSec resources
+resource "terraform_data" "trustsec_resources_trigger" {
+  triggers_replace = {
+    security_groups     = md5(jsonencode(try(local.ise.trust_sec.security_groups, [])))
+    security_group_acls = md5(jsonencode(try(local.ise.trust_sec.security_group_acls, [])))
+    matrix_entries      = md5(jsonencode(try(local.ise.trust_sec.matrix_entries, [])))
+  }
+}
+
+resource "ise_trustsec_egress_push_matrix" "push" {
+
+  lifecycle {
+    replace_triggered_by = [
+      terraform_data.trustsec_resources_trigger
+    ]
+  }
 
   depends_on = [
     ise_trustsec_egress_matrix_cell.trustsec_egress_matrix_cell

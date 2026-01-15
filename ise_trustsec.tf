@@ -88,3 +88,37 @@ resource "ise_trustsec_egress_matrix_cell" "trustsec_egress_matrix_cell" {
 
   depends_on = [time_sleep.sgt_wait]
 }
+
+# Terraform data resource to track changes to TrustSec resources for automatic push
+resource "terraform_data" "trustsec_resources_trigger" {
+  count = try(local.ise.trust_sec.push_mode, local.defaults.ise.trust_sec.push_mode, "DISABLED") == "AUTO" ? 1 : 0
+
+  triggers_replace = {
+    security_groups       = md5(jsonencode(try(local.ise.trust_sec.security_groups, [])))
+    security_group_acls   = md5(jsonencode(try(local.ise.trust_sec.security_group_acls, [])))
+    ip_sgt_mapping_groups = md5(jsonencode(try(local.ise.trust_sec.ip_sgt_mapping_groups, [])))
+    ip_sgt_mappings       = md5(jsonencode(try(local.ise.trust_sec.ip_sgt_mappings, [])))
+    matrix_entries        = md5(jsonencode(try(local.ise.trust_sec.matrix_entries, [])))
+  }
+}
+
+# DISABLED mode (default): TrustSec policy changes stay in ISE database only
+# AUTO mode: Set push_mode: AUTO to automatically push when TrustSec resources change
+# Pushes TrustSec Environment Data, SGACLs, and Policy Matrix to network devices
+resource "ise_trustsec_egress_push_matrix" "push_auto" {
+  count = try(local.ise.trust_sec.push_mode, local.defaults.ise.trust_sec.push_mode, "DISABLED") == "AUTO" ? 1 : 0
+
+  lifecycle {
+    replace_triggered_by = [
+      terraform_data.trustsec_resources_trigger[0]
+    ]
+  }
+
+  depends_on = [
+    ise_trustsec_security_group.trustsec_security_group,
+    ise_trustsec_security_group_acl.trustsec_security_group_acl,
+    ise_trustsec_ip_to_sgt_mapping_group.trustsec_ip_to_sgt_mapping_group,
+    ise_trustsec_ip_to_sgt_mapping.trustsec_ip_to_sgt_mapping,
+    ise_trustsec_egress_matrix_cell.trustsec_egress_matrix_cell
+  ]
+}

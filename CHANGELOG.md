@@ -1,6 +1,6 @@
 ## 0.2.3 (unreleased)
 
-- Add support for trustsec matrix push
+- Add support for automatic TrustSec policy push (SGTs, SGACLs, and egress matrix) to network devices with configurable `push_mode` (AUTO/DISABLED)
 - Add support for shell profile av-pairs under authorization profiles
 
 ## 0.2.2

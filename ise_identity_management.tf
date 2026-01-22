@@ -445,8 +445,8 @@ locals {
     for ad in try(local.ise.identity_management.active_directories, []) : ad.name => ad
     if length(try(ad.groups, [])) > 0 && anytrue([
       for group in try(ad.groups, []) :
-      # Need lookup if group is a string OR if it's an object without SID
-      can(group.name) ? (can(group.sid) ? group.sid == null || group.sid == "" : true) : true
+      # Need lookup if group is a string OR if it's an object without SID (null or empty)
+      try(group.sid, null) == null || try(group.sid, "") == ""
     ])
   }
 }
@@ -473,10 +473,11 @@ locals {
   active_directory_groups = {
     for ad in try(local.ise.identity_management.active_directories, []) : ad.name => [
       for group in try(ad.groups, []) : {
-        # If group is a string, lookup SID from data source; if it's an object, use provided values or lookup if missing
-        name = can(group.name) ? group.name : group
-        type = can(group.type) && group.type != null && group.type != "" ? group.type : try(local.active_directory_groups_all[ad.name][can(group.name) ? group.name : group].type, null)
-        sid  = can(group.sid) && group.sid != null && group.sid != "" ? group.sid : try(local.active_directory_groups_all[ad.name][can(group.name) ? group.name : group].sid, null)
+        # If group is a string, use it directly; if it's an object, extract group.name
+        name = try(group.name, group)
+        # Use provided type/sid if available (non-null, non-empty), otherwise lookup from data source
+        type = try(group.type, null) != null && try(group.type, "") != "" ? group.type : try(local.active_directory_groups_all[ad.name][try(group.name, group)].type, null)
+        sid  = try(group.sid, null) != null && try(group.sid, "") != "" ? group.sid : try(local.active_directory_groups_all[ad.name][try(group.name, group)].sid, null)
       }
     ]
   }

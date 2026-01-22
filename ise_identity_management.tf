@@ -439,11 +439,21 @@ resource "ise_active_directory_join_domain_with_all_nodes" "active_directory_joi
   depends_on = [ise_active_directory_join_point.active_directory_join_point]
 }
 
-data "ise_active_directory_groups_by_domain" "all_groups" {
-  for_each = {
+locals {
+  # Determine which ADs need group lookup
+  # Lookup is needed only when groups are strings (not objects with SID)
+  ad_groups_need_lookup = {
     for ad in try(local.ise.identity_management.active_directories, []) : ad.name => ad
-    if length(try(ad.groups, [])) > 0
+    if length(try(ad.groups, [])) > 0 && anytrue([
+      for group in try(ad.groups, []) :
+      # If group is a string, we need lookup; if object, SID is required by schema
+      !can(group.name)
+    ])
   }
+}
+
+data "ise_active_directory_groups_by_domain" "all_groups" {
+  for_each = local.ad_groups_need_lookup
 
   join_point_id = ise_active_directory_join_point.active_directory_join_point[each.key].id
   domain        = try(each.value.domain, local.defaults.ise.identity_management.active_directories.domain, null)
@@ -464,9 +474,11 @@ locals {
   active_directory_groups = {
     for ad in try(local.ise.identity_management.active_directories, []) : ad.name => [
       for group in try(ad.groups, []) : {
-        name = group
-        type = try(local.active_directory_groups_all[ad.name][group].type, null)
-        sid  = try(local.active_directory_groups_all[ad.name][group].sid, null)
+        # Object format: use group.name and group.sid directly
+        # String format: use group as name, lookup SID from data source
+        name = try(group.name, group)
+        sid  = try(group.sid, local.active_directory_groups_all[ad.name][try(group.name, group)].sid)
+        type = try(group.type, local.active_directory_groups_all[ad.name][try(group.name, group)].type, null)
       }
     ]
   }

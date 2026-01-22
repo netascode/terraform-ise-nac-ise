@@ -48,6 +48,7 @@ defaults:
         certificate_attribute_name: SUBJECT_COMMON_NAME
         external_identity_store_name: "[not applicable]"
       active_directories:
+        join_domain: true
         ad_scopes_names: Default_Scope
         enable_domain_allowed_list: true
         enable_rewrites: false
@@ -61,6 +62,7 @@ defaults:
         enable_failed_auth_protection: false
         failed_auth_threshold: 5
     trust_sec:
+      push_mode: DISABLED
       security_groups:
         propagate_to_apic: false
       security_group_acls:

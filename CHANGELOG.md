@@ -1,5 +1,6 @@
 ## 0.2.3 (unreleased)
 
+- Add support for adding AD groups using name and SID without domain join and lookup
 - Fix issue where `*_eap_tls_auth_of_expired_certs` attributes in allowed protocols were incorrectly set to `false` instead of `null` when parent EAP-TLS method is disabled, causing ISE API validation errors (PEAP, EAP-FAST, TEAP)
 - Add support for optional Active Directory join operation with `join_domain` flag, allowing creation of join points and addition of groups without executing join
 - Add support for automatic TrustSec policy push (SGTs, SGACLs, and egress matrix) to network devices with configurable `push_mode` (AUTO/DISABLED)

@@ -473,16 +473,12 @@ locals {
 
   active_directory_groups = {
     for ad in try(local.ise.identity_management.active_directories, []) : ad.name => [
-      for group in try(ad.groups, []) : can(group.name) ? {
-        # Object format: SID is required by schema, type is optional
-        name = group.name
-        sid  = group.sid
-        type = try(group.type, null)
-        } : {
-        # String format: lookup SID and type from data source
-        name = group
-        sid  = try(local.active_directory_groups_all[ad.name][group].sid, null)
-        type = try(local.active_directory_groups_all[ad.name][group].type, null)
+      for group in try(ad.groups, []) : {
+        # Object format: use group.name and group.sid directly
+        # String format: use group as name, lookup SID from data source
+        name = try(group.name, group)
+        sid  = try(group.sid, local.active_directory_groups_all[ad.name][try(group.name, group)].sid)
+        type = try(group.type, local.active_directory_groups_all[ad.name][try(group.name, group)].type, null)
       }
     ]
   }

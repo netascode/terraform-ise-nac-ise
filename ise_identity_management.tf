@@ -439,11 +439,20 @@ resource "ise_active_directory_join_domain_with_all_nodes" "active_directory_joi
   depends_on = [ise_active_directory_join_point.active_directory_join_point]
 }
 
-data "ise_active_directory_groups_by_domain" "all_groups" {
-  for_each = {
+locals {
+  # Determine which ADs need group lookup (groups without SID provided)
+  ad_groups_need_lookup = {
     for ad in try(local.ise.identity_management.active_directories, []) : ad.name => ad
-    if length(try(ad.groups, [])) > 0
+    if length(try(ad.groups, [])) > 0 && anytrue([
+      for group in try(ad.groups, []) :
+      # Need lookup if group is a string OR if it's an object without SID
+      can(group.name) ? (can(group.sid) ? group.sid == null || group.sid == "" : true) : true
+    ])
   }
+}
+
+data "ise_active_directory_groups_by_domain" "all_groups" {
+  for_each = local.ad_groups_need_lookup
 
   join_point_id = ise_active_directory_join_point.active_directory_join_point[each.key].id
   domain        = try(each.value.domain, local.defaults.ise.identity_management.active_directories.domain, null)
@@ -464,9 +473,10 @@ locals {
   active_directory_groups = {
     for ad in try(local.ise.identity_management.active_directories, []) : ad.name => [
       for group in try(ad.groups, []) : {
-        name = group
-        type = try(local.active_directory_groups_all[ad.name][group].type, null)
-        sid  = try(local.active_directory_groups_all[ad.name][group].sid, null)
+        # If group is a string, lookup SID from data source; if it's an object, use provided values or lookup if missing
+        name = can(group.name) ? group.name : group
+        type = can(group.type) && group.type != null && group.type != "" ? group.type : try(local.active_directory_groups_all[ad.name][can(group.name) ? group.name : group].type, null)
+        sid  = can(group.sid) && group.sid != null && group.sid != "" ? group.sid : try(local.active_directory_groups_all[ad.name][can(group.name) ? group.name : group].sid, null)
       }
     ]
   }

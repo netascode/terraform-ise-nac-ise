@@ -440,13 +440,14 @@ resource "ise_active_directory_join_domain_with_all_nodes" "active_directory_joi
 }
 
 locals {
-  # Determine which ADs need group lookup (groups without SID provided)
+  # Determine which ADs need group lookup
+  # Lookup is needed only when groups are strings (not objects with SID)
   ad_groups_need_lookup = {
     for ad in try(local.ise.identity_management.active_directories, []) : ad.name => ad
     if length(try(ad.groups, [])) > 0 && anytrue([
       for group in try(ad.groups, []) :
-      # Need lookup if group is a string OR if it's an object without SID (null or empty)
-      try(group.sid, null) == null || try(group.sid, "") == ""
+      # If group is a string, we need lookup; if object, SID is required by schema
+      !can(group.name)
     ])
   }
 }
@@ -472,12 +473,16 @@ locals {
 
   active_directory_groups = {
     for ad in try(local.ise.identity_management.active_directories, []) : ad.name => [
-      for group in try(ad.groups, []) : {
-        # If group is a string, use it directly; if it's an object, extract group.name
-        name = try(group.name, group)
-        # Use provided type/sid if available (non-null, non-empty), otherwise lookup from data source
-        type = try(group.type, null) != null && try(group.type, "") != "" ? group.type : try(local.active_directory_groups_all[ad.name][try(group.name, group)].type, null)
-        sid  = try(group.sid, null) != null && try(group.sid, "") != "" ? group.sid : try(local.active_directory_groups_all[ad.name][try(group.name, group)].sid, null)
+      for group in try(ad.groups, []) : can(group.name) ? {
+        # Object format: SID is required by schema, type is optional
+        name = group.name
+        sid  = group.sid
+        type = try(group.type, null)
+        } : {
+        # String format: lookup SID and type from data source
+        name = group
+        sid  = try(local.active_directory_groups_all[ad.name][group].sid, null)
+        type = try(local.active_directory_groups_all[ad.name][group].type, null)
       }
     ]
   }

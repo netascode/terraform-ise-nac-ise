@@ -441,13 +441,13 @@ resource "ise_active_directory_join_domain_with_all_nodes" "active_directory_joi
 
 locals {
   # Determine which ADs need group lookup
-  # Lookup is needed only when groups are strings (not objects with SID)
+  # Lookup is needed when groups don't have SID provided
   ad_groups_need_lookup = {
     for ad in try(local.ise.identity_management.active_directories, []) : ad.name => ad
     if length(try(ad.groups, [])) > 0 && anytrue([
       for group in try(ad.groups, []) :
-      # If group is a string, we need lookup; if object, SID is required by schema
-      !can(group.name)
+      # If group doesn't have sid field, we need lookup
+      try(group.sid, null) == null
     ])
   }
 }
@@ -474,11 +474,11 @@ locals {
   active_directory_groups = {
     for ad in try(local.ise.identity_management.active_directories, []) : ad.name => [
       for group in try(ad.groups, []) : {
-        # Object format: use group.name and group.sid directly
-        # String format: use group as name, lookup SID from data source
-        name = try(group.name, group)
-        sid  = try(group.sid, local.active_directory_groups_all[ad.name][try(group.name, group)].sid)
-        type = try(group.type, local.active_directory_groups_all[ad.name][try(group.name, group)].type, null)
+        # Groups are always objects now with optional sid field
+        # If sid not provided, lookup from data source
+        name = group.name
+        sid  = try(group.sid, local.active_directory_groups_all[ad.name][group.name].sid)
+        type = try(group.type, local.active_directory_groups_all[ad.name][group.name].type, null)
       }
     ]
   }

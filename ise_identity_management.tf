@@ -364,11 +364,11 @@ resource "ise_certificate_authentication_profile" "certificate_authentication_pr
 
   name                         = each.key
   description                  = try(each.value.description, local.defaults.ise.identity_management.certificate_authentication_profiles.description, null)
-  allowed_as_user_name         = try(each.value.allowed_as_user_name, local.defaults.ise.identity_management.certificate_authentication_profiles.description, null)
-  certificate_attribute_name   = try(each.value.certificate_attribute_name, local.defaults.ise.identity_management.certificate_authentication_profiles.description, null)
-  external_identity_store_name = try(each.value.external_identity_store_name, local.defaults.ise.identity_management.certificate_authentication_profiles.description, null)
-  match_mode                   = try(each.value.match_mode, local.defaults.ise.identity_management.certificate_authentication_profiles.description, null)
-  username_from                = try(each.value.username_from, local.defaults.ise.identity_management.certificate_authentication_profiles.description, null)
+  allowed_as_user_name         = try(each.value.allowed_as_user_name, local.defaults.ise.identity_management.certificate_authentication_profiles.allowed_as_user_name, null)
+  certificate_attribute_name   = try(each.value.username_from, local.defaults.ise.identity_management.certificate_authentication_profiles.username_from, null) == "UPN" ? "ALL_SUBJECT_AND_ALTERNATIVE_NAMES" : try(each.value.certificate_attribute_name, local.defaults.ise.identity_management.certificate_authentication_profiles.certificate_attribute_name, null)
+  external_identity_store_name = try(each.value.external_identity_store_name, local.defaults.ise.identity_management.certificate_authentication_profiles.external_identity_store_name, null)
+  match_mode                   = try(each.value.match_mode, local.defaults.ise.identity_management.certificate_authentication_profiles.match_mode, null)
+  username_from                = try(each.value.username_from, local.defaults.ise.identity_management.certificate_authentication_profiles.username_from, null)
 }
 
 resource "ise_active_directory_join_point" "active_directory_join_point" {

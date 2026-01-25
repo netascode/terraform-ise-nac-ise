@@ -1,5 +1,6 @@
 ## 0.2.3 (unreleased)
 
+- Fix Certificate Authentication Profile defaults and add proper support for `username_from: UPN` mode with Active Directory  
 - BREAKING CHANGE: Active Directory `groups` field now requires object format with `name` field instead of string format
 - Add support for adding AD groups using name and SID without domain join and lookup
 - Fix issue where `*_eap_tls_auth_of_expired_certs` attributes in allowed protocols were incorrectly set to `false` instead of `null` when parent EAP-TLS method is disabled, causing ISE API validation errors (PEAP, EAP-FAST, TEAP)

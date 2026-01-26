@@ -369,6 +369,8 @@ resource "ise_certificate_authentication_profile" "certificate_authentication_pr
   external_identity_store_name = try(each.value.external_identity_store_name, local.defaults.ise.identity_management.certificate_authentication_profiles.external_identity_store_name, null)
   match_mode                   = try(each.value.match_mode, local.defaults.ise.identity_management.certificate_authentication_profiles.match_mode, null)
   username_from                = try(each.value.username_from, local.defaults.ise.identity_management.certificate_authentication_profiles.username_from, null)
+
+  depends_on = [ise_active_directory_join_point.active_directory_join_point]
 }
 
 resource "ise_active_directory_join_point" "active_directory_join_point" {

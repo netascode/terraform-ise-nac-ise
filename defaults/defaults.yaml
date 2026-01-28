@@ -61,6 +61,8 @@ defaults:
         enable_callback_for_dialin_client: false
         enable_failed_auth_protection: false
         failed_auth_threshold: 5
+        attributes:
+          default_value: ""
     trust_sec:
       push_mode: DISABLED
       security_groups:

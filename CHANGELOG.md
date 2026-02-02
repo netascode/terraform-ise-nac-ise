@@ -1,4 +1,4 @@
-## 0.2.3 (unreleased)
+## 0.2.3
 
 - Fix Certificate Authentication Profile defaults and add proper support for `username_from: UPN` mode with Active Directory  
 - BREAKING CHANGE: Active Directory `groups` field now requires object format with `name` field instead of string format

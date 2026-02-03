@@ -40,15 +40,36 @@ resource "ise_trustsec_security_group_acl" "trustsec_security_group_acl" {
   depends_on = [ise_trustsec_security_group.trustsec_security_group]
 }
 
+locals {
+  sgt_mappings_groups_network_device_groups = { for group in try(local.ise.trust_sec.ip_sgt_mapping_groups, []) : group.name => try(group.deploy_to, null) }
+  unique_network_device_groups              = distinct(concat([for key, value in local.sgt_mappings_groups_network_device_groups : value]))
+  known_network_device_groups               = [for group in try(local.all_network_device_groups, []) : group.name]
+  unknown_network_device_groups             = setsubtract(local.unique_network_device_groups, local.known_network_device_groups)
+}
+
+data "ise_network_device_group" "network_device_group" {
+  for_each = toset(local.unknown_network_device_groups)
+
+  name = each.value
+}
+
 resource "ise_trustsec_ip_to_sgt_mapping_group" "trustsec_ip_to_sgt_mapping_group" {
   for_each = { for group in try(local.ise.trust_sec.ip_sgt_mapping_groups, []) : group.name => group }
 
   name        = each.key
   sgt         = contains(local.known_sgts, each.value.sgt) ? ise_trustsec_security_group.trustsec_security_group[each.value.sgt].id : data.ise_trustsec_security_group.trustsec_security_group[each.value.sgt].id
   deploy_type = try(each.value.deploy_type, local.defaults.ise.trust_sec.ip_sgt_mappings.deploy_type, null)
-  deploy_to   = try(each.value.deploy_to, local.defaults.ise.trust_sec.ip_sgt_mappings.deploy_to, null)
+  deploy_to   = contains(local.known_network_device_groups, each.value.deploy_to) ? try(ise_network_device_group.network_device_group_0[each.value.deploy_to].id, ise_network_device_group.network_device_group_1[each.value.deploy_to].id, ise_network_device_group.network_device_group_2[each.value.deploy_to].id, ise_network_device_group.network_device_group_3[each.value.deploy_to].id, ise_network_device_group.network_device_group_4[each.value.deploy_to].id, ise_network_device_group.network_device_group_5[each.value.deploy_to].id) : data.ise_network_device_group.network_device_group[each.value.deploy_to].id
 
-  depends_on = [time_sleep.sgt_wait]
+  depends_on = [
+    time_sleep.sgt_wait,
+    ise_network_device_group.network_device_group_0,
+    ise_network_device_group.network_device_group_1,
+    ise_network_device_group.network_device_group_2,
+    ise_network_device_group.network_device_group_3,
+    ise_network_device_group.network_device_group_4,
+    ise_network_device_group.network_device_group_5,
+  ]
 }
 
 resource "ise_trustsec_ip_to_sgt_mapping" "trustsec_ip_to_sgt_mapping" {
@@ -60,9 +81,17 @@ resource "ise_trustsec_ip_to_sgt_mapping" "trustsec_ip_to_sgt_mapping" {
   sgt           = try(each.value.mapping_group, null) != null ? null : try(each.value.sgt, null) != null ? (contains(local.known_sgts, each.value.sgt) ? ise_trustsec_security_group.trustsec_security_group[each.value.sgt].id : data.ise_trustsec_security_group.trustsec_security_group[each.value.sgt].id) : null
   mapping_group = try(each.value.mapping_group, null) != null ? ise_trustsec_ip_to_sgt_mapping_group.trustsec_ip_to_sgt_mapping_group[each.value.mapping_group].id : null
   deploy_type   = try(each.value.mapping_group, null) != null ? null : try(each.value.deploy_type, local.defaults.ise.trust_sec.ip_sgt_mappings.deploy_type, null)
-  deploy_to     = try(each.value.mapping_group, null) != null ? null : try(each.value.deploy_to, local.defaults.ise.trust_sec.ip_sgt_mappings.deploy_to, null)
+  deploy_to     = try(each.value.mapping_group, null) != null ? null : try(each.value.deploy_type, local.defaults.ise.trust_sec.ip_sgt_mappings.deploy_type, null) == "ALL" ? null : contains(local.known_network_device_groups, each.value.deploy_to) ? try(ise_network_device_group.network_device_group_0[each.value.deploy_to].id, ise_network_device_group.network_device_group_1[each.value.deploy_to].id, ise_network_device_group.network_device_group_2[each.value.deploy_to].id, ise_network_device_group.network_device_group_3[each.value.deploy_to].id, ise_network_device_group.network_device_group_4[each.value.deploy_to].id, ise_network_device_group.network_device_group_5[each.value.deploy_to].id) : data.ise_network_device_group.network_device_group[each.value.deploy_to].id
 
-  depends_on = [time_sleep.sgt_wait]
+  depends_on = [
+    time_sleep.sgt_wait,
+    ise_network_device_group.network_device_group_0,
+    ise_network_device_group.network_device_group_1,
+    ise_network_device_group.network_device_group_2,
+    ise_network_device_group.network_device_group_3,
+    ise_network_device_group.network_device_group_4,
+    ise_network_device_group.network_device_group_5,
+  ]
 }
 
 # Workaround for ISE API issue where deleting an SGT immediately after deleting an object using this SGT fails

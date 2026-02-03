@@ -1,5 +1,6 @@
 ## (Unreleased)
 
+- Fix issue with missing `certificate_authentication_profile` field in identity source sequences when field is not defined in YAML
 - Add support for network device group references in TrustSec IP-SGT mappings and mapping groups with proper ID resolution
 - Add support for network device references in TrustSec IP-SGT mappings and mapping groups with proper ID resolution
 - Add deploy target resolution that selects between network devices (ND), network device groups (NDG), or all devices (ALL) based on `deploy_type` attribute in IP to SGT mapping and IP to SGT mapping groups

@@ -513,7 +513,7 @@ resource "ise_identity_source_sequence" "identity_source_sequences" {
   name                               = each.key
   description                        = try(each.value.description, local.defaults.ise.identity_management.identity_source_sequences.description, null)
   break_on_store_fail                = try(each.value.break_on_store_fail, local.defaults.ise.identity_management.identity_source_sequences.break_on_store_fail, null)
-  certificate_authentication_profile = try(each.value.certificate_authentication_profile, local.defaults.ise.identity_management.identity_source_sequences.certificate_authentication_profile, null)
+  certificate_authentication_profile = try(each.value.certificate_authentication_profile, local.defaults.ise.identity_management.identity_source_sequences.certificate_authentication_profile, "")
   identity_sources = [for index, identity_source in try(each.value.identity_sources, []) : {
     name  = try(identity_source, local.defaults.ise.identity_management.identity_source_sequences.identity_sources, null)
     order = index + 1

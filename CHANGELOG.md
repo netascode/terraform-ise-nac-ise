@@ -1,5 +1,6 @@
 ## (Unreleased)
 
+- Add automatic profiler profile ID lookup for EndPointPolicy conditions in authorization rules
 - Fix issue with missing `certificate_authentication_profile` field in identity source sequences when field is not defined in YAML
 - Add support for network device group references in TrustSec IP-SGT mappings and mapping groups with proper ID resolution
 - Add support for network device references in TrustSec IP-SGT mappings and mapping groups with proper ID resolution

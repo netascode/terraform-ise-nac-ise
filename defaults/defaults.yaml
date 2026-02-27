@@ -65,6 +65,10 @@ defaults:
           default_value: ""
     trust_sec:
       push_mode: DISABLED
+      matrix_mode: SINGLE_MATRIX
+      work_process_settings:
+        use_defcons: false
+        enable_approval_workflow: false
       security_groups:
         propagate_to_apic: false
       security_group_acls:
@@ -75,6 +79,8 @@ defaults:
         deploy_type: ALL
       matrix_entries:
         rule_status: ENABLED
+      matrices:
+        matrix_policy_type: TRUSTSEC_POLICY
     network_access:
       policy_elements:
         authorization_profiles:

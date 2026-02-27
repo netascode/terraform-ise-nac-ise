@@ -129,8 +129,10 @@ module "ise" {
 | [ise_trustsec_egress_push_matrix.push_auto](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/trustsec_egress_push_matrix) | resource |
 | [ise_trustsec_ip_to_sgt_mapping.trustsec_ip_to_sgt_mapping](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/trustsec_ip_to_sgt_mapping) | resource |
 | [ise_trustsec_ip_to_sgt_mapping_group.trustsec_ip_to_sgt_mapping_group](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/trustsec_ip_to_sgt_mapping_group) | resource |
+| [ise_trustsec_matrix.trustsec_matrix](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/trustsec_matrix) | resource |
 | [ise_trustsec_security_group.trustsec_security_group](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/trustsec_security_group) | resource |
 | [ise_trustsec_security_group_acl.trustsec_security_group_acl](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/trustsec_security_group_acl) | resource |
+| [ise_trustsec_work_process_settings.trustsec_work_process_settings](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/trustsec_work_process_settings) | resource |
 | [ise_user_identity_group.user_identity_group_0](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/user_identity_group) | resource |
 | [ise_user_identity_group.user_identity_group_1](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/user_identity_group) | resource |
 | [ise_user_identity_group.user_identity_group_2](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/user_identity_group) | resource |
@@ -152,6 +154,7 @@ module "ise" {
 | [ise_network_device.network_device](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/data-sources/network_device) | data source |
 | [ise_network_device_group.network_device_group](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/data-sources/network_device_group) | data source |
 | [ise_profiler_profile.profiler_profile](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/data-sources/profiler_profile) | data source |
+| [ise_trustsec_matrix.trustsec_matrix](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/data-sources/trustsec_matrix) | data source |
 | [ise_trustsec_security_group.trustsec_security_group](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/data-sources/trustsec_security_group) | data source |
 | [ise_trustsec_security_group_acl.trustsec_security_group_acl](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/data-sources/trustsec_security_group_acl) | data source |
 | [ise_user_identity_group.user_identity_group](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/data-sources/user_identity_group) | data source |

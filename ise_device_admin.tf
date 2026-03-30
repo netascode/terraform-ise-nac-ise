@@ -38,16 +38,64 @@ resource "ise_device_admin_condition" "device_admin_condition" {
     name             = try(c.name, null)
     id               = try(c.type, local.defaults.ise.device_administration.policy_elements.conditions.type, null) == "ConditionReference" ? data.ise_device_admin_condition.device_admin_condition_circular[c.name].id : null
     children = length(try(c.children, [])) == 0 ? null : [for c2 in try(c.children, []) : {
+      description      = try(c2.description, data.ise_device_admin_condition.device_admin_condition_circular[c2.name].description, null)
       attribute_name   = try(c2.attribute_name, local.defaults.ise.device_administration.policy_elements.conditions.attribute_name, null)
       attribute_value  = try(c2.attribute_value, local.defaults.ise.device_administration.policy_elements.conditions.attribute_value, null)
       dictionary_name  = try(c2.dictionary_name, local.defaults.ise.device_administration.policy_elements.conditions.dictionary_name, null)
       dictionary_value = try(c2.dictionary_value, local.defaults.ise.device_administration.policy_elements.conditions.dictionary_value, null)
-      description      = try(c2.description, data.ise_device_admin_condition.device_admin_condition_circular[c2.name].description, null)
       condition_type   = try(c2.type, local.defaults.ise.device_administration.policy_elements.conditions.type, null)
       is_negate        = try(c2.is_negate, local.defaults.ise.device_administration.policy_elements.conditions.is_negate, null)
       operator         = try(c2.operator, local.defaults.ise.device_administration.policy_elements.conditions.operator, null)
       name             = try(c2.name, null)
       id               = try(c2.type, local.defaults.ise.device_administration.policy_elements.conditions.type, null) == "ConditionReference" ? data.ise_device_admin_condition.device_admin_condition_circular[c2.name].id : null
+      children = length(try(c2.children, [])) == 0 ? null : [for c3 in try(c2.children, []) : {
+        description      = try(c3.description, data.ise_device_admin_condition.device_admin_condition_circular[c3.name].description, null)
+        attribute_name   = try(c3.attribute_name, local.defaults.ise.device_administration.policy_elements.conditions.attribute_name, null)
+        attribute_value  = try(c3.attribute_value, local.defaults.ise.device_administration.policy_elements.conditions.attribute_value, null)
+        dictionary_name  = try(c3.dictionary_name, local.defaults.ise.device_administration.policy_elements.conditions.dictionary_name, null)
+        dictionary_value = try(c3.dictionary_value, local.defaults.ise.device_administration.policy_elements.conditions.dictionary_value, null)
+        condition_type   = try(c3.type, local.defaults.ise.device_administration.policy_elements.conditions.type, null)
+        is_negate        = try(c3.is_negate, local.defaults.ise.device_administration.policy_elements.conditions.is_negate, null)
+        operator         = try(c3.operator, local.defaults.ise.device_administration.policy_elements.conditions.operator, null)
+        name             = try(c3.name, null)
+        id               = try(c3.type, local.defaults.ise.device_administration.policy_elements.conditions.type, null) == "ConditionReference" ? data.ise_device_admin_condition.device_admin_condition_circular[c3.name].id : null
+        children = length(try(c3.children, [])) == 0 ? null : [for c4 in try(c3.children, []) : {
+          description      = try(c4.description, data.ise_device_admin_condition.device_admin_condition_circular[c4.name].description, null)
+          attribute_name   = try(c4.attribute_name, local.defaults.ise.device_administration.policy_elements.conditions.attribute_name, null)
+          attribute_value  = try(c4.attribute_value, local.defaults.ise.device_administration.policy_elements.conditions.attribute_value, null)
+          dictionary_name  = try(c4.dictionary_name, local.defaults.ise.device_administration.policy_elements.conditions.dictionary_name, null)
+          dictionary_value = try(c4.dictionary_value, local.defaults.ise.device_administration.policy_elements.conditions.dictionary_value, null)
+          condition_type   = try(c4.type, local.defaults.ise.device_administration.policy_elements.conditions.type, null)
+          is_negate        = try(c4.is_negate, local.defaults.ise.device_administration.policy_elements.conditions.is_negate, null)
+          operator         = try(c4.operator, local.defaults.ise.device_administration.policy_elements.conditions.operator, null)
+          name             = try(c4.name, null)
+          id               = try(c4.type, local.defaults.ise.device_administration.policy_elements.conditions.type, null) == "ConditionReference" ? data.ise_device_admin_condition.device_admin_condition_circular[c4.name].id : null
+          children = length(try(c4.children, [])) == 0 ? null : [for c5 in try(c4.children, []) : {
+            description      = try(c5.description, data.ise_device_admin_condition.device_admin_condition_circular[c5.name].description, null)
+            attribute_name   = try(c5.attribute_name, local.defaults.ise.device_administration.policy_elements.conditions.attribute_name, null)
+            attribute_value  = try(c5.attribute_value, local.defaults.ise.device_administration.policy_elements.conditions.attribute_value, null)
+            dictionary_name  = try(c5.dictionary_name, local.defaults.ise.device_administration.policy_elements.conditions.dictionary_name, null)
+            dictionary_value = try(c5.dictionary_value, local.defaults.ise.device_administration.policy_elements.conditions.dictionary_value, null)
+            condition_type   = try(c5.type, local.defaults.ise.device_administration.policy_elements.conditions.type, null)
+            is_negate        = try(c5.is_negate, local.defaults.ise.device_administration.policy_elements.conditions.is_negate, null)
+            operator         = try(c5.operator, local.defaults.ise.device_administration.policy_elements.conditions.operator, null)
+            name             = try(c5.name, null)
+            id               = try(c5.type, local.defaults.ise.device_administration.policy_elements.conditions.type, null) == "ConditionReference" ? data.ise_device_admin_condition.device_admin_condition_circular[c5.name].id : null
+            children = length(try(c5.children, [])) == 0 ? null : [for c6 in try(c5.children, []) : {
+              description      = try(c6.description, data.ise_device_admin_condition.device_admin_condition_circular[c6.name].description, null)
+              attribute_name   = try(c6.attribute_name, local.defaults.ise.device_administration.policy_elements.conditions.attribute_name, null)
+              attribute_value  = try(c6.attribute_value, local.defaults.ise.device_administration.policy_elements.conditions.attribute_value, null)
+              dictionary_name  = try(c6.dictionary_name, local.defaults.ise.device_administration.policy_elements.conditions.dictionary_name, null)
+              dictionary_value = try(c6.dictionary_value, local.defaults.ise.device_administration.policy_elements.conditions.dictionary_value, null)
+              condition_type   = try(c6.type, local.defaults.ise.device_administration.policy_elements.conditions.type, null)
+              is_negate        = try(c6.is_negate, local.defaults.ise.device_administration.policy_elements.conditions.is_negate, null)
+              operator         = try(c6.operator, local.defaults.ise.device_administration.policy_elements.conditions.operator, null)
+              name             = try(c6.name, null)
+              id               = try(c6.type, local.defaults.ise.device_administration.policy_elements.conditions.type, null) == "ConditionReference" ? data.ise_device_admin_condition.device_admin_condition_circular[c6.name].id : null
+            }]
+          }]
+        }]
+      }]
     }]
   }]
 

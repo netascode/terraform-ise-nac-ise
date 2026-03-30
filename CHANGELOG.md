@@ -1,5 +1,6 @@
 ## (Unreleased)
 
+- Add support for extended policy condition nesting from 3 to 7 levels (1 root + 6 nested children) for all 12 Network Access and Device Admin policy resources
 - Add automatic profiler profile ID lookup for EndPointPolicy conditions in authorization rules
 - Fix issue with missing `certificate_authentication_profile` field in identity source sequences when field is not defined in YAML
 - Add support for network device group references in TrustSec IP-SGT mappings and mapping groups with proper ID resolution

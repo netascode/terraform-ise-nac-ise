@@ -614,7 +614,7 @@ resource "ise_network_access_authentication_rule" "default_network_access_authen
 resource "ise_network_access_authentication_rule_update_ranks" "network_access_authentication_rule_update_ranks" {
   for_each = local.network_access_authentication_rules_by_policy_name
 
-  policy_set_id = ise_network_access_policy_set.network_access_policy_set[each.key].id
+  policy_set_id = try(ise_network_access_policy_set.network_access_policy_set[each.key].id, ise_network_access_policy_set.default_network_access_policy_set[each.key].id)
 
   rules = [
     for rule in each.value : {
@@ -834,7 +834,7 @@ resource "ise_network_access_authorization_rule" "default_network_access_authori
 resource "ise_network_access_authorization_rule_update_ranks" "network_access_authorization_rule_update_ranks" {
   for_each = local.network_access_authorization_rules_by_policy_name
 
-  policy_set_id = ise_network_access_policy_set.network_access_policy_set[each.key].id
+  policy_set_id = try(ise_network_access_policy_set.network_access_policy_set[each.key].id, ise_network_access_policy_set.default_network_access_policy_set[each.key].id)
 
   rules = [
     for rule in each.value : {
@@ -982,7 +982,7 @@ resource "ise_network_access_authorization_exception_rule" "network_access_autho
 resource "ise_network_access_authorization_exception_rule_update_ranks" "network_access_authorization_exception_rule_update_ranks" {
   for_each = local.network_access_authorization_exception_rules_by_policy_name
 
-  policy_set_id = ise_network_access_policy_set.network_access_policy_set[each.key].id
+  policy_set_id = try(ise_network_access_policy_set.network_access_policy_set[each.key].id, ise_network_access_policy_set.default_network_access_policy_set[each.key].id)
 
   rules = [
     for rule in each.value : {

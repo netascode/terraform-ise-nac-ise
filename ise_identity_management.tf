@@ -134,8 +134,27 @@ resource "ise_user_identity_group" "user_identity_group_5" {
   depends_on = [ise_user_identity_group.user_identity_group_4]
 }
 
+locals {
+  user_identity_groups_managed_names = toset(flatten([
+    [for g in try(local.ise.identity_management.user_identity_groups, []) : g.name],
+    [for g in local.user_identity_groups_children : g.name],
+    [for g in local.user_identity_groups_children_children : g.name],
+    [for g in local.user_identity_groups_children_children_children : g.name],
+    [for g in local.user_identity_groups_children_children_children_children : g.name],
+    [for g in local.user_identity_groups_children_children_children_children_children : g.name],
+  ]))
+  user_identity_groups_managed_ids = merge(
+    { for k, v in ise_user_identity_group.user_identity_group_0 : k => v.id },
+    { for k, v in ise_user_identity_group.user_identity_group_1 : v.name => v.id },
+    { for k, v in ise_user_identity_group.user_identity_group_2 : v.name => v.id },
+    { for k, v in ise_user_identity_group.user_identity_group_3 : v.name => v.id },
+    { for k, v in ise_user_identity_group.user_identity_group_4 : v.name => v.id },
+    { for k, v in ise_user_identity_group.user_identity_group_5 : v.name => v.id },
+  )
+}
+
 data "ise_user_identity_group" "user_identity_group" {
-  for_each = toset(local.user_identity_groups)
+  for_each = setsubtract(toset(local.user_identity_groups), local.user_identity_groups_managed_names)
 
   name = each.value
 
@@ -155,7 +174,7 @@ resource "ise_internal_user" "internal_user" {
   first_name             = try(each.value.first_name, local.defaults.ise.identity_management.internal_users.first_name, null)
   last_name              = try(each.value.last_name, local.defaults.ise.identity_management.internal_users.last_name, null)
   change_password        = try(each.value.change_password, local.defaults.ise.identity_management.internal_users.change_password, null)
-  identity_groups        = length(try(each.value.user_identity_groups, [])) > 0 ? join(",", [for i in try(each.value.user_identity_groups, []) : data.ise_user_identity_group.user_identity_group[i].id]) : null
+  identity_groups        = length(try(each.value.user_identity_groups, [])) > 0 ? join(",", [for i in try(each.value.user_identity_groups, []) : contains(local.user_identity_groups_managed_names, i) ? local.user_identity_groups_managed_ids[i] : data.ise_user_identity_group.user_identity_group[i].id]) : null
   password_never_expires = try(each.value.password_never_expires, local.defaults.ise.identity_management.internal_users.password_never_expires, null)
   password_id_store      = try(each.value.password_id_store, local.defaults.ise.identity_management.internal_users.password_id_store, null)
 

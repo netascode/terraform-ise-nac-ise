@@ -257,6 +257,35 @@ resource "ise_network_access_dictionary" "network_access_dictionary" {
   dictionary_attr_type = try(each.value.attribute_type, local.defaults.ise.network_access.policy_elements.dictionaries.attribute_type, null)
 }
 
+locals {
+  network_access_dictionary_attributes = flatten([
+    for d in try(local.ise.network_access.policy_elements.dictionaries, []) : [
+      for a in try(d.attributes, []) : {
+        key             = "${d.name}/${a.name}"
+        dictionary_name = d.name
+        name            = a.name
+        description     = try(a.description, local.defaults.ise.network_access.policy_elements.dictionaries.attributes.description, null)
+        data_type       = try(a.data_type, local.defaults.ise.network_access.policy_elements.dictionaries.attributes.data_type, null)
+        direction_type  = try(a.direction_type, local.defaults.ise.network_access.policy_elements.dictionaries.attributes.direction_type, null)
+        internal_name   = try(a.internal_name, local.defaults.ise.network_access.policy_elements.dictionaries.attributes.internal_name, null)
+      }
+    ]
+  ])
+}
+
+resource "ise_network_access_dictionary_attribute" "network_access_dictionary_attribute" {
+  for_each = { for a in local.network_access_dictionary_attributes : a.key => a }
+
+  dictionary_name = each.value.dictionary_name
+  name            = each.value.name
+  description     = each.value.description
+  data_type       = each.value.data_type
+  direction_type  = each.value.direction_type
+  internal_name   = each.value.internal_name
+
+  depends_on = [ise_network_access_dictionary.network_access_dictionary]
+}
+
 resource "ise_network_access_time_and_date_condition" "network_access_time_and_date_condition" {
   for_each = { for c in try(local.ise.network_access.policy_elements.time_date_conditions, []) : c.name => c }
 

@@ -175,6 +175,8 @@ defaults:
           dacl_type: IPV4
         dictionaries:
           attribute_type: ENTITY_ATTR
+          attributes:
+            direction_type: BOTH
       policy_sets:
         default: false
         state: enabled

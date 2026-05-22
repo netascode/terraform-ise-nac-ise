@@ -1,4 +1,4 @@
-## 0.3.0 (unreleased)
+## 0.3.0
 
 - Add support for TrustSec Multiple Matrices (requires Cisco ISE 3.4 Patch 2 or above)
 - Add support for extended policy condition nesting from 3 to 7 levels (1 root + 6 nested children) for all 12 Network Access and Device Admin policy resources
@@ -7,6 +7,10 @@
 - Add support for network device group references in TrustSec IP-SGT mappings and mapping groups with proper ID resolution
 - Add support for network device references in TrustSec IP-SGT mappings and mapping groups with proper ID resolution
 - Add deploy target resolution that selects between network devices (ND), network device groups (NDG), or all devices (ALL) based on `deploy_type` attribute in IP to SGT mapping and IP to SGT mapping groups
+- Add support for network access dictionary attributes
+- Fix support for custom network device group type names using single-segment path
+- Fix issue with circular condition references causing failures on fresh deployments
+- Fix issue with policy set rule ranking when Default policy set is used
 
 ## 0.2.3
 

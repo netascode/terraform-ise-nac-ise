@@ -1,3 +1,7 @@
+## 1.0.0 (unreleased)
+
+- Fix duplicate Terraform key error when defining multiple network device groups under the built-in `Is IPSEC Device` container [link](https://github.com/netascode/terraform-ise-nac-ise/pull/57)
+
 ## 0.3.0
 
 - Add support for TrustSec Multiple Matrices (requires Cisco ISE 3.4 Patch 2 or above)

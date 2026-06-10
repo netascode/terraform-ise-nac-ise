@@ -85,6 +85,7 @@ module "ise" {
 | [ise_device_admin_authorization_rule_update_ranks.device_admin_authorization_rule_update_ranks](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_authorization_rule_update_ranks) | resource |
 | [ise_device_admin_condition.device_admin_condition](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_condition) | resource |
 | [ise_device_admin_condition.device_admin_condition_ref](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_condition) | resource |
+| [ise_device_admin_condition.device_admin_condition_ref_leaf](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_condition) | resource |
 | [ise_device_admin_policy_set.default_device_admin_policy_set](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_policy_set) | resource |
 | [ise_device_admin_policy_set.device_admin_policy_set](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_policy_set) | resource |
 | [ise_device_admin_policy_set_update_ranks.ise_device_admin_policy_set_update_ranks](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_policy_set_update_ranks) | resource |
@@ -113,6 +114,7 @@ module "ise" {
 | [ise_network_access_authorization_rule_update_ranks.network_access_authorization_rule_update_ranks](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_authorization_rule_update_ranks) | resource |
 | [ise_network_access_condition.network_access_condition](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_condition) | resource |
 | [ise_network_access_condition.network_access_condition_ref](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_condition) | resource |
+| [ise_network_access_condition.network_access_condition_ref_leaf](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_condition) | resource |
 | [ise_network_access_dictionary.network_access_dictionary](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_dictionary) | resource |
 | [ise_network_access_dictionary_attribute.network_access_dictionary_attribute](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_dictionary_attribute) | resource |
 | [ise_network_access_policy_set.default_network_access_policy_set](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/network_access_policy_set) | resource |

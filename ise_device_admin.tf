@@ -17,7 +17,7 @@ locals {
     length([
       for child in try(condition.children, []) : child.name
       if try(child.type, null) == "ConditionReference" &&
-         contains(local.device_admin_conditions_circular_managed_names, try(child.name, ""))
+      contains(local.device_admin_conditions_circular_managed_names, try(child.name, ""))
     ]) == 0
   ])
   device_admin_conditions_circular_parent_names = setsubtract(

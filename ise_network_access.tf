@@ -81,6 +81,7 @@ locals {
   # Define strings that should be treated as AttributeValue despite containing colons
   attribute_value_patterns = [
     "shell:priv-lvl=",
+    "url-redirect=",
   ]
 }
 

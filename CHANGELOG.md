@@ -1,6 +1,7 @@
 ## 1.0.0 (unreleased)
 
 - Fix duplicate Terraform key error when defining multiple network device groups under the built-in `Is IPSEC Device` container [link](https://github.com/netascode/terraform-ise-nac-ise/pull/57)
+- Fix incorrect handling of advanced authorization profile attributes whose values contain a colon but are not `Dictionary:Attribute` pairs (e.g. `url-redirect=https://...`)
 
 ## 0.3.0
 

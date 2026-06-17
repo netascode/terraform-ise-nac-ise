@@ -44,7 +44,7 @@ module "ise" {
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.8.0 |
-| <a name="requirement_ise"></a> [ise](#requirement\_ise) | ~> 0.3.2 |
+| <a name="requirement_ise"></a> [ise](#requirement\_ise) | ~> 0.3.3 |
 | <a name="requirement_local"></a> [local](#requirement\_local) | >= 2.3.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.10.0 |
 | <a name="requirement_utils"></a> [utils](#requirement\_utils) | 2.0.0-beta2 |
@@ -91,6 +91,7 @@ module "ise" {
 | [ise_device_admin_time_and_date_condition.device_admin_time_and_date_condition](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_time_and_date_condition) | resource |
 | [ise_downloadable_acl.downloadable_acl](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/downloadable_acl) | resource |
 | [ise_endpoint.endpoint](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/endpoint) | resource |
+| [ise_endpoint_custom_attribute.endpoint_custom_attribute](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/endpoint_custom_attribute) | resource |
 | [ise_endpoint_identity_group.endpoint_identity_group_0](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/endpoint_identity_group) | resource |
 | [ise_endpoint_identity_group.endpoint_identity_group_1](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/endpoint_identity_group) | resource |
 | [ise_endpoint_identity_group.endpoint_identity_group_2](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/endpoint_identity_group) | resource |

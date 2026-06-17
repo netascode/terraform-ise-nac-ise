@@ -356,7 +356,14 @@ resource "ise_endpoint" "endpoint" {
   mdm_serial                        = try(each.value.mdm_attributes.serial, local.defaults.ise.identity_management.endpoints.mdm_attributes.serial, null)
   mdm_server_name                   = try(each.value.mdm_attributes.server_name, local.defaults.ise.identity_management.endpoints.mdm_attributes.server_name, null)
 
-  depends_on = [ise_endpoint_identity_group.endpoint_identity_group_5]
+  depends_on = [ise_endpoint_identity_group.endpoint_identity_group_5, ise_endpoint_custom_attribute.endpoint_custom_attribute]
+}
+
+resource "ise_endpoint_custom_attribute" "endpoint_custom_attribute" {
+  for_each = { for attr in try(local.ise.identity_management.endpoint_custom_attributes, []) : attr.name => attr }
+
+  attribute_name = each.value.name
+  attribute_type = each.value.type
 }
 
 resource "ise_certificate_authentication_profile" "certificate_authentication_profile" {

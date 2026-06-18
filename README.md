@@ -47,7 +47,7 @@ module "ise" {
 | <a name="requirement_ise"></a> [ise](#requirement\_ise) | ~> 0.3.3 |
 | <a name="requirement_local"></a> [local](#requirement\_local) | >= 2.3.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.10.0 |
-| <a name="requirement_utils"></a> [utils](#requirement\_utils) | 2.0.0-beta2 |
+| <a name="requirement_utils"></a> [utils](#requirement\_utils) | 2.0.0 |
 ## Inputs
 
 | Name | Description | Type | Default | Required |

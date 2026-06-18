@@ -1,5 +1,6 @@
 ## 1.0.0 (unreleased)
 
+- Add support for endpoint custom attributes via the `endpoint_custom_attributes` data model key, mapping to the `ise_endpoint_custom_attribute` resource
 - Fix duplicate Terraform key error when defining multiple network device groups under the built-in `Is IPSEC Device` container [link](https://github.com/netascode/terraform-ise-nac-ise/pull/57)
 
 ## 0.3.0

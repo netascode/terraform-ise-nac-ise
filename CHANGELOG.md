@@ -1,6 +1,7 @@
 ## 1.0.0 (unreleased)
 
 - Add support for endpoint custom attributes via the `endpoint_custom_attributes` data model key, mapping to the `ise_endpoint_custom_attribute` resource
+- **BREAKING CHANGE**: Authorization profile advanced attributes now use an explicit `dictionary_value` key for dictionary references (`AdvancedDictionaryAttribute`) instead of inferring intent from colons in `value`. `value` is now always a literal `AttributeValue` (colons preserved, so `value: "shell:priv-lvl=15"` no longer needs a special-case pattern). To configure a dictionary reference, replace `value: "Dictionary:attribute"` with `dictionary_value: "Dictionary:attribute"`. The `attribute_value_patterns` workaround has been removed.
 - Fix duplicate Terraform key error when defining multiple network device groups under the built-in `Is IPSEC Device` container [link](https://github.com/netascode/terraform-ise-nac-ise/pull/57)
 
 ## 0.3.0

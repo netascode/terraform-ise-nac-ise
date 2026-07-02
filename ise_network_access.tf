@@ -337,7 +337,7 @@ resource "ise_network_access_condition" "network_access_condition_ref_leaf" {
     }]
   }]
 
-  depends_on = [ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups, ise_network_access_condition.network_access_condition_ref_leaf]
+  depends_on = [ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups]
 }
 
 resource "ise_network_access_condition" "network_access_condition_ref_mid1" {

@@ -308,7 +308,7 @@ resource "ise_network_access_condition" "network_access_condition_ref_leaf" {
         is_negate        = try(c3.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
         operator         = try(c3.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
         name             = try(c3.name, null)
-        id               = try(c3.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (data.ise_network_access_condition.network_access_condition_circular[c3.name].id) : null
+        id               = try(c3.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (try(data.ise_network_access_condition.network_access_condition_circular[c3.name].id, null)) : null
         children = length(try(c3.children, [])) == 0 ? null : [for c4 in try(c3.children, []) : {
           description      = try(c4.description, data.ise_network_access_condition.network_access_condition_circular[c4.name].description, null)
           attribute_name   = try(c4.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
@@ -319,7 +319,7 @@ resource "ise_network_access_condition" "network_access_condition_ref_leaf" {
           is_negate        = try(c4.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
           operator         = try(c4.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
           name             = try(c4.name, null)
-          id               = try(c4.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (data.ise_network_access_condition.network_access_condition_circular[c4.name].id) : null
+          id               = try(c4.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (try(data.ise_network_access_condition.network_access_condition_circular[c4.name].id, null)) : null
           children = length(try(c4.children, [])) == 0 ? null : [for c5 in try(c4.children, []) : {
             description      = try(c5.description, data.ise_network_access_condition.network_access_condition_circular[c5.name].description, null)
             attribute_name   = try(c5.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
@@ -330,7 +330,7 @@ resource "ise_network_access_condition" "network_access_condition_ref_leaf" {
             is_negate        = try(c5.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
             operator         = try(c5.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
             name             = try(c5.name, null)
-            id               = try(c5.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (data.ise_network_access_condition.network_access_condition_circular[c5.name].id) : null
+            id               = try(c5.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (try(data.ise_network_access_condition.network_access_condition_circular[c5.name].id, null)) : null
           }]
         }]
       }]
@@ -365,7 +365,55 @@ resource "ise_network_access_condition" "network_access_condition_ref_mid1" {
     is_negate        = try(c.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
     operator         = try(c.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
     name             = try(c.name, null)
-    id               = try(c.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c.name].id : data.ise_network_access_condition.network_access_condition_circular[c.name].id) : null
+    id               = try(c.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c.name].id, null)) : null
+    children = length(try(c.children, [])) == 0 ? null : [for c2 in try(c.children, []) : {
+      description      = try(c2.description, null)
+      attribute_name   = try(c2.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
+      attribute_value  = try(c2.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
+      dictionary_name  = try(c2.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
+      dictionary_value = try(c2.dictionary_value, local.defaults.ise.network_access.policy_elements.conditions.dictionary_value, null)
+      condition_type   = try(c2.type, local.defaults.ise.network_access.policy_elements.conditions.type, null)
+      is_negate        = try(c2.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
+      operator         = try(c2.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
+      name             = try(c2.name, null)
+      id               = try(c2.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c2.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c2.name].id, null)) : null
+      children = length(try(c2.children, [])) == 0 ? null : [for c3 in try(c2.children, []) : {
+        description      = try(c3.description, null)
+        attribute_name   = try(c3.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
+        attribute_value  = try(c3.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
+        dictionary_name  = try(c3.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
+        dictionary_value = try(c3.dictionary_value, local.defaults.ise.network_access.policy_elements.conditions.dictionary_value, null)
+        condition_type   = try(c3.type, local.defaults.ise.network_access.policy_elements.conditions.type, null)
+        is_negate        = try(c3.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
+        operator         = try(c3.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
+        name             = try(c3.name, null)
+        id               = try(c3.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c3.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c3.name].id, null)) : null
+        children = length(try(c3.children, [])) == 0 ? null : [for c4 in try(c3.children, []) : {
+          description      = try(c4.description, null)
+          attribute_name   = try(c4.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
+          attribute_value  = try(c4.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
+          dictionary_name  = try(c4.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
+          dictionary_value = try(c4.dictionary_value, local.defaults.ise.network_access.policy_elements.conditions.dictionary_value, null)
+          condition_type   = try(c4.type, local.defaults.ise.network_access.policy_elements.conditions.type, null)
+          is_negate        = try(c4.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
+          operator         = try(c4.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
+          name             = try(c4.name, null)
+          id               = try(c4.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c4.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c4.name].id, null)) : null
+          children = length(try(c4.children, [])) == 0 ? null : [for c5 in try(c4.children, []) : {
+            description      = try(c5.description, null)
+            attribute_name   = try(c5.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
+            attribute_value  = try(c5.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
+            dictionary_name  = try(c5.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
+            dictionary_value = try(c5.dictionary_value, local.defaults.ise.network_access.policy_elements.conditions.dictionary_value, null)
+            condition_type   = try(c5.type, local.defaults.ise.network_access.policy_elements.conditions.type, null)
+            is_negate        = try(c5.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
+            operator         = try(c5.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
+            name             = try(c5.name, null)
+            id               = try(c5.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c5.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c5.name].id, null)) : null
+          }]
+        }]
+      }]
+    }]
   }]
 
   lifecycle {
@@ -400,7 +448,55 @@ resource "ise_network_access_condition" "network_access_condition_ref_mid2" {
     is_negate        = try(c.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
     operator         = try(c.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
     name             = try(c.name, null)
-    id               = try(c.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c.name].id : contains(local.network_access_conditions_circular_mid1_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c.name].id : data.ise_network_access_condition.network_access_condition_circular[c.name].id) : null
+    id               = try(c.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c.name].id : contains(local.network_access_conditions_circular_mid1_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c.name].id, null)) : null
+    children = length(try(c.children, [])) == 0 ? null : [for c2 in try(c.children, []) : {
+      description      = try(c2.description, null)
+      attribute_name   = try(c2.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
+      attribute_value  = try(c2.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
+      dictionary_name  = try(c2.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
+      dictionary_value = try(c2.dictionary_value, local.defaults.ise.network_access.policy_elements.conditions.dictionary_value, null)
+      condition_type   = try(c2.type, local.defaults.ise.network_access.policy_elements.conditions.type, null)
+      is_negate        = try(c2.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
+      operator         = try(c2.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
+      name             = try(c2.name, null)
+      id               = try(c2.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c2.name].id : contains(local.network_access_conditions_circular_mid1_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c2.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c2.name].id, null)) : null
+      children = length(try(c2.children, [])) == 0 ? null : [for c3 in try(c2.children, []) : {
+        description      = try(c3.description, null)
+        attribute_name   = try(c3.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
+        attribute_value  = try(c3.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
+        dictionary_name  = try(c3.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
+        dictionary_value = try(c3.dictionary_value, local.defaults.ise.network_access.policy_elements.conditions.dictionary_value, null)
+        condition_type   = try(c3.type, local.defaults.ise.network_access.policy_elements.conditions.type, null)
+        is_negate        = try(c3.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
+        operator         = try(c3.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
+        name             = try(c3.name, null)
+        id               = try(c3.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c3.name].id : contains(local.network_access_conditions_circular_mid1_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c3.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c3.name].id, null)) : null
+        children = length(try(c3.children, [])) == 0 ? null : [for c4 in try(c3.children, []) : {
+          description      = try(c4.description, null)
+          attribute_name   = try(c4.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
+          attribute_value  = try(c4.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
+          dictionary_name  = try(c4.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
+          dictionary_value = try(c4.dictionary_value, local.defaults.ise.network_access.policy_elements.conditions.dictionary_value, null)
+          condition_type   = try(c4.type, local.defaults.ise.network_access.policy_elements.conditions.type, null)
+          is_negate        = try(c4.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
+          operator         = try(c4.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
+          name             = try(c4.name, null)
+          id               = try(c4.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c4.name].id : contains(local.network_access_conditions_circular_mid1_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c4.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c4.name].id, null)) : null
+          children = length(try(c4.children, [])) == 0 ? null : [for c5 in try(c4.children, []) : {
+            description      = try(c5.description, null)
+            attribute_name   = try(c5.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
+            attribute_value  = try(c5.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
+            dictionary_name  = try(c5.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
+            dictionary_value = try(c5.dictionary_value, local.defaults.ise.network_access.policy_elements.conditions.dictionary_value, null)
+            condition_type   = try(c5.type, local.defaults.ise.network_access.policy_elements.conditions.type, null)
+            is_negate        = try(c5.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
+            operator         = try(c5.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
+            name             = try(c5.name, null)
+            id               = try(c5.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c5.name].id : contains(local.network_access_conditions_circular_mid1_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c5.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c5.name].id, null)) : null
+          }]
+        }]
+      }]
+    }]
   }]
 
   lifecycle {
@@ -435,7 +531,55 @@ resource "ise_network_access_condition" "network_access_condition_ref_mid3" {
     is_negate        = try(c.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
     operator         = try(c.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
     name             = try(c.name, null)
-    id               = try(c.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c.name].id : contains(local.network_access_conditions_circular_mid1_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c.name].id : contains(local.network_access_conditions_circular_mid2_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c.name].id : data.ise_network_access_condition.network_access_condition_circular[c.name].id) : null
+    id               = try(c.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c.name].id : contains(local.network_access_conditions_circular_mid1_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c.name].id : contains(local.network_access_conditions_circular_mid2_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c.name].id, null)) : null
+    children = length(try(c.children, [])) == 0 ? null : [for c2 in try(c.children, []) : {
+      description      = try(c2.description, null)
+      attribute_name   = try(c2.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
+      attribute_value  = try(c2.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
+      dictionary_name  = try(c2.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
+      dictionary_value = try(c2.dictionary_value, local.defaults.ise.network_access.policy_elements.conditions.dictionary_value, null)
+      condition_type   = try(c2.type, local.defaults.ise.network_access.policy_elements.conditions.type, null)
+      is_negate        = try(c2.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
+      operator         = try(c2.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
+      name             = try(c2.name, null)
+      id               = try(c2.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c2.name].id : contains(local.network_access_conditions_circular_mid1_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c2.name].id : contains(local.network_access_conditions_circular_mid2_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c2.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c2.name].id, null)) : null
+      children = length(try(c2.children, [])) == 0 ? null : [for c3 in try(c2.children, []) : {
+        description      = try(c3.description, null)
+        attribute_name   = try(c3.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
+        attribute_value  = try(c3.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
+        dictionary_name  = try(c3.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
+        dictionary_value = try(c3.dictionary_value, local.defaults.ise.network_access.policy_elements.conditions.dictionary_value, null)
+        condition_type   = try(c3.type, local.defaults.ise.network_access.policy_elements.conditions.type, null)
+        is_negate        = try(c3.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
+        operator         = try(c3.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
+        name             = try(c3.name, null)
+        id               = try(c3.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c3.name].id : contains(local.network_access_conditions_circular_mid1_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c3.name].id : contains(local.network_access_conditions_circular_mid2_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c3.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c3.name].id, null)) : null
+        children = length(try(c3.children, [])) == 0 ? null : [for c4 in try(c3.children, []) : {
+          description      = try(c4.description, null)
+          attribute_name   = try(c4.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
+          attribute_value  = try(c4.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
+          dictionary_name  = try(c4.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
+          dictionary_value = try(c4.dictionary_value, local.defaults.ise.network_access.policy_elements.conditions.dictionary_value, null)
+          condition_type   = try(c4.type, local.defaults.ise.network_access.policy_elements.conditions.type, null)
+          is_negate        = try(c4.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
+          operator         = try(c4.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
+          name             = try(c4.name, null)
+          id               = try(c4.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c4.name].id : contains(local.network_access_conditions_circular_mid1_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c4.name].id : contains(local.network_access_conditions_circular_mid2_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c4.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c4.name].id, null)) : null
+          children = length(try(c4.children, [])) == 0 ? null : [for c5 in try(c4.children, []) : {
+            description      = try(c5.description, null)
+            attribute_name   = try(c5.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
+            attribute_value  = try(c5.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
+            dictionary_name  = try(c5.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
+            dictionary_value = try(c5.dictionary_value, local.defaults.ise.network_access.policy_elements.conditions.dictionary_value, null)
+            condition_type   = try(c5.type, local.defaults.ise.network_access.policy_elements.conditions.type, null)
+            is_negate        = try(c5.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
+            operator         = try(c5.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
+            name             = try(c5.name, null)
+            id               = try(c5.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c5.name].id : contains(local.network_access_conditions_circular_mid1_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c5.name].id : contains(local.network_access_conditions_circular_mid2_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c5.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c5.name].id, null)) : null
+          }]
+        }]
+      }]
+    }]
   }]
 
   lifecycle {
@@ -470,7 +614,55 @@ resource "ise_network_access_condition" "network_access_condition_ref_mid4" {
     is_negate        = try(c.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
     operator         = try(c.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
     name             = try(c.name, null)
-    id               = try(c.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c.name].id : contains(local.network_access_conditions_circular_mid1_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c.name].id : contains(local.network_access_conditions_circular_mid2_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c.name].id : contains(local.network_access_conditions_circular_mid3_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c.name].id : data.ise_network_access_condition.network_access_condition_circular[c.name].id) : null
+    id               = try(c.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c.name].id : contains(local.network_access_conditions_circular_mid1_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c.name].id : contains(local.network_access_conditions_circular_mid2_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c.name].id : contains(local.network_access_conditions_circular_mid3_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c.name].id, null)) : null
+    children = length(try(c.children, [])) == 0 ? null : [for c2 in try(c.children, []) : {
+      description      = try(c2.description, null)
+      attribute_name   = try(c2.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
+      attribute_value  = try(c2.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
+      dictionary_name  = try(c2.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
+      dictionary_value = try(c2.dictionary_value, local.defaults.ise.network_access.policy_elements.conditions.dictionary_value, null)
+      condition_type   = try(c2.type, local.defaults.ise.network_access.policy_elements.conditions.type, null)
+      is_negate        = try(c2.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
+      operator         = try(c2.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
+      name             = try(c2.name, null)
+      id               = try(c2.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c2.name].id : contains(local.network_access_conditions_circular_mid1_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c2.name].id : contains(local.network_access_conditions_circular_mid2_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c2.name].id : contains(local.network_access_conditions_circular_mid3_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c2.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c2.name].id, null)) : null
+      children = length(try(c2.children, [])) == 0 ? null : [for c3 in try(c2.children, []) : {
+        description      = try(c3.description, null)
+        attribute_name   = try(c3.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
+        attribute_value  = try(c3.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
+        dictionary_name  = try(c3.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
+        dictionary_value = try(c3.dictionary_value, local.defaults.ise.network_access.policy_elements.conditions.dictionary_value, null)
+        condition_type   = try(c3.type, local.defaults.ise.network_access.policy_elements.conditions.type, null)
+        is_negate        = try(c3.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
+        operator         = try(c3.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
+        name             = try(c3.name, null)
+        id               = try(c3.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c3.name].id : contains(local.network_access_conditions_circular_mid1_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c3.name].id : contains(local.network_access_conditions_circular_mid2_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c3.name].id : contains(local.network_access_conditions_circular_mid3_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c3.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c3.name].id, null)) : null
+        children = length(try(c3.children, [])) == 0 ? null : [for c4 in try(c3.children, []) : {
+          description      = try(c4.description, null)
+          attribute_name   = try(c4.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
+          attribute_value  = try(c4.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
+          dictionary_name  = try(c4.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
+          dictionary_value = try(c4.dictionary_value, local.defaults.ise.network_access.policy_elements.conditions.dictionary_value, null)
+          condition_type   = try(c4.type, local.defaults.ise.network_access.policy_elements.conditions.type, null)
+          is_negate        = try(c4.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
+          operator         = try(c4.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
+          name             = try(c4.name, null)
+          id               = try(c4.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c4.name].id : contains(local.network_access_conditions_circular_mid1_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c4.name].id : contains(local.network_access_conditions_circular_mid2_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c4.name].id : contains(local.network_access_conditions_circular_mid3_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c4.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c4.name].id, null)) : null
+          children = length(try(c4.children, [])) == 0 ? null : [for c5 in try(c4.children, []) : {
+            description      = try(c5.description, null)
+            attribute_name   = try(c5.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
+            attribute_value  = try(c5.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
+            dictionary_name  = try(c5.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
+            dictionary_value = try(c5.dictionary_value, local.defaults.ise.network_access.policy_elements.conditions.dictionary_value, null)
+            condition_type   = try(c5.type, local.defaults.ise.network_access.policy_elements.conditions.type, null)
+            is_negate        = try(c5.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
+            operator         = try(c5.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
+            name             = try(c5.name, null)
+            id               = try(c5.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c5.name].id : contains(local.network_access_conditions_circular_mid1_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c5.name].id : contains(local.network_access_conditions_circular_mid2_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c5.name].id : contains(local.network_access_conditions_circular_mid3_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c5.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c5.name].id, null)) : null
+          }]
+        }]
+      }]
+    }]
   }]
 
   lifecycle {
@@ -505,7 +697,55 @@ resource "ise_network_access_condition" "network_access_condition_ref_mid5" {
     is_negate        = try(c.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
     operator         = try(c.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
     name             = try(c.name, null)
-    id               = try(c.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c.name].id : contains(local.network_access_conditions_circular_mid1_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c.name].id : contains(local.network_access_conditions_circular_mid2_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c.name].id : contains(local.network_access_conditions_circular_mid3_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c.name].id : contains(local.network_access_conditions_circular_mid4_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid4[c.name].id : data.ise_network_access_condition.network_access_condition_circular[c.name].id) : null
+    id               = try(c.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c.name].id : contains(local.network_access_conditions_circular_mid1_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c.name].id : contains(local.network_access_conditions_circular_mid2_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c.name].id : contains(local.network_access_conditions_circular_mid3_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c.name].id : contains(local.network_access_conditions_circular_mid4_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid4[c.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c.name].id, null)) : null
+    children = length(try(c.children, [])) == 0 ? null : [for c2 in try(c.children, []) : {
+      description      = try(c2.description, null)
+      attribute_name   = try(c2.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
+      attribute_value  = try(c2.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
+      dictionary_name  = try(c2.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
+      dictionary_value = try(c2.dictionary_value, local.defaults.ise.network_access.policy_elements.conditions.dictionary_value, null)
+      condition_type   = try(c2.type, local.defaults.ise.network_access.policy_elements.conditions.type, null)
+      is_negate        = try(c2.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
+      operator         = try(c2.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
+      name             = try(c2.name, null)
+      id               = try(c2.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c2.name].id : contains(local.network_access_conditions_circular_mid1_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c2.name].id : contains(local.network_access_conditions_circular_mid2_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c2.name].id : contains(local.network_access_conditions_circular_mid3_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c2.name].id : contains(local.network_access_conditions_circular_mid4_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid4[c2.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c2.name].id, null)) : null
+      children = length(try(c2.children, [])) == 0 ? null : [for c3 in try(c2.children, []) : {
+        description      = try(c3.description, null)
+        attribute_name   = try(c3.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
+        attribute_value  = try(c3.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
+        dictionary_name  = try(c3.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
+        dictionary_value = try(c3.dictionary_value, local.defaults.ise.network_access.policy_elements.conditions.dictionary_value, null)
+        condition_type   = try(c3.type, local.defaults.ise.network_access.policy_elements.conditions.type, null)
+        is_negate        = try(c3.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
+        operator         = try(c3.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
+        name             = try(c3.name, null)
+        id               = try(c3.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c3.name].id : contains(local.network_access_conditions_circular_mid1_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c3.name].id : contains(local.network_access_conditions_circular_mid2_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c3.name].id : contains(local.network_access_conditions_circular_mid3_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c3.name].id : contains(local.network_access_conditions_circular_mid4_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid4[c3.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c3.name].id, null)) : null
+        children = length(try(c3.children, [])) == 0 ? null : [for c4 in try(c3.children, []) : {
+          description      = try(c4.description, null)
+          attribute_name   = try(c4.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
+          attribute_value  = try(c4.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
+          dictionary_name  = try(c4.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
+          dictionary_value = try(c4.dictionary_value, local.defaults.ise.network_access.policy_elements.conditions.dictionary_value, null)
+          condition_type   = try(c4.type, local.defaults.ise.network_access.policy_elements.conditions.type, null)
+          is_negate        = try(c4.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
+          operator         = try(c4.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
+          name             = try(c4.name, null)
+          id               = try(c4.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c4.name].id : contains(local.network_access_conditions_circular_mid1_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c4.name].id : contains(local.network_access_conditions_circular_mid2_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c4.name].id : contains(local.network_access_conditions_circular_mid3_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c4.name].id : contains(local.network_access_conditions_circular_mid4_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid4[c4.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c4.name].id, null)) : null
+          children = length(try(c4.children, [])) == 0 ? null : [for c5 in try(c4.children, []) : {
+            description      = try(c5.description, null)
+            attribute_name   = try(c5.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
+            attribute_value  = try(c5.attribute_value, local.defaults.ise.network_access.policy_elements.conditions.attribute_value, null)
+            dictionary_name  = try(c5.dictionary_name, local.defaults.ise.network_access.policy_elements.conditions.dictionary_name, null)
+            dictionary_value = try(c5.dictionary_value, local.defaults.ise.network_access.policy_elements.conditions.dictionary_value, null)
+            condition_type   = try(c5.type, local.defaults.ise.network_access.policy_elements.conditions.type, null)
+            is_negate        = try(c5.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
+            operator         = try(c5.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
+            name             = try(c5.name, null)
+            id               = try(c5.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c5.name].id : contains(local.network_access_conditions_circular_mid1_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c5.name].id : contains(local.network_access_conditions_circular_mid2_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c5.name].id : contains(local.network_access_conditions_circular_mid3_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c5.name].id : contains(local.network_access_conditions_circular_mid4_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid4[c5.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c5.name].id, null)) : null
+          }]
+        }]
+      }]
+    }]
   }]
 
   lifecycle {
@@ -540,7 +780,7 @@ resource "ise_network_access_condition" "network_access_condition_ref" {
     is_negate        = try(c.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
     operator         = try(c.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
     name             = try(c.name, null)
-    id               = try(c.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c.name].id : contains(local.network_access_conditions_circular_mid1_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c.name].id : contains(local.network_access_conditions_circular_mid2_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c.name].id : contains(local.network_access_conditions_circular_mid3_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c.name].id : contains(local.network_access_conditions_circular_mid4_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid4[c.name].id : contains(local.network_access_conditions_circular_mid5_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid5[c.name].id : data.ise_network_access_condition.network_access_condition_circular[c.name].id) : null
+    id               = try(c.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c.name].id : contains(local.network_access_conditions_circular_mid1_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c.name].id : contains(local.network_access_conditions_circular_mid2_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c.name].id : contains(local.network_access_conditions_circular_mid3_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c.name].id : contains(local.network_access_conditions_circular_mid4_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid4[c.name].id : contains(local.network_access_conditions_circular_mid5_names, c.name) ? ise_network_access_condition.network_access_condition_ref_mid5[c.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c.name].id, null)) : null
     children = length(try(c.children, [])) == 0 ? null : [for c2 in try(c.children, []) : {
       description      = try(c2.description, null)
       attribute_name   = try(c2.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
@@ -551,7 +791,7 @@ resource "ise_network_access_condition" "network_access_condition_ref" {
       is_negate        = try(c2.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
       operator         = try(c2.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
       name             = try(c2.name, null)
-      id               = try(c2.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c2.name].id : contains(local.network_access_conditions_circular_mid1_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c2.name].id : contains(local.network_access_conditions_circular_mid2_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c2.name].id : contains(local.network_access_conditions_circular_mid3_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c2.name].id : contains(local.network_access_conditions_circular_mid4_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid4[c2.name].id : contains(local.network_access_conditions_circular_mid5_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid5[c2.name].id : data.ise_network_access_condition.network_access_condition_circular[c2.name].id) : null
+      id               = try(c2.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c2.name].id : contains(local.network_access_conditions_circular_mid1_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c2.name].id : contains(local.network_access_conditions_circular_mid2_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c2.name].id : contains(local.network_access_conditions_circular_mid3_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c2.name].id : contains(local.network_access_conditions_circular_mid4_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid4[c2.name].id : contains(local.network_access_conditions_circular_mid5_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid5[c2.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c2.name].id, null)) : null
       children = length(try(c2.children, [])) == 0 ? null : [for c3 in try(c2.children, []) : {
         description      = try(c3.description, null)
         attribute_name   = try(c3.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
@@ -562,7 +802,7 @@ resource "ise_network_access_condition" "network_access_condition_ref" {
         is_negate        = try(c3.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
         operator         = try(c3.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
         name             = try(c3.name, null)
-        id               = try(c3.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c3.name].id : contains(local.network_access_conditions_circular_mid1_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c3.name].id : contains(local.network_access_conditions_circular_mid2_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c3.name].id : contains(local.network_access_conditions_circular_mid3_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c3.name].id : contains(local.network_access_conditions_circular_mid4_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid4[c3.name].id : contains(local.network_access_conditions_circular_mid5_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid5[c3.name].id : data.ise_network_access_condition.network_access_condition_circular[c3.name].id) : null
+        id               = try(c3.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c3.name].id : contains(local.network_access_conditions_circular_mid1_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c3.name].id : contains(local.network_access_conditions_circular_mid2_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c3.name].id : contains(local.network_access_conditions_circular_mid3_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c3.name].id : contains(local.network_access_conditions_circular_mid4_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid4[c3.name].id : contains(local.network_access_conditions_circular_mid5_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid5[c3.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c3.name].id, null)) : null
         children = length(try(c3.children, [])) == 0 ? null : [for c4 in try(c3.children, []) : {
           description      = try(c4.description, null)
           attribute_name   = try(c4.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
@@ -573,7 +813,7 @@ resource "ise_network_access_condition" "network_access_condition_ref" {
           is_negate        = try(c4.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
           operator         = try(c4.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
           name             = try(c4.name, null)
-          id               = try(c4.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c4.name].id : contains(local.network_access_conditions_circular_mid1_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c4.name].id : contains(local.network_access_conditions_circular_mid2_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c4.name].id : contains(local.network_access_conditions_circular_mid3_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c4.name].id : contains(local.network_access_conditions_circular_mid4_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid4[c4.name].id : contains(local.network_access_conditions_circular_mid5_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid5[c4.name].id : data.ise_network_access_condition.network_access_condition_circular[c4.name].id) : null
+          id               = try(c4.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c4.name].id : contains(local.network_access_conditions_circular_mid1_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c4.name].id : contains(local.network_access_conditions_circular_mid2_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c4.name].id : contains(local.network_access_conditions_circular_mid3_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c4.name].id : contains(local.network_access_conditions_circular_mid4_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid4[c4.name].id : contains(local.network_access_conditions_circular_mid5_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid5[c4.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c4.name].id, null)) : null
           children = length(try(c4.children, [])) == 0 ? null : [for c5 in try(c4.children, []) : {
             description      = try(c5.description, null)
             attribute_name   = try(c5.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
@@ -584,7 +824,7 @@ resource "ise_network_access_condition" "network_access_condition_ref" {
             is_negate        = try(c5.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
             operator         = try(c5.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
             name             = try(c5.name, null)
-            id               = try(c5.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c5.name].id : contains(local.network_access_conditions_circular_mid1_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c5.name].id : contains(local.network_access_conditions_circular_mid2_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c5.name].id : contains(local.network_access_conditions_circular_mid3_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c5.name].id : contains(local.network_access_conditions_circular_mid4_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid4[c5.name].id : contains(local.network_access_conditions_circular_mid5_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid5[c5.name].id : data.ise_network_access_condition.network_access_condition_circular[c5.name].id) : null
+            id               = try(c5.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c5.name].id : contains(local.network_access_conditions_circular_mid1_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c5.name].id : contains(local.network_access_conditions_circular_mid2_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c5.name].id : contains(local.network_access_conditions_circular_mid3_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c5.name].id : contains(local.network_access_conditions_circular_mid4_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid4[c5.name].id : contains(local.network_access_conditions_circular_mid5_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid5[c5.name].id : try(data.ise_network_access_condition.network_access_condition_circular[c5.name].id, null)) : null
           }]
         }]
       }]
@@ -634,7 +874,7 @@ resource "ise_network_access_condition" "network_access_condition" {
       is_negate        = try(c2.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
       operator         = try(c2.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
       name             = try(c2.name, null)
-      id               = try(c2.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c2.name].id : contains(local.network_access_conditions_circular_mid1_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c2.name].id : contains(local.network_access_conditions_circular_parent_names, c2.name) ? ise_network_access_condition.network_access_condition_ref[c2.name].id : data.ise_network_access_condition.network_access_condition_circular[c2.name].id) : null
+      id               = try(c2.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c2.name].id : contains(local.network_access_conditions_circular_mid1_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c2.name].id : contains(local.network_access_conditions_circular_mid2_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c2.name].id : contains(local.network_access_conditions_circular_mid3_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c2.name].id : contains(local.network_access_conditions_circular_mid4_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid4[c2.name].id : contains(local.network_access_conditions_circular_mid5_names, c2.name) ? ise_network_access_condition.network_access_condition_ref_mid5[c2.name].id : contains(local.network_access_conditions_circular_parent_names, c2.name) ? ise_network_access_condition.network_access_condition_ref[c2.name].id : data.ise_network_access_condition.network_access_condition_circular[c2.name].id) : null
       children = length(try(c2.children, [])) == 0 ? null : [for c3 in try(c2.children, []) : {
         description      = try(c3.description, data.ise_network_access_condition.network_access_condition_circular[c3.name].description, null)
         attribute_name   = try(c3.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
@@ -645,7 +885,7 @@ resource "ise_network_access_condition" "network_access_condition" {
         is_negate        = try(c3.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
         operator         = try(c3.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
         name             = try(c3.name, null)
-        id               = try(c3.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c3.name].id : contains(local.network_access_conditions_circular_mid1_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c3.name].id : contains(local.network_access_conditions_circular_parent_names, c3.name) ? ise_network_access_condition.network_access_condition_ref[c3.name].id : data.ise_network_access_condition.network_access_condition_circular[c3.name].id) : null
+        id               = try(c3.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c3.name].id : contains(local.network_access_conditions_circular_mid1_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c3.name].id : contains(local.network_access_conditions_circular_mid2_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c3.name].id : contains(local.network_access_conditions_circular_mid3_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c3.name].id : contains(local.network_access_conditions_circular_mid4_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid4[c3.name].id : contains(local.network_access_conditions_circular_mid5_names, c3.name) ? ise_network_access_condition.network_access_condition_ref_mid5[c3.name].id : contains(local.network_access_conditions_circular_parent_names, c3.name) ? ise_network_access_condition.network_access_condition_ref[c3.name].id : data.ise_network_access_condition.network_access_condition_circular[c3.name].id) : null
         children = length(try(c3.children, [])) == 0 ? null : [for c4 in try(c3.children, []) : {
           description      = try(c4.description, data.ise_network_access_condition.network_access_condition_circular[c4.name].description, null)
           attribute_name   = try(c4.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
@@ -656,7 +896,7 @@ resource "ise_network_access_condition" "network_access_condition" {
           is_negate        = try(c4.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
           operator         = try(c4.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
           name             = try(c4.name, null)
-          id               = try(c4.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c4.name].id : contains(local.network_access_conditions_circular_mid1_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c4.name].id : contains(local.network_access_conditions_circular_parent_names, c4.name) ? ise_network_access_condition.network_access_condition_ref[c4.name].id : data.ise_network_access_condition.network_access_condition_circular[c4.name].id) : null
+          id               = try(c4.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c4.name].id : contains(local.network_access_conditions_circular_mid1_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c4.name].id : contains(local.network_access_conditions_circular_mid2_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c4.name].id : contains(local.network_access_conditions_circular_mid3_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c4.name].id : contains(local.network_access_conditions_circular_mid4_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid4[c4.name].id : contains(local.network_access_conditions_circular_mid5_names, c4.name) ? ise_network_access_condition.network_access_condition_ref_mid5[c4.name].id : contains(local.network_access_conditions_circular_parent_names, c4.name) ? ise_network_access_condition.network_access_condition_ref[c4.name].id : data.ise_network_access_condition.network_access_condition_circular[c4.name].id) : null
           children = length(try(c4.children, [])) == 0 ? null : [for c5 in try(c4.children, []) : {
             description      = try(c5.description, data.ise_network_access_condition.network_access_condition_circular[c5.name].description, null)
             attribute_name   = try(c5.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
@@ -667,7 +907,7 @@ resource "ise_network_access_condition" "network_access_condition" {
             is_negate        = try(c5.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
             operator         = try(c5.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
             name             = try(c5.name, null)
-            id               = try(c5.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c5.name].id : contains(local.network_access_conditions_circular_mid1_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c5.name].id : contains(local.network_access_conditions_circular_parent_names, c5.name) ? ise_network_access_condition.network_access_condition_ref[c5.name].id : data.ise_network_access_condition.network_access_condition_circular[c5.name].id) : null
+            id               = try(c5.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c5.name].id : contains(local.network_access_conditions_circular_mid1_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c5.name].id : contains(local.network_access_conditions_circular_mid2_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c5.name].id : contains(local.network_access_conditions_circular_mid3_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c5.name].id : contains(local.network_access_conditions_circular_mid4_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid4[c5.name].id : contains(local.network_access_conditions_circular_mid5_names, c5.name) ? ise_network_access_condition.network_access_condition_ref_mid5[c5.name].id : contains(local.network_access_conditions_circular_parent_names, c5.name) ? ise_network_access_condition.network_access_condition_ref[c5.name].id : data.ise_network_access_condition.network_access_condition_circular[c5.name].id) : null
             children = length(try(c5.children, [])) == 0 ? null : [for c6 in try(c5.children, []) : {
               description      = try(c6.description, data.ise_network_access_condition.network_access_condition_circular[c6.name].description, null)
               attribute_name   = try(c6.attribute_name, local.defaults.ise.network_access.policy_elements.conditions.attribute_name, null)
@@ -678,7 +918,7 @@ resource "ise_network_access_condition" "network_access_condition" {
               is_negate        = try(c6.is_negate, local.defaults.ise.network_access.policy_elements.conditions.is_negate, null)
               operator         = try(c6.operator, local.defaults.ise.network_access.policy_elements.conditions.operator, null)
               name             = try(c6.name, null)
-              id               = try(c6.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c6.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c6.name].id : contains(local.network_access_conditions_circular_mid1_names, c6.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c6.name].id : contains(local.network_access_conditions_circular_parent_names, c6.name) ? ise_network_access_condition.network_access_condition_ref[c6.name].id : data.ise_network_access_condition.network_access_condition_circular[c6.name].id) : null
+              id               = try(c6.type, local.defaults.ise.network_access.policy_elements.conditions.type, null) == "ConditionReference" ? (contains(local.network_access_conditions_circular_leaf_names, c6.name) ? ise_network_access_condition.network_access_condition_ref_leaf[c6.name].id : contains(local.network_access_conditions_circular_mid1_names, c6.name) ? ise_network_access_condition.network_access_condition_ref_mid1[c6.name].id : contains(local.network_access_conditions_circular_mid2_names, c6.name) ? ise_network_access_condition.network_access_condition_ref_mid2[c6.name].id : contains(local.network_access_conditions_circular_mid3_names, c6.name) ? ise_network_access_condition.network_access_condition_ref_mid3[c6.name].id : contains(local.network_access_conditions_circular_mid4_names, c6.name) ? ise_network_access_condition.network_access_condition_ref_mid4[c6.name].id : contains(local.network_access_conditions_circular_mid5_names, c6.name) ? ise_network_access_condition.network_access_condition_ref_mid5[c6.name].id : contains(local.network_access_conditions_circular_parent_names, c6.name) ? ise_network_access_condition.network_access_condition_ref[c6.name].id : data.ise_network_access_condition.network_access_condition_circular[c6.name].id) : null
             }]
           }]
         }]
@@ -862,7 +1102,7 @@ locals {
             condition_type   = try(k.type, local.defaults.ise.network_access.policy_sets.condition.type, null)
             is_negate        = try(k.is_negate, local.defaults.ise.network_access.policy_sets.condition.is_negate, null)
             operator         = try(k.operator, local.defaults.ise.network_access.policy_sets.condition.operator, null)
-            id               = try(contains(local.known_conditions_network_access, try(k.name, "")) ? ise_network_access_condition.network_access_condition[k.name].id : data.ise_network_access_condition.network_access_condition[k.name].id, null)
+            id               = try(contains(local.known_conditions_network_access, try(k.name, "")) ? local.network_access_all_condition_ids[k.name] : data.ise_network_access_condition.network_access_condition[k.name].id, null)
             children = try([for l in k.children : {
               attribute_name   = try(l.attribute_name, local.defaults.ise.network_access.policy_sets.condition.attribute_name, null)
               attribute_value  = try(l.attribute_value, local.defaults.ise.network_access.policy_sets.condition.attribute_value, null)
@@ -871,7 +1111,7 @@ locals {
               condition_type   = try(l.type, local.defaults.ise.network_access.policy_sets.condition.type, null)
               is_negate        = try(l.is_negate, local.defaults.ise.network_access.policy_sets.condition.is_negate, null)
               operator         = try(l.operator, local.defaults.ise.network_access.policy_sets.condition.operator, null)
-              id               = try(contains(local.known_conditions_network_access, try(l.name, "")) ? ise_network_access_condition.network_access_condition[l.name].id : data.ise_network_access_condition.network_access_condition[l.name].id, null)
+              id               = try(contains(local.known_conditions_network_access, try(l.name, "")) ? local.network_access_all_condition_ids[l.name] : data.ise_network_access_condition.network_access_condition[l.name].id, null)
               children = try([for m in l.children : {
                 attribute_name   = try(m.attribute_name, local.defaults.ise.network_access.policy_sets.condition.attribute_name, null)
                 attribute_value  = try(m.attribute_value, local.defaults.ise.network_access.policy_sets.condition.attribute_value, null)
@@ -880,7 +1120,7 @@ locals {
                 condition_type   = try(m.type, local.defaults.ise.network_access.policy_sets.condition.type, null)
                 is_negate        = try(m.is_negate, local.defaults.ise.network_access.policy_sets.condition.is_negate, null)
                 operator         = try(m.operator, local.defaults.ise.network_access.policy_sets.condition.operator, null)
-                id               = try(contains(local.known_conditions_network_access, try(m.name, "")) ? ise_network_access_condition.network_access_condition[m.name].id : data.ise_network_access_condition.network_access_condition[m.name].id, null)
+                id               = try(contains(local.known_conditions_network_access, try(m.name, "")) ? local.network_access_all_condition_ids[m.name] : data.ise_network_access_condition.network_access_condition[m.name].id, null)
                 children = try([for n in m.children : {
                   attribute_name   = try(n.attribute_name, local.defaults.ise.network_access.policy_sets.condition.attribute_name, null)
                   attribute_value  = try(n.attribute_value, local.defaults.ise.network_access.policy_sets.condition.attribute_value, null)
@@ -889,7 +1129,7 @@ locals {
                   condition_type   = try(n.type, local.defaults.ise.network_access.policy_sets.condition.type, null)
                   is_negate        = try(n.is_negate, local.defaults.ise.network_access.policy_sets.condition.is_negate, null)
                   operator         = try(n.operator, local.defaults.ise.network_access.policy_sets.condition.operator, null)
-                  id               = try(contains(local.known_conditions_network_access, try(n.name, "")) ? ise_network_access_condition.network_access_condition[n.name].id : data.ise_network_access_condition.network_access_condition[n.name].id, null)
+                  id               = try(contains(local.known_conditions_network_access, try(n.name, "")) ? local.network_access_all_condition_ids[n.name] : data.ise_network_access_condition.network_access_condition[n.name].id, null)
                 }], null)
               }], null)
             }], null)
@@ -1008,7 +1248,7 @@ locals {
               condition_type   = try(k.type, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.type, null)
               is_negate        = try(k.is_negate, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.is_negate, null)
               operator         = try(k.operator, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.operator, null)
-              id               = try(contains(local.known_conditions_network_access, try(k.name, "")) ? ise_network_access_condition.network_access_condition[k.name].id : data.ise_network_access_condition.network_access_condition[k.name].id, null)
+              id               = try(contains(local.known_conditions_network_access, try(k.name, "")) ? local.network_access_all_condition_ids[k.name] : data.ise_network_access_condition.network_access_condition[k.name].id, null)
               children = try([for l in k.children : {
                 attribute_name   = try(l.attribute_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_name, null)
                 attribute_value  = try(l.attribute_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_value, null)
@@ -1017,7 +1257,7 @@ locals {
                 condition_type   = try(l.type, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.type, null)
                 is_negate        = try(l.is_negate, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.is_negate, null)
                 operator         = try(l.operator, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.operator, null)
-                id               = try(contains(local.known_conditions_network_access, try(l.name, "")) ? ise_network_access_condition.network_access_condition[l.name].id : data.ise_network_access_condition.network_access_condition[l.name].id, null)
+                id               = try(contains(local.known_conditions_network_access, try(l.name, "")) ? local.network_access_all_condition_ids[l.name] : data.ise_network_access_condition.network_access_condition[l.name].id, null)
                 children = try([for m in l.children : {
                   attribute_name   = try(m.attribute_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_name, null)
                   attribute_value  = try(m.attribute_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_value, null)
@@ -1026,7 +1266,7 @@ locals {
                   condition_type   = try(m.type, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.type, null)
                   is_negate        = try(m.is_negate, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.is_negate, null)
                   operator         = try(m.operator, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.operator, null)
-                  id               = try(contains(local.known_conditions_network_access, try(m.name, "")) ? ise_network_access_condition.network_access_condition[m.name].id : data.ise_network_access_condition.network_access_condition[m.name].id, null)
+                  id               = try(contains(local.known_conditions_network_access, try(m.name, "")) ? local.network_access_all_condition_ids[m.name] : data.ise_network_access_condition.network_access_condition[m.name].id, null)
                   children = try([for n in m.children : {
                     attribute_name   = try(n.attribute_name, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_name, null)
                     attribute_value  = try(n.attribute_value, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.attribute_value, null)
@@ -1035,7 +1275,7 @@ locals {
                     condition_type   = try(n.type, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.type, null)
                     is_negate        = try(n.is_negate, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.is_negate, null)
                     operator         = try(n.operator, local.defaults.ise.network_access.policy_sets.authentication_rules.condition.operator, null)
-                    id               = try(contains(local.known_conditions_network_access, try(n.name, "")) ? ise_network_access_condition.network_access_condition[n.name].id : data.ise_network_access_condition.network_access_condition[n.name].id, null)
+                    id               = try(contains(local.known_conditions_network_access, try(n.name, "")) ? local.network_access_all_condition_ids[n.name] : data.ise_network_access_condition.network_access_condition[n.name].id, null)
                   }], null)
                 }], null)
               }], null)
@@ -1233,7 +1473,7 @@ locals {
               condition_type   = try(k.type, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.type, null)
               is_negate        = try(k.is_negate, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.is_negate, null)
               operator         = try(k.operator, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.operator, null)
-              id               = try(contains(local.known_conditions_network_access, try(k.name, "")) ? ise_network_access_condition.network_access_condition[k.name].id : data.ise_network_access_condition.network_access_condition[k.name].id, null)
+              id               = try(contains(local.known_conditions_network_access, try(k.name, "")) ? local.network_access_all_condition_ids[k.name] : data.ise_network_access_condition.network_access_condition[k.name].id, null)
               children = try([for l in k.children : {
                 attribute_name   = try(l.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, null)
                 attribute_value  = try(l.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, null)
@@ -1242,7 +1482,7 @@ locals {
                 condition_type   = try(l.type, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.type, null)
                 is_negate        = try(l.is_negate, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.is_negate, null)
                 operator         = try(l.operator, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.operator, null)
-                id               = try(contains(local.known_conditions_network_access, try(l.name, "")) ? ise_network_access_condition.network_access_condition[l.name].id : data.ise_network_access_condition.network_access_condition[l.name].id, null)
+                id               = try(contains(local.known_conditions_network_access, try(l.name, "")) ? local.network_access_all_condition_ids[l.name] : data.ise_network_access_condition.network_access_condition[l.name].id, null)
                 children = try([for m in l.children : {
                   attribute_name   = try(m.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, null)
                   attribute_value  = try(m.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, null)
@@ -1251,7 +1491,7 @@ locals {
                   condition_type   = try(m.type, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.type, null)
                   is_negate        = try(m.is_negate, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.is_negate, null)
                   operator         = try(m.operator, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.operator, null)
-                  id               = try(contains(local.known_conditions_network_access, try(m.name, "")) ? ise_network_access_condition.network_access_condition[m.name].id : data.ise_network_access_condition.network_access_condition[m.name].id, null)
+                  id               = try(contains(local.known_conditions_network_access, try(m.name, "")) ? local.network_access_all_condition_ids[m.name] : data.ise_network_access_condition.network_access_condition[m.name].id, null)
                   children = try([for n in m.children : {
                     attribute_name   = try(n.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, null)
                     attribute_value  = try(n.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, null)
@@ -1260,7 +1500,7 @@ locals {
                     condition_type   = try(n.type, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.type, null)
                     is_negate        = try(n.is_negate, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.is_negate, null)
                     operator         = try(n.operator, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.operator, null)
-                    id               = try(contains(local.known_conditions_network_access, try(n.name, "")) ? ise_network_access_condition.network_access_condition[n.name].id : data.ise_network_access_condition.network_access_condition[n.name].id, null)
+                    id               = try(contains(local.known_conditions_network_access, try(n.name, "")) ? local.network_access_all_condition_ids[n.name] : data.ise_network_access_condition.network_access_condition[n.name].id, null)
                   }], null)
                 }], null)
               }], null)
@@ -1394,7 +1634,7 @@ locals {
               condition_type   = try(k.type, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.type, null)
               is_negate        = try(k.is_negate, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.is_negate, null)
               operator         = try(k.operator, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.operator, null)
-              id               = try(contains(local.known_conditions_network_access, try(k.name, "")) ? ise_network_access_condition.network_access_condition[k.name].id : data.ise_network_access_condition.network_access_condition[k.name].id, null)
+              id               = try(contains(local.known_conditions_network_access, try(k.name, "")) ? local.network_access_all_condition_ids[k.name] : data.ise_network_access_condition.network_access_condition[k.name].id, null)
               children = try([for l in k.children : {
                 attribute_name   = try(l.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, null)
                 attribute_value  = try(l.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, null)
@@ -1403,7 +1643,7 @@ locals {
                 condition_type   = try(l.type, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.type, null)
                 is_negate        = try(l.is_negate, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.is_negate, null)
                 operator         = try(l.operator, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.operator, null)
-                id               = try(contains(local.known_conditions_network_access, try(l.name, "")) ? ise_network_access_condition.network_access_condition[l.name].id : data.ise_network_access_condition.network_access_condition[l.name].id, null)
+                id               = try(contains(local.known_conditions_network_access, try(l.name, "")) ? local.network_access_all_condition_ids[l.name] : data.ise_network_access_condition.network_access_condition[l.name].id, null)
                 children = try([for m in l.children : {
                   attribute_name   = try(m.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, null)
                   attribute_value  = try(m.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, null)
@@ -1412,7 +1652,7 @@ locals {
                   condition_type   = try(m.type, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.type, null)
                   is_negate        = try(m.is_negate, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.is_negate, null)
                   operator         = try(m.operator, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.operator, null)
-                  id               = try(contains(local.known_conditions_network_access, try(m.name, "")) ? ise_network_access_condition.network_access_condition[m.name].id : data.ise_network_access_condition.network_access_condition[m.name].id, null)
+                  id               = try(contains(local.known_conditions_network_access, try(m.name, "")) ? local.network_access_all_condition_ids[m.name] : data.ise_network_access_condition.network_access_condition[m.name].id, null)
                   children = try([for n in m.children : {
                     attribute_name   = try(n.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, null)
                     attribute_value  = try(n.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, null)
@@ -1421,7 +1661,7 @@ locals {
                     condition_type   = try(n.type, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.type, null)
                     is_negate        = try(n.is_negate, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.is_negate, null)
                     operator         = try(n.operator, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.operator, null)
-                    id               = try(contains(local.known_conditions_network_access, try(n.name, "")) ? ise_network_access_condition.network_access_condition[n.name].id : data.ise_network_access_condition.network_access_condition[n.name].id, null)
+                    id               = try(contains(local.known_conditions_network_access, try(n.name, "")) ? local.network_access_all_condition_ids[n.name] : data.ise_network_access_condition.network_access_condition[n.name].id, null)
                   }], null)
                 }], null)
               }], null)
@@ -1537,7 +1777,7 @@ locals {
             condition_type   = try(k.type, local.defaults.ise.network_access.authorization_global_exception_rules.condition.type, null)
             is_negate        = try(k.is_negate, local.defaults.ise.network_access.authorization_global_exception_rules.condition.is_negate, null)
             operator         = try(k.operator, local.defaults.ise.network_access.authorization_global_exception_rules.condition.operator, null)
-            id               = try(contains(local.known_conditions_network_access, try(k.name, "")) ? ise_network_access_condition.network_access_condition[k.name].id : data.ise_network_access_condition.network_access_condition[k.name].id, null)
+            id               = try(contains(local.known_conditions_network_access, try(k.name, "")) ? local.network_access_all_condition_ids[k.name] : data.ise_network_access_condition.network_access_condition[k.name].id, null)
             children = try([for l in k.children : {
               attribute_name   = try(l.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, null)
               attribute_value  = try(l.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, null)
@@ -1546,7 +1786,7 @@ locals {
               condition_type   = try(l.type, local.defaults.ise.network_access.authorization_global_exception_rules.condition.type, null)
               is_negate        = try(l.is_negate, local.defaults.ise.network_access.authorization_global_exception_rules.condition.is_negate, null)
               operator         = try(l.operator, local.defaults.ise.network_access.authorization_global_exception_rules.condition.operator, null)
-              id               = try(contains(local.known_conditions_network_access, try(l.name, "")) ? ise_network_access_condition.network_access_condition[l.name].id : data.ise_network_access_condition.network_access_condition[l.name].id, null)
+              id               = try(contains(local.known_conditions_network_access, try(l.name, "")) ? local.network_access_all_condition_ids[l.name] : data.ise_network_access_condition.network_access_condition[l.name].id, null)
               children = try([for m in l.children : {
                 attribute_name   = try(m.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, null)
                 attribute_value  = try(m.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, null)
@@ -1555,7 +1795,7 @@ locals {
                 condition_type   = try(m.type, local.defaults.ise.network_access.authorization_global_exception_rules.condition.type, null)
                 is_negate        = try(m.is_negate, local.defaults.ise.network_access.authorization_global_exception_rules.condition.is_negate, null)
                 operator         = try(m.operator, local.defaults.ise.network_access.authorization_global_exception_rules.condition.operator, null)
-                id               = try(contains(local.known_conditions_network_access, try(m.name, "")) ? ise_network_access_condition.network_access_condition[m.name].id : data.ise_network_access_condition.network_access_condition[m.name].id, null)
+                id               = try(contains(local.known_conditions_network_access, try(m.name, "")) ? local.network_access_all_condition_ids[m.name] : data.ise_network_access_condition.network_access_condition[m.name].id, null)
                 children = try([for n in m.children : {
                   attribute_name   = try(n.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, null)
                   attribute_value  = try(n.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, null)
@@ -1564,7 +1804,7 @@ locals {
                   condition_type   = try(n.type, local.defaults.ise.network_access.authorization_global_exception_rules.condition.type, null)
                   is_negate        = try(n.is_negate, local.defaults.ise.network_access.authorization_global_exception_rules.condition.is_negate, null)
                   operator         = try(n.operator, local.defaults.ise.network_access.authorization_global_exception_rules.condition.operator, null)
-                  id               = try(contains(local.known_conditions_network_access, try(n.name, "")) ? ise_network_access_condition.network_access_condition[n.name].id : data.ise_network_access_condition.network_access_condition[n.name].id, null)
+                  id               = try(contains(local.known_conditions_network_access, try(n.name, "")) ? local.network_access_all_condition_ids[n.name] : data.ise_network_access_condition.network_access_condition[n.name].id, null)
                 }], null)
               }], null)
             }], null)

@@ -700,7 +700,7 @@ locals {
         condition_type   = try(i.type, local.defaults.ise.device_administration.policy_sets.condition.type, null)
         is_negate        = try(i.is_negate, local.defaults.ise.device_administration.policy_sets.condition.is_negate, null)
         operator         = try(i.operator, local.defaults.ise.device_administration.policy_sets.condition.operator, null)
-        id               = contains(local.known_conditions_device_admin, try(i.name, "")) ? local.device_admin_all_condition_ids[i.name] : try(data.ise_device_admin_condition.device_admin_condition[i.name].id, null)
+        id               = try(contains(local.known_conditions_device_admin, try(i.name, "")) ? local.device_admin_all_condition_ids[i.name] : data.ise_device_admin_condition.device_admin_condition[i.name].id, null)
         children = try([for j in i.children : {
           attribute_name   = try(j.attribute_name, local.defaults.ise.device_administration.policy_sets.condition.attribute_name, null)
           attribute_value  = try(j.attribute_value, local.defaults.ise.device_administration.policy_sets.condition.attribute_value, null)
@@ -709,7 +709,7 @@ locals {
           condition_type   = try(j.type, local.defaults.ise.device_administration.policy_sets.condition.type, null)
           is_negate        = try(j.is_negate, local.defaults.ise.device_administration.policy_sets.condition.is_negate, null)
           operator         = try(j.operator, local.defaults.ise.device_administration.policy_sets.condition.operator, null)
-          id               = contains(local.known_conditions_device_admin, try(j.name, "")) ? local.device_admin_all_condition_ids[j.name] : try(data.ise_device_admin_condition.device_admin_condition[j.name].id, null)
+          id               = try(contains(local.known_conditions_device_admin, try(j.name, "")) ? local.device_admin_all_condition_ids[j.name] : data.ise_device_admin_condition.device_admin_condition[j.name].id, null)
           children = try([for k in j.children : {
             attribute_name   = try(k.attribute_name, local.defaults.ise.device_administration.policy_sets.condition.attribute_name, null)
             attribute_value  = try(k.attribute_value, local.defaults.ise.device_administration.policy_sets.condition.attribute_value, null)
@@ -718,7 +718,7 @@ locals {
             condition_type   = try(k.type, local.defaults.ise.device_administration.policy_sets.condition.type, null)
             is_negate        = try(k.is_negate, local.defaults.ise.device_administration.policy_sets.condition.is_negate, null)
             operator         = try(k.operator, local.defaults.ise.device_administration.policy_sets.condition.operator, null)
-            id               = contains(local.known_conditions_device_admin, try(k.name, "")) ? ise_device_admin_condition.device_admin_condition[k.name].id : try(data.ise_device_admin_condition.device_admin_condition[k.name].id, null)
+            id               = try(contains(local.known_conditions_device_admin, try(k.name, "")) ? ise_device_admin_condition.device_admin_condition[k.name].id : data.ise_device_admin_condition.device_admin_condition[k.name].id, null)
             children = try([for l in k.children : {
               attribute_name   = try(l.attribute_name, local.defaults.ise.device_administration.policy_sets.condition.attribute_name, null)
               attribute_value  = try(l.attribute_value, local.defaults.ise.device_administration.policy_sets.condition.attribute_value, null)
@@ -727,7 +727,7 @@ locals {
               condition_type   = try(l.type, local.defaults.ise.device_administration.policy_sets.condition.type, null)
               is_negate        = try(l.is_negate, local.defaults.ise.device_administration.policy_sets.condition.is_negate, null)
               operator         = try(l.operator, local.defaults.ise.device_administration.policy_sets.condition.operator, null)
-              id               = contains(local.known_conditions_device_admin, try(l.name, "")) ? ise_device_admin_condition.device_admin_condition[l.name].id : try(data.ise_device_admin_condition.device_admin_condition[l.name].id, null)
+              id               = try(contains(local.known_conditions_device_admin, try(l.name, "")) ? ise_device_admin_condition.device_admin_condition[l.name].id : data.ise_device_admin_condition.device_admin_condition[l.name].id, null)
               children = try([for m in l.children : {
                 attribute_name   = try(m.attribute_name, local.defaults.ise.device_administration.policy_sets.condition.attribute_name, null)
                 attribute_value  = try(m.attribute_value, local.defaults.ise.device_administration.policy_sets.condition.attribute_value, null)
@@ -736,7 +736,7 @@ locals {
                 condition_type   = try(m.type, local.defaults.ise.device_administration.policy_sets.condition.type, null)
                 is_negate        = try(m.is_negate, local.defaults.ise.device_administration.policy_sets.condition.is_negate, null)
                 operator         = try(m.operator, local.defaults.ise.device_administration.policy_sets.condition.operator, null)
-                id               = contains(local.known_conditions_device_admin, try(m.name, "")) ? ise_device_admin_condition.device_admin_condition[m.name].id : try(data.ise_device_admin_condition.device_admin_condition[m.name].id, null)
+                id               = try(contains(local.known_conditions_device_admin, try(m.name, "")) ? ise_device_admin_condition.device_admin_condition[m.name].id : data.ise_device_admin_condition.device_admin_condition[m.name].id, null)
                 children = try([for n in m.children : {
                   attribute_name   = try(n.attribute_name, local.defaults.ise.device_administration.policy_sets.condition.attribute_name, null)
                   attribute_value  = try(n.attribute_value, local.defaults.ise.device_administration.policy_sets.condition.attribute_value, null)
@@ -745,7 +745,7 @@ locals {
                   condition_type   = try(n.type, local.defaults.ise.device_administration.policy_sets.condition.type, null)
                   is_negate        = try(n.is_negate, local.defaults.ise.device_administration.policy_sets.condition.is_negate, null)
                   operator         = try(n.operator, local.defaults.ise.device_administration.policy_sets.condition.operator, null)
-                  id               = contains(local.known_conditions_device_admin, try(n.name, "")) ? ise_device_admin_condition.device_admin_condition[n.name].id : try(data.ise_device_admin_condition.device_admin_condition[n.name].id, null)
+                  id               = try(contains(local.known_conditions_device_admin, try(n.name, "")) ? ise_device_admin_condition.device_admin_condition[n.name].id : data.ise_device_admin_condition.device_admin_condition[n.name].id, null)
                 }], null)
               }], null)
             }], null)
@@ -846,7 +846,7 @@ locals {
           condition_type   = try(i.type, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.type, null)
           is_negate        = try(i.is_negate, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.is_negate, null)
           operator         = try(i.operator, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.operator, null)
-          id               = contains(local.known_conditions_device_admin, try(i.name, "")) ? local.device_admin_all_condition_ids[i.name] : try(data.ise_device_admin_condition.device_admin_condition[i.name].id, null)
+          id               = try(contains(local.known_conditions_device_admin, try(i.name, "")) ? local.device_admin_all_condition_ids[i.name] : data.ise_device_admin_condition.device_admin_condition[i.name].id, null)
           children = try([for j in i.children : {
             attribute_name   = try(j.attribute_name, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.attribute_name, null)
             attribute_value  = try(j.attribute_value, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.attribute_value, null)
@@ -855,7 +855,7 @@ locals {
             condition_type   = try(j.type, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.type, null)
             is_negate        = try(j.is_negate, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.is_negate, null)
             operator         = try(j.operator, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.operator, null)
-            id               = contains(local.known_conditions_device_admin, try(j.name, "")) ? local.device_admin_all_condition_ids[j.name] : try(data.ise_device_admin_condition.device_admin_condition[j.name].id, null)
+            id               = try(contains(local.known_conditions_device_admin, try(j.name, "")) ? local.device_admin_all_condition_ids[j.name] : data.ise_device_admin_condition.device_admin_condition[j.name].id, null)
             children = try([for k in j.children : {
               attribute_name   = try(k.attribute_name, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.attribute_name, null)
               attribute_value  = try(k.attribute_value, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.attribute_value, null)
@@ -864,7 +864,7 @@ locals {
               condition_type   = try(k.type, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.type, null)
               is_negate        = try(k.is_negate, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.is_negate, null)
               operator         = try(k.operator, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.operator, null)
-              id               = contains(local.known_conditions_device_admin, try(k.name, "")) ? ise_device_admin_condition.device_admin_condition[k.name].id : try(data.ise_device_admin_condition.device_admin_condition[k.name].id, null)
+              id               = try(contains(local.known_conditions_device_admin, try(k.name, "")) ? ise_device_admin_condition.device_admin_condition[k.name].id : data.ise_device_admin_condition.device_admin_condition[k.name].id, null)
               children = try([for l in k.children : {
                 attribute_name   = try(l.attribute_name, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.attribute_name, null)
                 attribute_value  = try(l.attribute_value, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.attribute_value, null)
@@ -873,7 +873,7 @@ locals {
                 condition_type   = try(l.type, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.type, null)
                 is_negate        = try(l.is_negate, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.is_negate, null)
                 operator         = try(l.operator, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.operator, null)
-                id               = contains(local.known_conditions_device_admin, try(l.name, "")) ? ise_device_admin_condition.device_admin_condition[l.name].id : try(data.ise_device_admin_condition.device_admin_condition[l.name].id, null)
+                id               = try(contains(local.known_conditions_device_admin, try(l.name, "")) ? ise_device_admin_condition.device_admin_condition[l.name].id : data.ise_device_admin_condition.device_admin_condition[l.name].id, null)
                 children = try([for m in l.children : {
                   attribute_name   = try(m.attribute_name, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.attribute_name, null)
                   attribute_value  = try(m.attribute_value, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.attribute_value, null)
@@ -882,7 +882,7 @@ locals {
                   condition_type   = try(m.type, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.type, null)
                   is_negate        = try(m.is_negate, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.is_negate, null)
                   operator         = try(m.operator, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.operator, null)
-                  id               = contains(local.known_conditions_device_admin, try(m.name, "")) ? ise_device_admin_condition.device_admin_condition[m.name].id : try(data.ise_device_admin_condition.device_admin_condition[m.name].id, null)
+                  id               = try(contains(local.known_conditions_device_admin, try(m.name, "")) ? ise_device_admin_condition.device_admin_condition[m.name].id : data.ise_device_admin_condition.device_admin_condition[m.name].id, null)
                   children = try([for n in m.children : {
                     attribute_name   = try(n.attribute_name, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.attribute_name, null)
                     attribute_value  = try(n.attribute_value, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.attribute_value, null)
@@ -891,7 +891,7 @@ locals {
                     condition_type   = try(n.type, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.type, null)
                     is_negate        = try(n.is_negate, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.is_negate, null)
                     operator         = try(n.operator, local.defaults.ise.device_administration.policy_sets.authentication_rules.condition.operator, null)
-                    id               = contains(local.known_conditions_device_admin, try(n.name, "")) ? ise_device_admin_condition.device_admin_condition[n.name].id : try(data.ise_device_admin_condition.device_admin_condition[n.name].id, null)
+                    id               = try(contains(local.known_conditions_device_admin, try(n.name, "")) ? ise_device_admin_condition.device_admin_condition[n.name].id : data.ise_device_admin_condition.device_admin_condition[n.name].id, null)
                   }], null)
                 }], null)
               }], null)
@@ -1013,7 +1013,7 @@ locals {
           condition_type   = try(i.type, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.type, null)
           is_negate        = try(i.is_negate, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.is_negate, null)
           operator         = try(i.operator, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.operator, null)
-          id               = contains(local.known_conditions_device_admin, try(i.name, "")) ? local.device_admin_all_condition_ids[i.name] : try(data.ise_device_admin_condition.device_admin_condition[i.name].id, null)
+          id               = try(contains(local.known_conditions_device_admin, try(i.name, "")) ? local.device_admin_all_condition_ids[i.name] : data.ise_device_admin_condition.device_admin_condition[i.name].id, null)
           children = try([for j in i.children : {
             attribute_name   = try(j.attribute_name, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.attribute_name, null)
             attribute_value  = try(j.attribute_value, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.attribute_value, null)
@@ -1022,7 +1022,7 @@ locals {
             condition_type   = try(j.type, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.type, null)
             is_negate        = try(j.is_negate, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.is_negate, null)
             operator         = try(j.operator, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.operator, null)
-            id               = contains(local.known_conditions_device_admin, try(j.name, "")) ? local.device_admin_all_condition_ids[j.name] : try(data.ise_device_admin_condition.device_admin_condition[j.name].id, null)
+            id               = try(contains(local.known_conditions_device_admin, try(j.name, "")) ? local.device_admin_all_condition_ids[j.name] : data.ise_device_admin_condition.device_admin_condition[j.name].id, null)
             children = try([for k in j.children : {
               attribute_name   = try(k.attribute_name, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.attribute_name, null)
               attribute_value  = try(k.attribute_value, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.attribute_value, null)
@@ -1031,7 +1031,7 @@ locals {
               condition_type   = try(k.type, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.type, null)
               is_negate        = try(k.is_negate, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.is_negate, null)
               operator         = try(k.operator, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.operator, null)
-              id               = contains(local.known_conditions_device_admin, try(k.name, "")) ? ise_device_admin_condition.device_admin_condition[k.name].id : try(data.ise_device_admin_condition.device_admin_condition[k.name].id, null)
+              id               = try(contains(local.known_conditions_device_admin, try(k.name, "")) ? ise_device_admin_condition.device_admin_condition[k.name].id : data.ise_device_admin_condition.device_admin_condition[k.name].id, null)
               children = try([for l in k.children : {
                 attribute_name   = try(l.attribute_name, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.attribute_name, null)
                 attribute_value  = try(l.attribute_value, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.attribute_value, null)
@@ -1040,7 +1040,7 @@ locals {
                 condition_type   = try(l.type, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.type, null)
                 is_negate        = try(l.is_negate, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.is_negate, null)
                 operator         = try(l.operator, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.operator, null)
-                id               = contains(local.known_conditions_device_admin, try(l.name, "")) ? ise_device_admin_condition.device_admin_condition[l.name].id : try(data.ise_device_admin_condition.device_admin_condition[l.name].id, null)
+                id               = try(contains(local.known_conditions_device_admin, try(l.name, "")) ? ise_device_admin_condition.device_admin_condition[l.name].id : data.ise_device_admin_condition.device_admin_condition[l.name].id, null)
                 children = try([for m in l.children : {
                   attribute_name   = try(m.attribute_name, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.attribute_name, null)
                   attribute_value  = try(m.attribute_value, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.attribute_value, null)
@@ -1049,7 +1049,7 @@ locals {
                   condition_type   = try(m.type, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.type, null)
                   is_negate        = try(m.is_negate, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.is_negate, null)
                   operator         = try(m.operator, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.operator, null)
-                  id               = contains(local.known_conditions_device_admin, try(m.name, "")) ? ise_device_admin_condition.device_admin_condition[m.name].id : try(data.ise_device_admin_condition.device_admin_condition[m.name].id, null)
+                  id               = try(contains(local.known_conditions_device_admin, try(m.name, "")) ? ise_device_admin_condition.device_admin_condition[m.name].id : data.ise_device_admin_condition.device_admin_condition[m.name].id, null)
                   children = try([for n in m.children : {
                     attribute_name   = try(n.attribute_name, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.attribute_name, null)
                     attribute_value  = try(n.attribute_value, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.attribute_value, null)
@@ -1058,7 +1058,7 @@ locals {
                     condition_type   = try(n.type, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.type, null)
                     is_negate        = try(n.is_negate, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.is_negate, null)
                     operator         = try(n.operator, local.defaults.ise.device_administration.policy_sets.authorization_rules.condition.operator, null)
-                    id               = contains(local.known_conditions_device_admin, try(n.name, "")) ? ise_device_admin_condition.device_admin_condition[n.name].id : try(data.ise_device_admin_condition.device_admin_condition[n.name].id, null)
+                    id               = try(contains(local.known_conditions_device_admin, try(n.name, "")) ? ise_device_admin_condition.device_admin_condition[n.name].id : data.ise_device_admin_condition.device_admin_condition[n.name].id, null)
                   }], null)
                 }], null)
               }], null)
@@ -1162,7 +1162,7 @@ locals {
           condition_type   = try(i.type, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.type, null)
           is_negate        = try(i.is_negate, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.is_negate, null)
           operator         = try(i.operator, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.operator, null)
-          id               = contains(local.known_conditions_device_admin, try(i.name, "")) ? local.device_admin_all_condition_ids[i.name] : try(data.ise_device_admin_condition.device_admin_condition[i.name].id, null)
+          id               = try(contains(local.known_conditions_device_admin, try(i.name, "")) ? local.device_admin_all_condition_ids[i.name] : data.ise_device_admin_condition.device_admin_condition[i.name].id, null)
           children = try([for j in i.children : {
             attribute_name   = try(j.attribute_name, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.attribute_name, null)
             attribute_value  = try(j.attribute_value, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.attribute_value, null)
@@ -1171,7 +1171,7 @@ locals {
             condition_type   = try(j.type, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.type, null)
             is_negate        = try(j.is_negate, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.is_negate, null)
             operator         = try(j.operator, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.operator, null)
-            id               = contains(local.known_conditions_device_admin, try(j.name, "")) ? local.device_admin_all_condition_ids[j.name] : try(data.ise_device_admin_condition.device_admin_condition[j.name].id, null)
+            id               = try(contains(local.known_conditions_device_admin, try(j.name, "")) ? local.device_admin_all_condition_ids[j.name] : data.ise_device_admin_condition.device_admin_condition[j.name].id, null)
             children = try([for k in j.children : {
               attribute_name   = try(k.attribute_name, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.attribute_name, null)
               attribute_value  = try(k.attribute_value, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.attribute_value, null)
@@ -1180,7 +1180,7 @@ locals {
               condition_type   = try(k.type, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.type, null)
               is_negate        = try(k.is_negate, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.is_negate, null)
               operator         = try(k.operator, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.operator, null)
-              id               = contains(local.known_conditions_device_admin, try(k.name, "")) ? ise_device_admin_condition.device_admin_condition[k.name].id : try(data.ise_device_admin_condition.device_admin_condition[k.name].id, null)
+              id               = try(contains(local.known_conditions_device_admin, try(k.name, "")) ? ise_device_admin_condition.device_admin_condition[k.name].id : data.ise_device_admin_condition.device_admin_condition[k.name].id, null)
               children = try([for l in k.children : {
                 attribute_name   = try(l.attribute_name, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.attribute_name, null)
                 attribute_value  = try(l.attribute_value, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.attribute_value, null)
@@ -1189,7 +1189,7 @@ locals {
                 condition_type   = try(l.type, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.type, null)
                 is_negate        = try(l.is_negate, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.is_negate, null)
                 operator         = try(l.operator, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.operator, null)
-                id               = contains(local.known_conditions_device_admin, try(l.name, "")) ? ise_device_admin_condition.device_admin_condition[l.name].id : try(data.ise_device_admin_condition.device_admin_condition[l.name].id, null)
+                id               = try(contains(local.known_conditions_device_admin, try(l.name, "")) ? ise_device_admin_condition.device_admin_condition[l.name].id : data.ise_device_admin_condition.device_admin_condition[l.name].id, null)
                 children = try([for m in l.children : {
                   attribute_name   = try(m.attribute_name, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.attribute_name, null)
                   attribute_value  = try(m.attribute_value, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.attribute_value, null)
@@ -1198,7 +1198,7 @@ locals {
                   condition_type   = try(m.type, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.type, null)
                   is_negate        = try(m.is_negate, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.is_negate, null)
                   operator         = try(m.operator, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.operator, null)
-                  id               = contains(local.known_conditions_device_admin, try(m.name, "")) ? ise_device_admin_condition.device_admin_condition[m.name].id : try(data.ise_device_admin_condition.device_admin_condition[m.name].id, null)
+                  id               = try(contains(local.known_conditions_device_admin, try(m.name, "")) ? ise_device_admin_condition.device_admin_condition[m.name].id : data.ise_device_admin_condition.device_admin_condition[m.name].id, null)
                   children = try([for n in m.children : {
                     attribute_name   = try(n.attribute_name, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.attribute_name, null)
                     attribute_value  = try(n.attribute_value, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.attribute_value, null)
@@ -1207,7 +1207,7 @@ locals {
                     condition_type   = try(n.type, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.type, null)
                     is_negate        = try(n.is_negate, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.is_negate, null)
                     operator         = try(n.operator, local.defaults.ise.device_administration.policy_sets.authorization_exception_rules.condition.operator, null)
-                    id               = contains(local.known_conditions_device_admin, try(n.name, "")) ? ise_device_admin_condition.device_admin_condition[n.name].id : try(data.ise_device_admin_condition.device_admin_condition[n.name].id, null)
+                    id               = try(contains(local.known_conditions_device_admin, try(n.name, "")) ? ise_device_admin_condition.device_admin_condition[n.name].id : data.ise_device_admin_condition.device_admin_condition[n.name].id, null)
                   }], null)
                 }], null)
               }], null)
@@ -1293,7 +1293,7 @@ locals {
         condition_type   = try(i.type, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.type, null)
         is_negate        = try(i.is_negate, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.is_negate, null)
         operator         = try(i.operator, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.operator, null)
-        id               = contains(local.known_conditions_device_admin, try(i.name, "")) ? local.device_admin_all_condition_ids[i.name] : try(data.ise_device_admin_condition.device_admin_condition[i.name].id, null)
+        id               = try(contains(local.known_conditions_device_admin, try(i.name, "")) ? local.device_admin_all_condition_ids[i.name] : data.ise_device_admin_condition.device_admin_condition[i.name].id, null)
         children = try([for j in i.children : {
           attribute_name   = try(j.attribute_name, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.attribute_name, null)
           attribute_value  = try(j.attribute_value, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.attribute_value, null)
@@ -1302,7 +1302,7 @@ locals {
           condition_type   = try(j.type, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.type, null)
           is_negate        = try(j.is_negate, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.is_negate, null)
           operator         = try(j.operator, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.operator, null)
-          id               = contains(local.known_conditions_device_admin, try(j.name, "")) ? local.device_admin_all_condition_ids[j.name] : try(data.ise_device_admin_condition.device_admin_condition[j.name].id, null)
+          id               = try(contains(local.known_conditions_device_admin, try(j.name, "")) ? local.device_admin_all_condition_ids[j.name] : data.ise_device_admin_condition.device_admin_condition[j.name].id, null)
           children = try([for k in j.children : {
             attribute_name   = try(k.attribute_name, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.attribute_name, null)
             attribute_value  = try(k.attribute_value, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.attribute_value, null)
@@ -1311,7 +1311,7 @@ locals {
             condition_type   = try(k.type, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.type, null)
             is_negate        = try(k.is_negate, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.is_negate, null)
             operator         = try(k.operator, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.operator, null)
-            id               = contains(local.known_conditions_device_admin, try(k.name, "")) ? ise_device_admin_condition.device_admin_condition[k.name].id : try(data.ise_device_admin_condition.device_admin_condition[k.name].id, null)
+            id               = try(contains(local.known_conditions_device_admin, try(k.name, "")) ? ise_device_admin_condition.device_admin_condition[k.name].id : data.ise_device_admin_condition.device_admin_condition[k.name].id, null)
             children = try([for l in k.children : {
               attribute_name   = try(l.attribute_name, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.attribute_name, null)
               attribute_value  = try(l.attribute_value, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.attribute_value, null)
@@ -1320,7 +1320,7 @@ locals {
               condition_type   = try(l.type, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.type, null)
               is_negate        = try(l.is_negate, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.is_negate, null)
               operator         = try(l.operator, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.operator, null)
-              id               = contains(local.known_conditions_device_admin, try(l.name, "")) ? ise_device_admin_condition.device_admin_condition[l.name].id : try(data.ise_device_admin_condition.device_admin_condition[l.name].id, null)
+              id               = try(contains(local.known_conditions_device_admin, try(l.name, "")) ? ise_device_admin_condition.device_admin_condition[l.name].id : data.ise_device_admin_condition.device_admin_condition[l.name].id, null)
               children = try([for m in l.children : {
                 attribute_name   = try(m.attribute_name, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.attribute_name, null)
                 attribute_value  = try(m.attribute_value, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.attribute_value, null)
@@ -1329,7 +1329,7 @@ locals {
                 condition_type   = try(m.type, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.type, null)
                 is_negate        = try(m.is_negate, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.is_negate, null)
                 operator         = try(m.operator, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.operator, null)
-                id               = contains(local.known_conditions_device_admin, try(m.name, "")) ? ise_device_admin_condition.device_admin_condition[m.name].id : try(data.ise_device_admin_condition.device_admin_condition[m.name].id, null)
+                id               = try(contains(local.known_conditions_device_admin, try(m.name, "")) ? ise_device_admin_condition.device_admin_condition[m.name].id : data.ise_device_admin_condition.device_admin_condition[m.name].id, null)
                 children = try([for n in m.children : {
                   attribute_name   = try(n.attribute_name, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.attribute_name, null)
                   attribute_value  = try(n.attribute_value, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.attribute_value, null)
@@ -1338,7 +1338,7 @@ locals {
                   condition_type   = try(n.type, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.type, null)
                   is_negate        = try(n.is_negate, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.is_negate, null)
                   operator         = try(n.operator, local.defaults.ise.device_administration.authorization_global_exception_rules.condition.operator, null)
-                  id               = contains(local.known_conditions_device_admin, try(n.name, "")) ? ise_device_admin_condition.device_admin_condition[n.name].id : try(data.ise_device_admin_condition.device_admin_condition[n.name].id, null)
+                  id               = try(contains(local.known_conditions_device_admin, try(n.name, "")) ? ise_device_admin_condition.device_admin_condition[n.name].id : data.ise_device_admin_condition.device_admin_condition[n.name].id, null)
                 }], null)
               }], null)
             }], null)

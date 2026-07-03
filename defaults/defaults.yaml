@@ -57,7 +57,6 @@ defaults:
         enable_machine_access: true
         enable_dialin_permission_check: false
         plaintext_auth: false
-        aging_time: 5
         enable_callback_for_dialin_client: false
         enable_failed_auth_protection: false
         failed_auth_threshold: 5

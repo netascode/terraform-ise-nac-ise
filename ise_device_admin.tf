@@ -36,6 +36,7 @@ resource "ise_device_admin_condition" "device_admin_condition_ref" {
 
   lifecycle {
     create_before_destroy = true
+    ignore_changes        = [children]
   }
 
   depends_on = [ise_network_device_group.network_device_group_5, ise_active_directory_add_groups.active_directory_groups]

@@ -425,6 +425,12 @@ resource "ise_active_directory_join_point" "active_directory_join_point" {
   enable_failed_auth_protection     = try(each.value.enable_failed_auth_protection, local.defaults.ise.identity_management.active_directories.enable_failed_auth_protection, null)
   failed_auth_threshold             = try(each.value.failed_auth_threshold, local.defaults.ise.identity_management.active_directories.failed_auth_threshold, null)
   auth_protection_type              = try(each.value.auth_protection_type, local.defaults.ise.identity_management.active_directories.auth_protection_type, null)
+
+  lifecycle {
+    # Groups are managed by ise_active_directory_add_groups; import reads them on
+    # join_point but config intentionally sets groups = [].
+    ignore_changes = [groups]
+  }
 }
 
 resource "ise_active_directory_join_domain_with_all_nodes" "active_directory_join_domain_with_all_nodes" {

@@ -3,6 +3,9 @@
 - Add support for endpoint custom attributes via the `endpoint_custom_attributes` data model key, mapping to the `ise_endpoint_custom_attribute` resource
 - **BREAKING CHANGE**: Authorization profile advanced attributes now use an explicit `dictionary_value` key for dictionary references (`AdvancedDictionaryAttribute`) instead of inferring intent from colons in `value`. `value` is now always a literal `AttributeValue` (colons preserved, so `value: "shell:priv-lvl=15"` no longer needs a special-case pattern). To configure a dictionary reference, replace `value: "Dictionary:attribute"` with `dictionary_value: "Dictionary:attribute"`. The `attribute_value_patterns` workaround has been removed.
 - Fix duplicate Terraform key error when defining multiple network device groups under the built-in `Is IPSEC Device` container [link](https://github.com/netascode/terraform-ise-nac-ise/pull/57)
+- Fix circular managed conditions losing their children on every plan by splitting them into a two-phase leaf/parent creation [link](https://github.com/netascode/terraform-ise-nac-ise/issues/58)
+- Fix incorrect network device group paths under the `Is IPSEC Device` hierarchy caused by `ndg_type_map` merge order, which produced a perpetual plan diff for devices in that hierarchy [link](https://github.com/netascode/terraform-ise-nac-ise/issues/64)
+- Fix perpetual plan drift on `active_directory_join_point` by ignoring `groups`, which are managed separately by `ise_active_directory_add_groups` [link](https://github.com/netascode/terraform-ise-nac-ise/issues/75)
 
 ## 0.3.0
 

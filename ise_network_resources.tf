@@ -145,14 +145,14 @@ locals {
 # ERS API format (e.g., "All Device Groups" -> "Device Group#All Device Groups").
 locals {
   ndg_type_map = merge(
+    { for group in try(local.ise.network_resources.network_device_groups, []) :
+      group.name => group.path
+      if try(group.path, null) != null && length(split("#", group.path)) == 1
+    },
     {
       "All Device Types" = "Device Type"
       "All Locations"    = "Location"
       "Is IPSEC Device"  = "IPSEC"
-    },
-    { for group in try(local.ise.network_resources.network_device_groups, []) :
-      group.name => group.path
-      if try(group.path, null) != null && length(split("#", group.path)) == 1
     }
   )
 }

@@ -340,7 +340,6 @@ resource "ise_endpoint" "endpoint" {
   identity_store                    = try(each.value.identity_store, local.defaults.ise.identity_management.endpoints.identity_store, null)
   identity_store_id                 = try(each.value.identity_store_id, local.defaults.ise.identity_management.endpoints.identity_store_id, null)
   portal_user                       = try(each.value.portal_user, local.defaults.ise.identity_management.endpoints.portal_user, null)
-  profile_id                        = try(each.value.static_profile_assignment, false) ? try(each.value.profile_id, local.defaults.ise.identity_management.endpoints.profile_id, null) : null
   custom_attributes                 = try(each.value.custom_attributes, local.defaults.ise.identity_management.endpoints.custom_attributes, null)
   mdm_compliance_status             = try(each.value.mdm_attributes.compliance_status, local.defaults.ise.identity_management.endpoints.mdm_attributes.compliance_status, null)
   mdm_encrypted                     = try(each.value.mdm_attributes.encrypted, local.defaults.ise.identity_management.endpoints.mdm_attributes.encrypted, null)

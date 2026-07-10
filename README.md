@@ -169,6 +169,7 @@ module "ise" {
 | [ise_network_access_condition.network_access_condition_circular](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/data-sources/network_access_condition) | data source |
 | [ise_network_device.network_device](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/data-sources/network_device) | data source |
 | [ise_network_device_group.network_device_group](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/data-sources/network_device_group) | data source |
+| [ise_profiler_profile.endpoint_profile](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/data-sources/profiler_profile) | data source |
 | [ise_profiler_profile.profiler_profile](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/data-sources/profiler_profile) | data source |
 | [ise_trustsec_matrix.trustsec_matrix](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/data-sources/trustsec_matrix) | data source |
 | [ise_trustsec_security_group.trustsec_security_group](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/data-sources/trustsec_security_group) | data source |

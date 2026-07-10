@@ -326,6 +326,21 @@ locals {
   )
 }
 
+locals {
+  # Collect profile names for endpoints that statically assign a profile by name
+  # so they can be resolved to a profile ID via the profiler_profile data source.
+  endpoint_profile_names = distinct([
+    for endpoint in try(local.ise.identity_management.endpoints, []) : endpoint.profile_name
+    if try(endpoint.static_profile_assignment, false) && try(endpoint.profile_name, "") != ""
+  ])
+}
+
+data "ise_profiler_profile" "endpoint_profile" {
+  for_each = toset(local.endpoint_profile_names)
+
+  name = each.value
+}
+
 resource "ise_endpoint" "endpoint" {
   for_each = { for endpoint in try(local.ise.identity_management.endpoints, []) : endpoint.mac => endpoint }
 
@@ -340,7 +355,7 @@ resource "ise_endpoint" "endpoint" {
   identity_store                    = try(each.value.identity_store, local.defaults.ise.identity_management.endpoints.identity_store, null)
   identity_store_id                 = try(each.value.identity_store_id, local.defaults.ise.identity_management.endpoints.identity_store_id, null)
   portal_user                       = try(each.value.portal_user, local.defaults.ise.identity_management.endpoints.portal_user, null)
-  profile_id                        = try(each.value.static_profile_assignment, false) ? try(each.value.profile_id, local.defaults.ise.identity_management.endpoints.profile_id, null) : null
+  profile_id                        = try(each.value.static_profile_assignment, false) ? try(data.ise_profiler_profile.endpoint_profile[each.value.profile_name].id, each.value.profile_name, local.defaults.ise.identity_management.endpoints.profile_name, null) : null
   custom_attributes                 = try(each.value.custom_attributes, local.defaults.ise.identity_management.endpoints.custom_attributes, null)
   mdm_compliance_status             = try(each.value.mdm_attributes.compliance_status, local.defaults.ise.identity_management.endpoints.mdm_attributes.compliance_status, null)
   mdm_encrypted                     = try(each.value.mdm_attributes.encrypted, local.defaults.ise.identity_management.endpoints.mdm_attributes.encrypted, null)

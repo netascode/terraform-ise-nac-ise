@@ -1,5 +1,6 @@
 ## 1.0.0 (unreleased)
 
+- **BREAKING CHANGE**: Endpoints now reference a profiling policy by name via the `profile_name` data model key instead of the raw `profile_id`. The name is resolved to a profile ID automatically through the `ise_profiler_profile` data source. Replace `profile_id: "<uuid>"` with `profile_name: "<Profiler Policy Name>"` for any endpoint using `static_profile_assignment: true`.
 - Add support for endpoint custom attributes via the `endpoint_custom_attributes` data model key, mapping to the `ise_endpoint_custom_attribute` resource
 - **BREAKING CHANGE**: Authorization profile advanced attributes now use an explicit `dictionary_value` key for dictionary references (`AdvancedDictionaryAttribute`) instead of inferring intent from colons in `value`. `value` is now always a literal `AttributeValue` (colons preserved, so `value: "shell:priv-lvl=15"` no longer needs a special-case pattern). To configure a dictionary reference, replace `value: "Dictionary:attribute"` with `dictionary_value: "Dictionary:attribute"`. The `attribute_value_patterns` workaround has been removed.
 - Fix duplicate Terraform key error when defining multiple network device groups under the built-in `Is IPSEC Device` container [link](https://github.com/netascode/terraform-ise-nac-ise/pull/57)

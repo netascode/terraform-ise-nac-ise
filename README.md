@@ -97,6 +97,7 @@ module "ise" {
 | [ise_device_admin_time_and_date_condition.device_admin_time_and_date_condition](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/device_admin_time_and_date_condition) | resource |
 | [ise_downloadable_acl.downloadable_acl](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/downloadable_acl) | resource |
 | [ise_endpoint.endpoint](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/endpoint) | resource |
+| [ise_endpoint.endpoint_static_group](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/endpoint) | resource |
 | [ise_endpoint_custom_attribute.endpoint_custom_attribute](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/endpoint_custom_attribute) | resource |
 | [ise_endpoint_identity_group.endpoint_identity_group_0](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/endpoint_identity_group) | resource |
 | [ise_endpoint_identity_group.endpoint_identity_group_1](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/endpoint_identity_group) | resource |

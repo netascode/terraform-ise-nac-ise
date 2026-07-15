@@ -324,6 +324,17 @@ locals {
     { for k, v in ise_endpoint_identity_group.endpoint_identity_group_4 : k => v.id },
     { for k, v in ise_endpoint_identity_group.endpoint_identity_group_5 : k => v.id }
   )
+  endpoints = {
+    for endpoint in try(local.ise.identity_management.endpoints, []) : endpoint.mac => endpoint
+  }
+  endpoints_dynamic_group = {
+    for mac, endpoint in local.endpoints : mac => endpoint
+    if !try(endpoint.static_group_assignment, false)
+  }
+  endpoints_static_group = {
+    for mac, endpoint in local.endpoints : mac => endpoint
+    if try(endpoint.static_group_assignment, false)
+  }
 }
 
 locals {
@@ -342,14 +353,46 @@ data "ise_profiler_profile" "endpoint_profile" {
 }
 
 resource "ise_endpoint" "endpoint" {
-  for_each = { for endpoint in try(local.ise.identity_management.endpoints, []) : endpoint.mac => endpoint }
+  for_each = local.endpoints_dynamic_group
 
   name                              = each.key
   mac                               = each.key
   description                       = try(each.value.description, local.defaults.ise.identity_management.endpoints.description, null)
   static_profile_assignment         = try(each.value.static_profile_assignment, local.defaults.ise.identity_management.endpoints.static_profile_assignment, null)
   static_group_assignment           = try(each.value.static_group_assignment, local.defaults.ise.identity_management.endpoints.static_group_assignment, null)
-  group_id                          = try(each.value.static_group_assignment, false) ? try(local.endpoint_identity_groups_all[each.value.endpoint_identity_group], data.ise_endpoint_identity_group.endpoint_identity_group[each.value.endpoint_identity_group].id, null) : null
+  static_profile_assignment_defined = try(each.value.static_profile_assignment_defined, local.defaults.ise.identity_management.endpoints.static_profile_assignment_defined, null)
+  static_group_assignment_defined   = try(each.value.static_group_assignment_defined, local.defaults.ise.identity_management.endpoints.static_group_assignment_defined, null)
+  identity_store                    = try(each.value.identity_store, local.defaults.ise.identity_management.endpoints.identity_store, null)
+  identity_store_id                 = try(each.value.identity_store_id, local.defaults.ise.identity_management.endpoints.identity_store_id, null)
+  portal_user                       = try(each.value.portal_user, local.defaults.ise.identity_management.endpoints.portal_user, null)
+  profile_id                        = try(each.value.static_profile_assignment, false) ? try(each.value.profile_id, local.defaults.ise.identity_management.endpoints.profile_id, null) : null
+  custom_attributes                 = try(each.value.custom_attributes, local.defaults.ise.identity_management.endpoints.custom_attributes, null)
+  mdm_compliance_status             = try(each.value.mdm_attributes.compliance_status, local.defaults.ise.identity_management.endpoints.mdm_attributes.compliance_status, null)
+  mdm_encrypted                     = try(each.value.mdm_attributes.encrypted, local.defaults.ise.identity_management.endpoints.mdm_attributes.encrypted, null)
+  mdm_enrolled                      = try(each.value.mdm_attributes.enrolled, local.defaults.ise.identity_management.endpoints.mdm_attributes.enrolled, null)
+  mdm_imei                          = try(each.value.mdm_attributes.imei, local.defaults.ise.identity_management.endpoints.mdm_attributes.imei, null)
+  mdm_jail_broken                   = try(each.value.mdm_attributes.jail_broken, local.defaults.ise.identity_management.endpoints.mdm_attributes.jail_broken, null)
+  mdm_manufacturer                  = try(each.value.mdm_attributes.manufacturer, local.defaults.ise.identity_management.endpoints.mdm_attributes.manufacturer, null)
+  mdm_model                         = try(each.value.mdm_attributes.model, local.defaults.ise.identity_management.endpoints.mdm_attributes.model, null)
+  mdm_os                            = try(each.value.mdm_attributes.os, local.defaults.ise.identity_management.endpoints.mdm_attributes.os, null)
+  mdm_phone_number                  = try(each.value.mdm_attributes.phone_number, local.defaults.ise.identity_management.endpoints.mdm_attributes.phone_number, null)
+  mdm_pinlock                       = try(each.value.mdm_attributes.pin_lock, local.defaults.ise.identity_management.endpoints.mdm_attributes.pin_lock, null)
+  mdm_reachable                     = try(each.value.mdm_attributes.reachable, local.defaults.ise.identity_management.endpoints.mdm_attributes.reachable, null)
+  mdm_serial                        = try(each.value.mdm_attributes.serial, local.defaults.ise.identity_management.endpoints.mdm_attributes.serial, null)
+  mdm_server_name                   = try(each.value.mdm_attributes.server_name, local.defaults.ise.identity_management.endpoints.mdm_attributes.server_name, null)
+
+  depends_on = [ise_endpoint_identity_group.endpoint_identity_group_5, ise_endpoint_custom_attribute.endpoint_custom_attribute]
+}
+
+resource "ise_endpoint" "endpoint_static_group" {
+  for_each = local.endpoints_static_group
+
+  name                              = each.key
+  mac                               = each.key
+  description                       = try(each.value.description, local.defaults.ise.identity_management.endpoints.description, null)
+  static_profile_assignment         = try(each.value.static_profile_assignment, local.defaults.ise.identity_management.endpoints.static_profile_assignment, null)
+  static_group_assignment           = try(each.value.static_group_assignment, local.defaults.ise.identity_management.endpoints.static_group_assignment, null)
+  group_id                          = try(local.endpoint_identity_groups_all[each.value.endpoint_identity_group], data.ise_endpoint_identity_group.endpoint_identity_group[each.value.endpoint_identity_group].id, null)
   static_profile_assignment_defined = try(each.value.static_profile_assignment_defined, local.defaults.ise.identity_management.endpoints.static_profile_assignment_defined, null)
   static_group_assignment_defined   = try(each.value.static_group_assignment_defined, local.defaults.ise.identity_management.endpoints.static_group_assignment_defined, null)
   identity_store                    = try(each.value.identity_store, local.defaults.ise.identity_management.endpoints.identity_store, null)

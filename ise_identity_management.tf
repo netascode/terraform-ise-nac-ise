@@ -403,7 +403,6 @@ resource "ise_active_directory_join_point" "active_directory_join_point" {
   domain                     = try(each.value.domain, local.defaults.ise.identity_management.active_directories.domain, null)
   ad_scopes_names            = try(each.value.ad_scopes_names, local.defaults.ise.identity_management.active_directories.ad_scopes_names, null)
   enable_domain_allowed_list = try(each.value.enable_domain_allowed_list, local.defaults.ise.identity_management.active_directories.enable_domain_allowed_list, null)
-  groups                     = []
   attributes = [for attr in try(each.value.attributes, []) : {
     name          = try(attr.name, null)
     type          = try(attr.type, local.defaults.ise.identity_management.active_directories.attributes.type, null)
@@ -441,11 +440,6 @@ resource "ise_active_directory_join_point" "active_directory_join_point" {
   failed_auth_threshold             = try(each.value.failed_auth_threshold, local.defaults.ise.identity_management.active_directories.failed_auth_threshold, null)
   auth_protection_type              = try(each.value.auth_protection_type, local.defaults.ise.identity_management.active_directories.auth_protection_type, null)
 
-  lifecycle {
-    # Groups are managed by ise_active_directory_add_groups; import reads them on
-    # join_point but config intentionally sets groups = [].
-    ignore_changes = [groups]
-  }
 }
 
 resource "ise_active_directory_join_domain_with_all_nodes" "active_directory_join_domain_with_all_nodes" {

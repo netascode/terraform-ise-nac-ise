@@ -7,6 +7,8 @@
 - Fix circular managed conditions losing their children on every plan by splitting them into a two-phase leaf/parent creation [link](https://github.com/netascode/terraform-ise-nac-ise/issues/58)
 - Fix incorrect network device group paths under the `Is IPSEC Device` hierarchy caused by `ndg_type_map` merge order, which produced a perpetual plan diff for devices in that hierarchy [link](https://github.com/netascode/terraform-ise-nac-ise/issues/64)
 - Fix perpetual plan drift on `active_directory_join_point` by ignoring `groups`, which are managed separately by `ise_active_directory_add_groups` [link](https://github.com/netascode/terraform-ise-nac-ise/issues/75)
+- Add SNMPv3 support for network devices via the `snmp.username`, `snmp.security_level`, `snmp.auth_protocol`, `snmp.auth_password`, `snmp.privacy_protocol` and `snmp.privacy_password` data model keys
+- Fix SNMP settings being dropped for devices without a read-only community string. SNMP attributes were previously gated on `snmp.ro_community`, so an SNMPv3 device produced empty SNMP settings. `snmp.version` and `snmp.username` now activate SNMP settings as well
 
 ## 0.3.0
 

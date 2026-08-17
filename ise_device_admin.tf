@@ -801,7 +801,7 @@ resource "ise_device_admin_condition" "device_admin_condition" {
 resource "ise_allowed_protocols_tacacs" "allowed_protocols_tacacs" {
   for_each = { for protocol in try(local.ise.device_administration.policy_elements.allowed_protocols, []) : protocol.name => protocol }
 
-  description      = try(each.value.description, "")
+  description      = try(each.value.description, null)
   name             = each.key
   allow_pap_ascii  = try(each.value.allow_pap_ascii, local.defaults.ise.device_administration.policy_elements.allowed_protocols.allow_pap_ascii, null)
   allow_chap       = try(each.value.allow_chap, local.defaults.ise.device_administration.policy_elements.allowed_protocols.allow_chap, null)

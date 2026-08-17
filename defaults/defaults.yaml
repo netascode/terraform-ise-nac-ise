@@ -4,8 +4,6 @@ defaults:
       licenses:
         status: ENABLED
     network_resources:
-      network_device_groups:
-        description: ""
       network_devices:
         profile_name: Cisco
         ips:
@@ -33,10 +31,8 @@ defaults:
     identity_management:
       endpoint_identity_groups:
         system_defined: false
-        description: ""
       user_identity_groups:
         parent_group: NAC Group:NAC:IdentityGroups:User Identity Groups
-        description: ""
       internal_users:
         enabled: true
         change_password: true

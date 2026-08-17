@@ -1,7 +1,7 @@
 resource "ise_allowed_protocols" "allowed_protocols" {
   for_each = { for protocol in try(local.ise.network_access.policy_elements.allowed_protocols, []) : protocol.name => protocol }
 
-  description                                       = try(each.value.description, "")
+  description                                       = try(each.value.description, null)
   name                                              = each.key
   process_host_lookup                               = try(each.value.process_host_lookup, local.defaults.ise.network_access.policy_elements.allowed_protocols.process_host_lookup, null)
   allow_pap_ascii                                   = try(each.value.allow_pap_ascii, local.defaults.ise.network_access.policy_elements.allowed_protocols.allow_pap_ascii, null)

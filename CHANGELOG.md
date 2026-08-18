@@ -1,4 +1,4 @@
-## 1.0.0 (unreleased)
+## 1.0.0
 
 - **BREAKING CHANGE**: Endpoints now reference a profiling policy by name via the `profile_name` data model key instead of the raw `profile_id`. The name is resolved to a profile ID automatically through the `ise_profiler_profile` data source. Replace `profile_id: "<uuid>"` with `profile_name: "<Profiler Policy Name>"` for any endpoint using `static_profile_assignment: true`.
 - Add support for endpoint custom attributes via the `endpoint_custom_attributes` data model key, mapping to the `ise_endpoint_custom_attribute` resource

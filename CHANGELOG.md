@@ -1,3 +1,7 @@
+## 1.0.1 (Unreleased)
+
+- Add recursive YAML file discovery for `yaml_directories`, so files in subfolders are now included [link](https://github.com/netascode/terraform-ise-nac-ise/issues/84)
+
 ## 1.0.0
 
 - **BREAKING CHANGE**: Endpoints now reference a profiling policy by name via the `profile_name` data model key instead of the raw `profile_id`. The name is resolved to a profile ID automatically through the `ise_profiler_profile` data source. Replace `profile_id: "<uuid>"` with `profile_name: "<Profiler Policy Name>"` for any endpoint using `static_profile_assignment: true`.

@@ -155,7 +155,7 @@ resource "ise_internal_user" "internal_user" {
   first_name             = try(each.value.first_name, local.defaults.ise.identity_management.internal_users.first_name, null)
   last_name              = try(each.value.last_name, local.defaults.ise.identity_management.internal_users.last_name, null)
   change_password        = try(each.value.change_password, local.defaults.ise.identity_management.internal_users.change_password, null)
-  identity_groups        = length(try(each.value.user_identity_groups, [])) > 0 ? join(",", [for i in try(each.value.user_identity_groups, []) : data.ise_user_identity_group.user_identity_group[i].id]) : null
+  identity_groups        = length(try(each.value.user_identity_groups, [])) > 0 ? join(",", sort([for i in try(each.value.user_identity_groups, []) : data.ise_user_identity_group.user_identity_group[i].id])) : null
   password_never_expires = try(each.value.password_never_expires, local.defaults.ise.identity_management.internal_users.password_never_expires, null)
   password_id_store      = try(each.value.password_id_store, local.defaults.ise.identity_management.internal_users.password_id_store, null)
   custom_attributes      = try(each.value.custom_attributes, null)

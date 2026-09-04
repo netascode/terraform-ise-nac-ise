@@ -42,16 +42,16 @@ module "ise" {
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.8.0 |
-| <a name="requirement_ise"></a> [ise](#requirement\_ise) | ~> 0.4.0 |
+| <a name="requirement_ise"></a> [ise](#requirement\_ise) | ~> 0.4.1 |
 | <a name="requirement_local"></a> [local](#requirement\_local) | >= 2.3.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.10.0 |
 | <a name="requirement_utils"></a> [utils](#requirement\_utils) | 2.0.0 |
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_model"></a> [model](#input\_model) | As an alternative to YAML files, a native Terraform data structure can be provided as well. | `map(any)` | `{}` | no |
 | <a name="input_write_default_values_file"></a> [write\_default\_values\_file](#input\_write\_default\_values\_file) | Write all default values to a YAML file. Value is a path pointing to the file to be created. | `string` | `""` | no |
 | <a name="input_yaml_directories"></a> [yaml\_directories](#input\_yaml\_directories) | List of paths to YAML directories. | `list(string)` | `[]` | no |
@@ -59,13 +59,13 @@ module "ise" {
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_default_values"></a> [default\_values](#output\_default\_values) | All default values. |
 | <a name="output_model"></a> [model](#output\_model) | Full model. |
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [ise_active_directory_add_groups.active_directory_groups](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/active_directory_add_groups) | resource |
 | [ise_active_directory_join_domain_with_all_nodes.active_directory_join_domain_with_all_nodes](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/active_directory_join_domain_with_all_nodes) | resource |
 | [ise_active_directory_join_point.active_directory_join_point](https://registry.terraform.io/providers/CiscoDevNet/ise/latest/docs/resources/active_directory_join_point) | resource |

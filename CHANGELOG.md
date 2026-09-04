@@ -1,5 +1,6 @@
 ## 1.0.1 (Unreleased)
 
+- Add support for the `rsa_pss` (requires Cisco ISE 3.4) and `display_additional_tls_params` (requires Cisco ISE 3.5) data model keys on network access allowed protocols
 - Add recursive YAML file discovery for `yaml_directories`, so files in subfolders are now included [link](https://github.com/netascode/terraform-ise-nac-ise/issues/84)
 
 ## 1.0.0

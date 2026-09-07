@@ -1,5 +1,6 @@
 ## 1.0.1 (unreleased)
 
+- Fix TrustSec egress matrix cell update failing with "Only one Catch All Rule SGACL can exist" when a cell's `default_rule` had drifted out of band, triggered by any change to that cell
 - Fixed perpetual drift in identity groups assignment by sorting UUIDs before concatenation to match ISE's storage order ([#86](https://github.com/netascode/terraform-ise-nac-ise/pull/86))
 - Add support for the `rsa_pss` (requires Cisco ISE 3.4) and `display_additional_tls_params` (requires Cisco ISE 3.5) data model keys on network access allowed protocols
 - Add recursive YAML file discovery for `yaml_directories`, so files in subfolders are now included [link](https://github.com/netascode/terraform-ise-nac-ise/issues/84)

@@ -4,6 +4,7 @@
 - Fixed perpetual drift in identity groups assignment by sorting UUIDs before concatenation to match ISE's storage order ([#86](https://github.com/netascode/terraform-ise-nac-ise/pull/86))
 - Add support for the `rsa_pss` (requires Cisco ISE 3.4) and `display_additional_tls_params` (requires Cisco ISE 3.5) data model keys on network access allowed protocols
 - Add recursive YAML file discovery for `yaml_directories`, so files in subfolders are now included [link](https://github.com/netascode/terraform-ise-nac-ise/issues/84)
+- Fix perpetual plan drift on Default policy set resources by ignoring `description` and `rank` after brownfield import
 
 ## 1.0.0
 

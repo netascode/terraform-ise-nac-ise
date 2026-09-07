@@ -1035,6 +1035,10 @@ resource "ise_device_admin_policy_set" "default_device_admin_policy_set" {
   default      = true
 
   depends_on = [ise_device_admin_policy_set.device_admin_policy_set]
+
+  lifecycle {
+    ignore_changes = [description, rank]
+  }
 }
 
 resource "ise_device_admin_policy_set_update_ranks" "ise_device_admin_policy_set_update_ranks" {

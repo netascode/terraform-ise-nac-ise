@@ -1,10 +1,10 @@
 terraform {
-  required_version = ">= 1.8.0"
+  required_version = ">= 1.11.0"
 
   required_providers {
     ise = {
       source  = "CiscoDevNet/ise"
-      version = "~> 0.4.1"
+      version = ">= 0.5.0"
     }
     utils = {
       source  = "netascode/utils"

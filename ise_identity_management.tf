@@ -145,20 +145,24 @@ data "ise_user_identity_group" "user_identity_group" {
 resource "ise_internal_user" "internal_user" {
   for_each = { for user in try(local.ise.identity_management.internal_users, []) : user.name => user }
 
-  name                   = each.key
-  description            = try(each.value.description, local.defaults.ise.identity_management.internal_users.description, null)
-  enabled                = try(each.value.enabled, local.defaults.ise.identity_management.internal_users.enabled, null)
-  email                  = try(each.value.email, local.defaults.ise.identity_management.internal_users.email, null)
-  account_name_alias     = try(each.value.account_name_alias, local.defaults.ise.identity_management.internal_users.account_name_alias, null)
-  password               = try(each.value.password, local.defaults.ise.identity_management.internal_users.password, null)
-  enable_password        = try(each.value.enable_password, local.defaults.ise.identity_management.internal_users.enable_password, null)
-  first_name             = try(each.value.first_name, local.defaults.ise.identity_management.internal_users.first_name, null)
-  last_name              = try(each.value.last_name, local.defaults.ise.identity_management.internal_users.last_name, null)
-  change_password        = try(each.value.change_password, local.defaults.ise.identity_management.internal_users.change_password, null)
-  identity_groups        = length(try(each.value.user_identity_groups, [])) > 0 ? join(",", sort([for i in try(each.value.user_identity_groups, []) : data.ise_user_identity_group.user_identity_group[i].id])) : null
-  password_never_expires = try(each.value.password_never_expires, local.defaults.ise.identity_management.internal_users.password_never_expires, null)
-  password_id_store      = try(each.value.password_id_store, local.defaults.ise.identity_management.internal_users.password_id_store, null)
-  custom_attributes      = try(each.value.custom_attributes, null)
+  name                       = each.key
+  description                = try(each.value.description, local.defaults.ise.identity_management.internal_users.description, null)
+  enabled                    = try(each.value.enabled, local.defaults.ise.identity_management.internal_users.enabled, null)
+  email                      = try(each.value.email, local.defaults.ise.identity_management.internal_users.email, null)
+  account_name_alias         = try(each.value.account_name_alias, local.defaults.ise.identity_management.internal_users.account_name_alias, null)
+  password                   = try(each.value.password_version, local.defaults.ise.identity_management.internal_users.password_version, null) == null ? sensitive(try(each.value.password, local.defaults.ise.identity_management.internal_users.password, null)) : null
+  password_wo                = try(each.value.password_version, local.defaults.ise.identity_management.internal_users.password_version, null) == null ? null : sensitive(try(each.value.password, local.defaults.ise.identity_management.internal_users.password, null))
+  password_wo_version        = try(each.value.password_version, local.defaults.ise.identity_management.internal_users.password_version, null)
+  enable_password            = try(each.value.enable_password_version, local.defaults.ise.identity_management.internal_users.enable_password_version, null) == null ? sensitive(try(each.value.enable_password, local.defaults.ise.identity_management.internal_users.enable_password, null)) : null
+  enable_password_wo         = try(each.value.enable_password_version, local.defaults.ise.identity_management.internal_users.enable_password_version, null) == null ? null : sensitive(try(each.value.enable_password, local.defaults.ise.identity_management.internal_users.enable_password, null))
+  enable_password_wo_version = try(each.value.enable_password_version, local.defaults.ise.identity_management.internal_users.enable_password_version, null)
+  first_name                 = try(each.value.first_name, local.defaults.ise.identity_management.internal_users.first_name, null)
+  last_name                  = try(each.value.last_name, local.defaults.ise.identity_management.internal_users.last_name, null)
+  change_password            = try(each.value.change_password, local.defaults.ise.identity_management.internal_users.change_password, null)
+  identity_groups            = length(try(each.value.user_identity_groups, [])) > 0 ? join(",", sort([for i in try(each.value.user_identity_groups, []) : data.ise_user_identity_group.user_identity_group[i].id])) : null
+  password_never_expires     = try(each.value.password_never_expires, local.defaults.ise.identity_management.internal_users.password_never_expires, null)
+  password_id_store          = try(each.value.password_id_store, local.defaults.ise.identity_management.internal_users.password_id_store, null)
+  custom_attributes          = try(each.value.custom_attributes, null)
 
   depends_on = [ise_user_identity_group.user_identity_group_5]
 }

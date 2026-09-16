@@ -6,6 +6,7 @@
 - Add recursive YAML file discovery for `yaml_directories`, so files in subfolders are now included [link](https://github.com/netascode/terraform-ise-nac-ise/issues/84)
 - Fix perpetual plan drift on Default policy set resources by ignoring `description` and `rank` after brownfield import
 - Fix a spurious plan diff after brownfield import of `active_directory_join_point` [link](https://github.com/netascode/terraform-ise-nac-ise/issues/81)
+- Add support for write-only secrets, opted in per secret with a `<secret>_version` data model key, on network devices, internal users and repositories
 
 ## 1.0.0
 

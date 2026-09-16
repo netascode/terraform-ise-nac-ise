@@ -410,7 +410,9 @@ resource "ise_active_directory_join_point" "active_directory_join_point" {
     internal_name = try(attr.internal_name, local.defaults.ise.identity_management.active_directories.attributes.internal_name, null)
     default_value = try(attr.default_value, local.defaults.ise.identity_management.active_directories.attributes.default_value, null)
   }]
-  rewrite_rules = [for rule in try(each.value.rewrite_rules, []) : {
+  # Left null when no rules are defined so the provider's PreserveStateIfUnconfigured
+  # plan modifier keeps ISE's rules in state; an explicit [] would bypass it.
+  rewrite_rules = try(length(each.value.rewrite_rules), 0) == 0 ? null : [for rule in each.value.rewrite_rules : {
     row_id         = try(rule.row_id, local.defaults.ise.identity_management.active_directories.rewrite_rules.row_id, null)
     rewrite_match  = try(rule.rewrite_match, local.defaults.ise.identity_management.active_directories.rewrite_rules.rewrite_match, null)
     rewrite_result = try(rule.rewrite_result, local.defaults.ise.identity_management.active_directories.rewrite_rules.rewrite_result, null)

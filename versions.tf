@@ -4,7 +4,7 @@ terraform {
   required_providers {
     ise = {
       source  = "CiscoDevNet/ise"
-      version = "~> 0.4.1"
+      version = "~> 0.5.0"
     }
     utils = {
       source  = "netascode/utils"

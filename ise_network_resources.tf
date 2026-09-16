@@ -157,6 +157,20 @@ locals {
   )
 }
 
+# SNMP settings are only sent when the device itself configures SNMP. Gating on
+# device-level keys (not defaults) keeps default polling_interval/trap_query values
+# from enabling SNMP on devices that never asked for it. v3 uses username instead
+# of a read-only community string, so both are accepted as the trigger.
+locals {
+  network_device_snmp_configured = {
+    for nd in try(local.ise.network_resources.network_devices, []) : nd.name => (
+      try(nd.snmp.ro_community, null) != null ||
+      try(nd.snmp.username, null) != null ||
+      try(nd.snmp.version, null) != null
+    )
+  }
+}
+
 # Workaround for ISE API issue where creating/deleting a network device immediately after creating/deleting a network device group fails
 resource "time_sleep" "network_device_group_wait" {
   count = length(try(local.network_device_groups, [])) > 0 ? 1 : 0
@@ -194,12 +208,18 @@ resource "ise_network_device" "network_device" {
   ]
   software_version                                            = try(each.value.software_version, local.defaults.ise.network_resources.network_devices.software_version, null)
   profile_name                                                = try(each.value.profile_name, local.defaults.ise.network_resources.network_devices.profile_name, null)
-  snmp_link_trap_query                                        = try(each.value.snmp.ro_community, local.defaults.ise.network_resources.network_devices.snmp.ro_community, null) != null ? try(each.value.snmp.link_trap_query, local.defaults.ise.network_resources.network_devices.snmp.link_trap_query, null) : null
-  snmp_mac_trap_query                                         = try(each.value.snmp.ro_community, local.defaults.ise.network_resources.network_devices.snmp.ro_community, null) != null ? try(each.value.snmp.mac_trap_query, local.defaults.ise.network_resources.network_devices.snmp.mac_trap_query, null) : null
-  snmp_originating_policy_service_node                        = try(each.value.snmp.ro_community, local.defaults.ise.network_resources.network_devices.snmp.ro_community, null) != null ? try(each.value.snmp.originating_policy_services_node, local.defaults.ise.network_resources.network_devices.snmp.originating_policy_services_node, null) : null
-  snmp_polling_interval                                       = try(each.value.snmp.ro_community, local.defaults.ise.network_resources.network_devices.snmp.ro_community, null) != null ? try(each.value.snmp.polling_interval, local.defaults.ise.network_resources.network_devices.snmp.polling_interval, null) : null
+  snmp_link_trap_query                                        = local.network_device_snmp_configured[each.key] ? try(each.value.snmp.link_trap_query, local.defaults.ise.network_resources.network_devices.snmp.link_trap_query, null) : null
+  snmp_mac_trap_query                                         = local.network_device_snmp_configured[each.key] ? try(each.value.snmp.mac_trap_query, local.defaults.ise.network_resources.network_devices.snmp.mac_trap_query, null) : null
+  snmp_originating_policy_service_node                        = local.network_device_snmp_configured[each.key] ? try(each.value.snmp.originating_policy_services_node, local.defaults.ise.network_resources.network_devices.snmp.originating_policy_services_node, null) : null
+  snmp_polling_interval                                       = local.network_device_snmp_configured[each.key] ? try(each.value.snmp.polling_interval, local.defaults.ise.network_resources.network_devices.snmp.polling_interval, null) : null
   snmp_ro_community                                           = try(each.value.snmp.ro_community, local.defaults.ise.network_resources.network_devices.snmp.ro_community, null)
-  snmp_version                                                = try(each.value.snmp.ro_community, local.defaults.ise.network_resources.network_devices.snmp.ro_community, null) != null ? try(each.value.snmp.version, local.defaults.ise.network_resources.network_devices.snmp.version, null) : null
+  snmp_version                                                = local.network_device_snmp_configured[each.key] ? try(each.value.snmp.version, local.defaults.ise.network_resources.network_devices.snmp.version, null) : null
+  snmp_username                                               = local.network_device_snmp_configured[each.key] ? try(each.value.snmp.username, local.defaults.ise.network_resources.network_devices.snmp.username, null) : null
+  snmp_security_level                                         = local.network_device_snmp_configured[each.key] ? try(each.value.snmp.security_level, local.defaults.ise.network_resources.network_devices.snmp.security_level, null) : null
+  snmp_auth_protocol                                          = local.network_device_snmp_configured[each.key] ? try(each.value.snmp.auth_protocol, local.defaults.ise.network_resources.network_devices.snmp.auth_protocol, null) : null
+  snmp_auth_password                                          = local.network_device_snmp_configured[each.key] ? try(each.value.snmp.auth_password, local.defaults.ise.network_resources.network_devices.snmp.auth_password, null) : null
+  snmp_privacy_protocol                                       = local.network_device_snmp_configured[each.key] ? try(each.value.snmp.privacy_protocol, local.defaults.ise.network_resources.network_devices.snmp.privacy_protocol, null) : null
+  snmp_privacy_password                                       = local.network_device_snmp_configured[each.key] ? try(each.value.snmp.privacy_password, local.defaults.ise.network_resources.network_devices.snmp.privacy_password, null) : null
   tacacs_connect_mode_options                                 = try(each.value.tacacs.shared_secret, local.defaults.ise.network_resources.network_devices.tacacs.shared_secret, null) != null ? try(each.value.tacacs.connect_mode_options, local.defaults.ise.network_resources.network_devices.tacacs.connect_mode_options, null) : null
   tacacs_shared_secret                                        = try(each.value.tacacs.shared_secret, local.defaults.ise.network_resources.network_devices.tacacs.shared_secret, null)
   trustsec_coa_source_host                                    = try(each.value.trust_sec.device_id, local.defaults.ise.network_resources.network_devices.trust_sec.device_id, null) != null ? try(each.value.trust_sec.coa_source_host, local.defaults.ise.network_resources.network_devices.trust_sec.coa_source_host, null) : null

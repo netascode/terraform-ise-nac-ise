@@ -1,4 +1,12 @@
-## 1.0.0 (unreleased)
+## 1.0.1 (unreleased)
+
+- Fix TrustSec egress matrix cell update failing with "Only one Catch All Rule SGACL can exist" when a cell's `default_rule` had drifted out of band, triggered by any change to that cell
+- Fixed perpetual drift in identity groups assignment by sorting UUIDs before concatenation to match ISE's storage order ([#86](https://github.com/netascode/terraform-ise-nac-ise/pull/86))
+- Add support for the `rsa_pss` (requires Cisco ISE 3.4) and `display_additional_tls_params` (requires Cisco ISE 3.5) data model keys on network access allowed protocols
+- Add recursive YAML file discovery for `yaml_directories`, so files in subfolders are now included [link](https://github.com/netascode/terraform-ise-nac-ise/issues/84)
+- Fix perpetual plan drift on Default policy set resources by ignoring `description` and `rank` after brownfield import
+
+## 1.0.0
 
 - **BREAKING CHANGE**: Endpoints now reference a profiling policy by name via the `profile_name` data model key instead of the raw `profile_id`. The name is resolved to a profile ID automatically through the `ise_profiler_profile` data source. Replace `profile_id: "<uuid>"` with `profile_name: "<Profiler Policy Name>"` for any endpoint using `static_profile_assignment: true`.
 - Add support for endpoint custom attributes via the `endpoint_custom_attributes` data model key, mapping to the `ise_endpoint_custom_attribute` resource
@@ -7,6 +15,8 @@
 - Fix circular managed conditions losing their children on every plan by splitting them into a two-phase leaf/parent creation [link](https://github.com/netascode/terraform-ise-nac-ise/issues/58)
 - Fix incorrect network device group paths under the `Is IPSEC Device` hierarchy caused by `ndg_type_map` merge order, which produced a perpetual plan diff for devices in that hierarchy [link](https://github.com/netascode/terraform-ise-nac-ise/issues/64)
 - Fix perpetual plan drift on `active_directory_join_point` by ignoring `groups`, which are managed separately by `ise_active_directory_add_groups` [link](https://github.com/netascode/terraform-ise-nac-ise/issues/75)
+- Add SNMPv3 support for network devices via the `snmp.username`, `snmp.security_level`, `snmp.auth_protocol`, `snmp.auth_password`, `snmp.privacy_protocol` and `snmp.privacy_password` data model keys
+- Fix SNMP settings being dropped for devices without a read-only community string. SNMP attributes were previously gated on `snmp.ro_community`, so an SNMPv3 device produced empty SNMP settings. `snmp.version` and `snmp.username` now activate SNMP settings as well
 
 ## 0.3.0
 

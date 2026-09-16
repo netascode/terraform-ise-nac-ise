@@ -1,7 +1,7 @@
 resource "ise_allowed_protocols" "allowed_protocols" {
   for_each = { for protocol in try(local.ise.network_access.policy_elements.allowed_protocols, []) : protocol.name => protocol }
 
-  description                                       = try(each.value.description, "")
+  description                                       = try(each.value.description, null)
   name                                              = each.key
   process_host_lookup                               = try(each.value.process_host_lookup, local.defaults.ise.network_access.policy_elements.allowed_protocols.process_host_lookup, null)
   allow_pap_ascii                                   = try(each.value.allow_pap_ascii, local.defaults.ise.network_access.policy_elements.allowed_protocols.allow_pap_ascii, null)
@@ -20,6 +20,8 @@ resource "ise_allowed_protocols" "allowed_protocols" {
   eap_tls_l_bit                                     = try(each.value.eap_tls_l_bit, local.defaults.ise.network_access.policy_elements.allowed_protocols.eap_tls_l_bit, null)
   allow_weak_ciphers_for_eap                        = try(each.value.allow_weak_ciphers_for_eap, local.defaults.ise.network_access.policy_elements.allowed_protocols.allow_weak_ciphers_for_eap, null)
   require_message_auth                              = try(each.value.require_message_auth, local.defaults.ise.network_access.policy_elements.allowed_protocols.require_message_auth, null)
+  rsa_pss                                           = try(each.value.rsa_pss, local.defaults.ise.network_access.policy_elements.allowed_protocols.rsa_pss, null)
+  display_additional_tls_params                     = try(each.value.display_additional_tls_params, local.defaults.ise.network_access.policy_elements.allowed_protocols.display_additional_tls_params, null)
   eap_tls_allow_auth_of_expired_certs               = try(each.value.allow_eap_tls, local.defaults.ise.network_access.policy_elements.allowed_protocols.allow_eap_tls, false) ? try(each.value.eap_tls.auth_of_expired_certs, local.defaults.ise.network_access.policy_elements.allowed_protocols.eap_tls.auth_of_expired_certs, null) : null
   eap_tls_enable_stateless_session_resume           = try(each.value.allow_eap_tls, local.defaults.ise.network_access.policy_elements.allowed_protocols.allow_eap_tls, false) ? try(each.value.eap_tls.enable_stateless_session_resume, local.defaults.ise.network_access.policy_elements.allowed_protocols.eap_tls.enable_stateless_session_resume, null) : null
   eap_tls_session_ticket_ttl                        = try(each.value.eap_tls.enable_stateless_session_resume, local.defaults.ise.network_access.policy_elements.allowed_protocols.eap_tls.enable_stateless_session_resume, false) ? try(each.value.eap_tls.session_ticket_ttl, local.defaults.ise.network_access.policy_elements.allowed_protocols.eap_tls.session_ticket_ttl, null) : null
@@ -1179,6 +1181,10 @@ resource "ise_network_access_policy_set" "default_network_access_policy_set" {
   default      = true
 
   depends_on = [ise_network_access_policy_set.network_access_policy_set]
+
+  lifecycle {
+    ignore_changes = [description, rank]
+  }
 }
 
 resource "ise_network_access_policy_set_update_ranks" "network_access_policy_set_update_ranks" {

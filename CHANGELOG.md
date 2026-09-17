@@ -1,3 +1,7 @@
+## 1.1.1 (unreleased)
+
+- Fix perpetual plan drift on `network_device_groups` caused by ISE automatically assigning both `Device Group#All Device Groups` and `All Device Groups#All Device Groups` to every network device after any write, and automatically assigning `Is IPSEC Device#Is IPSEC Device` when any IPSEC child group is configured. Also adds `"All Device Groups" = "Device Group"` to the NDG type map so the YAML value `All Device Groups` correctly resolves to the canonical `Device Group#All Device Groups` path.
+
 ## 1.1.0
 
 - Fix TrustSec egress matrix cell update failing with "Only one Catch All Rule SGACL can exist" when a cell's `default_rule` had drifted out of band, triggered by any change to that cell

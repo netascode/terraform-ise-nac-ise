@@ -150,9 +150,10 @@ locals {
       if try(group.path, null) != null && length(split("#", group.path)) == 1
     },
     {
-      "All Device Types" = "Device Type"
-      "All Locations"    = "Location"
-      "Is IPSEC Device"  = "IPSEC"
+      "All Device Types"  = "Device Type"
+      "All Locations"     = "Location"
+      "Is IPSEC Device"   = "IPSEC"
+      "All Device Groups" = "Device Group"
     }
   )
 }
@@ -211,9 +212,15 @@ resource "ise_network_device" "network_device" {
     mask              = try(i.mask, local.defaults.ise.network_resources.network_devices.ips.mask, null)
   }], null)
   model_name = try(each.value.model_name, local.defaults.ise.network_resources.network_devices.model_name, null)
-  network_device_groups = try(each.value.network_device_groups, null) == null ? null : [
-    for group in try(each.value.network_device_groups, []) : contains(keys(local.ndg_type_map), split("#", group)[0]) ? "${local.ndg_type_map[split("#", group)[0]]}#${group}" : (split("#", group)[0] == "DNAC" ? group : "${split("#", group)[0]}#${group}")
-  ]
+  network_device_groups = try(each.value.network_device_groups, null) == null ? null : distinct(concat(
+    flatten([
+      for group in try(each.value.network_device_groups, []) : concat(
+        [contains(keys(local.ndg_type_map), split("#", group)[0]) ? "${local.ndg_type_map[split("#", group)[0]]}#${group}" : (split("#", group)[0] == "DNAC" ? group : "${split("#", group)[0]}#${group}")],
+        split("#", group)[0] == "Is IPSEC Device" && length(split("#", group)) > 1 ? ["Is IPSEC Device#Is IPSEC Device"] : []
+      )
+    ]),
+    ["Device Group#All Device Groups", "All Device Groups#All Device Groups"]
+  ))
   software_version                                            = try(each.value.software_version, local.defaults.ise.network_resources.network_devices.software_version, null)
   profile_name                                                = try(each.value.profile_name, local.defaults.ise.network_resources.network_devices.profile_name, null)
   snmp_link_trap_query                                        = local.network_device_snmp_configured[each.key] ? try(each.value.snmp.link_trap_query, local.defaults.ise.network_resources.network_devices.snmp.link_trap_query, null) : null

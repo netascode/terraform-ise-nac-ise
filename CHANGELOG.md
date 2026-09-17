@@ -1,4 +1,4 @@
-## 1.1.0 (unreleased)
+## 1.1.0
 
 - Fix TrustSec egress matrix cell update failing with "Only one Catch All Rule SGACL can exist" when a cell's `default_rule` had drifted out of band, triggered by any change to that cell
 - Fixed perpetual drift in identity groups assignment by sorting UUIDs before concatenation to match ISE's storage order ([#86](https://github.com/netascode/terraform-ise-nac-ise/pull/86))
@@ -7,6 +7,9 @@
 - Fix perpetual plan drift on Default policy set resources by ignoring `description` and `rank` after brownfield import
 - Fix a spurious plan diff after brownfield import of `active_directory_join_point` [link](https://github.com/netascode/terraform-ise-nac-ise/issues/81)
 - Add support for write-only secrets, opted in per secret with a `<secret>_version` data model key, on network devices, internal users and repositories
+
+**Breaking Changes:**
+- Raise the minimum requirements to Terraform `>= 1.11.0` and provider `CiscoDevNet/ise ~> 0.5.0`. Terraform 1.11 and provider 0.5.0 are required by the write-only secret support
 
 ## 1.0.0
 

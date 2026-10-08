@@ -1469,8 +1469,12 @@ locals {
             operator         = try(j.operator, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.operator, null)
             id               = try(contains(local.known_conditions_network_access, try(j.name, "")) ? local.network_access_all_condition_ids[j.name] : data.ise_network_access_condition.network_access_condition[j.name].id, null)
             children = try([for k in j.children : {
-              attribute_name   = try(k.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, null)
-              attribute_value  = try(k.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, null)
+              attribute_name = try(k.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, null)
+              attribute_value = (
+                try(k.attribute_name, null) == "EndPointPolicy" && contains(local.unique_profiler_profiles, try(k.attribute_value, "")) ?
+                data.ise_profiler_profile.profiler_profile[k.attribute_value].id :
+                try(k.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, null)
+              )
               dictionary_name  = try(k.dictionary_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.dictionary_name, null)
               dictionary_value = try(k.dictionary_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.dictionary_value, null)
               condition_type   = try(k.type, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.type, null)
@@ -1478,8 +1482,12 @@ locals {
               operator         = try(k.operator, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.operator, null)
               id               = try(contains(local.known_conditions_network_access, try(k.name, "")) ? local.network_access_all_condition_ids[k.name] : data.ise_network_access_condition.network_access_condition[k.name].id, null)
               children = try([for l in k.children : {
-                attribute_name   = try(l.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, null)
-                attribute_value  = try(l.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, null)
+                attribute_name = try(l.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, null)
+                attribute_value = (
+                  try(l.attribute_name, null) == "EndPointPolicy" && contains(local.unique_profiler_profiles, try(l.attribute_value, "")) ?
+                  data.ise_profiler_profile.profiler_profile[l.attribute_value].id :
+                  try(l.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, null)
+                )
                 dictionary_name  = try(l.dictionary_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.dictionary_name, null)
                 dictionary_value = try(l.dictionary_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.dictionary_value, null)
                 condition_type   = try(l.type, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.type, null)
@@ -1487,8 +1495,12 @@ locals {
                 operator         = try(l.operator, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.operator, null)
                 id               = try(contains(local.known_conditions_network_access, try(l.name, "")) ? local.network_access_all_condition_ids[l.name] : data.ise_network_access_condition.network_access_condition[l.name].id, null)
                 children = try([for m in l.children : {
-                  attribute_name   = try(m.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, null)
-                  attribute_value  = try(m.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, null)
+                  attribute_name = try(m.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, null)
+                  attribute_value = (
+                    try(m.attribute_name, null) == "EndPointPolicy" && contains(local.unique_profiler_profiles, try(m.attribute_value, "")) ?
+                    data.ise_profiler_profile.profiler_profile[m.attribute_value].id :
+                    try(m.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, null)
+                  )
                   dictionary_name  = try(m.dictionary_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.dictionary_name, null)
                   dictionary_value = try(m.dictionary_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.dictionary_value, null)
                   condition_type   = try(m.type, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.type, null)
@@ -1496,8 +1508,12 @@ locals {
                   operator         = try(m.operator, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.operator, null)
                   id               = try(contains(local.known_conditions_network_access, try(m.name, "")) ? local.network_access_all_condition_ids[m.name] : data.ise_network_access_condition.network_access_condition[m.name].id, null)
                   children = try([for n in m.children : {
-                    attribute_name   = try(n.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, null)
-                    attribute_value  = try(n.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, null)
+                    attribute_name = try(n.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_name, null)
+                    attribute_value = (
+                      try(n.attribute_name, null) == "EndPointPolicy" && contains(local.unique_profiler_profiles, try(n.attribute_value, "")) ?
+                      data.ise_profiler_profile.profiler_profile[n.attribute_value].id :
+                      try(n.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.attribute_value, null)
+                    )
                     dictionary_name  = try(n.dictionary_name, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.dictionary_name, null)
                     dictionary_value = try(n.dictionary_value, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.dictionary_value, null)
                     condition_type   = try(n.type, local.defaults.ise.network_access.policy_sets.authorization_rules.condition.type, null)
@@ -1630,8 +1646,12 @@ locals {
             operator         = try(j.operator, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.operator, null)
             id               = try(contains(local.known_conditions_network_access, try(j.name, "")) ? local.network_access_all_condition_ids[j.name] : data.ise_network_access_condition.network_access_condition[j.name].id, null)
             children = try([for k in j.children : {
-              attribute_name   = try(k.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, null)
-              attribute_value  = try(k.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, null)
+              attribute_name = try(k.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, null)
+              attribute_value = (
+                try(k.attribute_name, null) == "EndPointPolicy" && contains(local.unique_profiler_profiles, try(k.attribute_value, "")) ?
+                data.ise_profiler_profile.profiler_profile[k.attribute_value].id :
+                try(k.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, null)
+              )
               dictionary_name  = try(k.dictionary_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.dictionary_name, null)
               dictionary_value = try(k.dictionary_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.dictionary_value, null)
               condition_type   = try(k.type, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.type, null)
@@ -1639,8 +1659,12 @@ locals {
               operator         = try(k.operator, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.operator, null)
               id               = try(contains(local.known_conditions_network_access, try(k.name, "")) ? local.network_access_all_condition_ids[k.name] : data.ise_network_access_condition.network_access_condition[k.name].id, null)
               children = try([for l in k.children : {
-                attribute_name   = try(l.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, null)
-                attribute_value  = try(l.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, null)
+                attribute_name = try(l.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, null)
+                attribute_value = (
+                  try(l.attribute_name, null) == "EndPointPolicy" && contains(local.unique_profiler_profiles, try(l.attribute_value, "")) ?
+                  data.ise_profiler_profile.profiler_profile[l.attribute_value].id :
+                  try(l.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, null)
+                )
                 dictionary_name  = try(l.dictionary_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.dictionary_name, null)
                 dictionary_value = try(l.dictionary_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.dictionary_value, null)
                 condition_type   = try(l.type, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.type, null)
@@ -1648,8 +1672,12 @@ locals {
                 operator         = try(l.operator, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.operator, null)
                 id               = try(contains(local.known_conditions_network_access, try(l.name, "")) ? local.network_access_all_condition_ids[l.name] : data.ise_network_access_condition.network_access_condition[l.name].id, null)
                 children = try([for m in l.children : {
-                  attribute_name   = try(m.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, null)
-                  attribute_value  = try(m.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, null)
+                  attribute_name = try(m.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, null)
+                  attribute_value = (
+                    try(m.attribute_name, null) == "EndPointPolicy" && contains(local.unique_profiler_profiles, try(m.attribute_value, "")) ?
+                    data.ise_profiler_profile.profiler_profile[m.attribute_value].id :
+                    try(m.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, null)
+                  )
                   dictionary_name  = try(m.dictionary_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.dictionary_name, null)
                   dictionary_value = try(m.dictionary_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.dictionary_value, null)
                   condition_type   = try(m.type, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.type, null)
@@ -1657,8 +1685,12 @@ locals {
                   operator         = try(m.operator, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.operator, null)
                   id               = try(contains(local.known_conditions_network_access, try(m.name, "")) ? local.network_access_all_condition_ids[m.name] : data.ise_network_access_condition.network_access_condition[m.name].id, null)
                   children = try([for n in m.children : {
-                    attribute_name   = try(n.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, null)
-                    attribute_value  = try(n.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, null)
+                    attribute_name = try(n.attribute_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_name, null)
+                    attribute_value = (
+                      try(n.attribute_name, null) == "EndPointPolicy" && contains(local.unique_profiler_profiles, try(n.attribute_value, "")) ?
+                      data.ise_profiler_profile.profiler_profile[n.attribute_value].id :
+                      try(n.attribute_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.attribute_value, null)
+                    )
                     dictionary_name  = try(n.dictionary_name, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.dictionary_name, null)
                     dictionary_value = try(n.dictionary_value, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.dictionary_value, null)
                     condition_type   = try(n.type, local.defaults.ise.network_access.policy_sets.authorization_exception_rules.condition.type, null)
@@ -1773,8 +1805,12 @@ locals {
           operator         = try(j.operator, local.defaults.ise.network_access.authorization_global_exception_rules.condition.operator, null)
           id               = try(contains(local.known_conditions_network_access, try(j.name, "")) ? local.network_access_all_condition_ids[j.name] : data.ise_network_access_condition.network_access_condition[j.name].id, null)
           children = try([for k in j.children : {
-            attribute_name   = try(k.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, null)
-            attribute_value  = try(k.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, null)
+            attribute_name = try(k.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, null)
+            attribute_value = (
+              try(k.attribute_name, null) == "EndPointPolicy" && contains(local.unique_profiler_profiles, try(k.attribute_value, "")) ?
+              data.ise_profiler_profile.profiler_profile[k.attribute_value].id :
+              try(k.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, null)
+            )
             dictionary_name  = try(k.dictionary_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.dictionary_name, null)
             dictionary_value = try(k.dictionary_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.dictionary_value, null)
             condition_type   = try(k.type, local.defaults.ise.network_access.authorization_global_exception_rules.condition.type, null)
@@ -1782,8 +1818,12 @@ locals {
             operator         = try(k.operator, local.defaults.ise.network_access.authorization_global_exception_rules.condition.operator, null)
             id               = try(contains(local.known_conditions_network_access, try(k.name, "")) ? local.network_access_all_condition_ids[k.name] : data.ise_network_access_condition.network_access_condition[k.name].id, null)
             children = try([for l in k.children : {
-              attribute_name   = try(l.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, null)
-              attribute_value  = try(l.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, null)
+              attribute_name = try(l.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, null)
+              attribute_value = (
+                try(l.attribute_name, null) == "EndPointPolicy" && contains(local.unique_profiler_profiles, try(l.attribute_value, "")) ?
+                data.ise_profiler_profile.profiler_profile[l.attribute_value].id :
+                try(l.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, null)
+              )
               dictionary_name  = try(l.dictionary_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.dictionary_name, null)
               dictionary_value = try(l.dictionary_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.dictionary_value, null)
               condition_type   = try(l.type, local.defaults.ise.network_access.authorization_global_exception_rules.condition.type, null)
@@ -1791,8 +1831,12 @@ locals {
               operator         = try(l.operator, local.defaults.ise.network_access.authorization_global_exception_rules.condition.operator, null)
               id               = try(contains(local.known_conditions_network_access, try(l.name, "")) ? local.network_access_all_condition_ids[l.name] : data.ise_network_access_condition.network_access_condition[l.name].id, null)
               children = try([for m in l.children : {
-                attribute_name   = try(m.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, null)
-                attribute_value  = try(m.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, null)
+                attribute_name = try(m.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, null)
+                attribute_value = (
+                  try(m.attribute_name, null) == "EndPointPolicy" && contains(local.unique_profiler_profiles, try(m.attribute_value, "")) ?
+                  data.ise_profiler_profile.profiler_profile[m.attribute_value].id :
+                  try(m.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, null)
+                )
                 dictionary_name  = try(m.dictionary_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.dictionary_name, null)
                 dictionary_value = try(m.dictionary_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.dictionary_value, null)
                 condition_type   = try(m.type, local.defaults.ise.network_access.authorization_global_exception_rules.condition.type, null)
@@ -1800,8 +1844,12 @@ locals {
                 operator         = try(m.operator, local.defaults.ise.network_access.authorization_global_exception_rules.condition.operator, null)
                 id               = try(contains(local.known_conditions_network_access, try(m.name, "")) ? local.network_access_all_condition_ids[m.name] : data.ise_network_access_condition.network_access_condition[m.name].id, null)
                 children = try([for n in m.children : {
-                  attribute_name   = try(n.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, null)
-                  attribute_value  = try(n.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, null)
+                  attribute_name = try(n.attribute_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_name, null)
+                  attribute_value = (
+                    try(n.attribute_name, null) == "EndPointPolicy" && contains(local.unique_profiler_profiles, try(n.attribute_value, "")) ?
+                    data.ise_profiler_profile.profiler_profile[n.attribute_value].id :
+                    try(n.attribute_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.attribute_value, null)
+                  )
                   dictionary_name  = try(n.dictionary_name, local.defaults.ise.network_access.authorization_global_exception_rules.condition.dictionary_name, null)
                   dictionary_value = try(n.dictionary_value, local.defaults.ise.network_access.authorization_global_exception_rules.condition.dictionary_value, null)
                   condition_type   = try(n.type, local.defaults.ise.network_access.authorization_global_exception_rules.condition.type, null)

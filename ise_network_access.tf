@@ -1367,44 +1367,29 @@ locals {
     for ps in try(local.ise.network_access.policy_sets, []) : concat(
       # From authorization_rules
       [
-        for rule in try(ps.authorization_rules, []) : concat(
-          # Top-level condition
-          [try(rule.condition.attribute_value, null)],
-          # First level children
-          [for i in try(rule.condition.children, []) : try(i.attribute_value, null)],
-          # Second level children
-          flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : try(j.attribute_value, null)]])
-        ) if try(rule.condition.attribute_name, null) == "EndPointPolicy" ||
-        anytrue([for i in try(rule.condition.children, []) : try(i.attribute_name, null) == "EndPointPolicy"]) ||
-        anytrue(flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : try(j.attribute_name, null) == "EndPointPolicy"]]))
+        for rule in try(ps.authorization_rules, []) : compact(concat(
+          [try(rule.condition.attribute_name, null) == "EndPointPolicy" ? try(rule.condition.attribute_value, null) : null],
+          [for i in try(rule.condition.children, []) : try(i.attribute_name, null) == "EndPointPolicy" ? try(i.attribute_value, null) : null],
+          flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : try(j.attribute_name, null) == "EndPointPolicy" ? try(j.attribute_value, null) : null]])
+        ))
       ],
       # From authorization_exception_rules
       [
-        for rule in try(ps.authorization_exception_rules, []) : concat(
-          # Top-level condition
-          [try(rule.condition.attribute_value, null)],
-          # First level children
-          [for i in try(rule.condition.children, []) : try(i.attribute_value, null)],
-          # Second level children
-          flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : try(j.attribute_value, null)]])
-        ) if try(rule.condition.attribute_name, null) == "EndPointPolicy" ||
-        anytrue([for i in try(rule.condition.children, []) : try(i.attribute_name, null) == "EndPointPolicy"]) ||
-        anytrue(flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : try(j.attribute_name, null) == "EndPointPolicy"]]))
+        for rule in try(ps.authorization_exception_rules, []) : compact(concat(
+          [try(rule.condition.attribute_name, null) == "EndPointPolicy" ? try(rule.condition.attribute_value, null) : null],
+          [for i in try(rule.condition.children, []) : try(i.attribute_name, null) == "EndPointPolicy" ? try(i.attribute_value, null) : null],
+          flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : try(j.attribute_name, null) == "EndPointPolicy" ? try(j.attribute_value, null) : null]])
+        ))
       ]
     )
   ])
 
   endpoint_policies_from_global_exception_rules = flatten([
-    for rule in try(local.ise.network_access.authorization_global_exception_rules, []) : concat(
-      # Top-level condition
-      [try(rule.condition.attribute_value, null)],
-      # First level children
-      [for i in try(rule.condition.children, []) : try(i.attribute_value, null)],
-      # Second level children
-      flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : try(j.attribute_value, null)]])
-    ) if try(rule.condition.attribute_name, null) == "EndPointPolicy" ||
-    anytrue([for i in try(rule.condition.children, []) : try(i.attribute_name, null) == "EndPointPolicy"]) ||
-    anytrue(flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : try(j.attribute_name, null) == "EndPointPolicy"]]))
+    for rule in try(local.ise.network_access.authorization_global_exception_rules, []) : compact(concat(
+      [try(rule.condition.attribute_name, null) == "EndPointPolicy" ? try(rule.condition.attribute_value, null) : null],
+      [for i in try(rule.condition.children, []) : try(i.attribute_name, null) == "EndPointPolicy" ? try(i.attribute_value, null) : null],
+      flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : try(j.attribute_name, null) == "EndPointPolicy" ? try(j.attribute_value, null) : null]])
+    ))
   ])
 
   unique_profiler_profiles = distinct(compact(concat(

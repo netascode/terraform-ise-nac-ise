@@ -1370,7 +1370,11 @@ locals {
         for rule in try(ps.authorization_rules, []) : compact(concat(
           [try(rule.condition.attribute_name, null) == "EndPointPolicy" ? try(rule.condition.attribute_value, null) : null],
           [for i in try(rule.condition.children, []) : try(i.attribute_name, null) == "EndPointPolicy" ? try(i.attribute_value, null) : null],
-          flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : try(j.attribute_name, null) == "EndPointPolicy" ? try(j.attribute_value, null) : null]])
+          flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : try(j.attribute_name, null) == "EndPointPolicy" ? try(j.attribute_value, null) : null]]),
+          flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : [for k in try(j.children, []) : try(k.attribute_name, null) == "EndPointPolicy" ? try(k.attribute_value, null) : null]]]),
+          flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : [for k in try(j.children, []) : [for l in try(k.children, []) : try(l.attribute_name, null) == "EndPointPolicy" ? try(l.attribute_value, null) : null]]]]),
+          flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : [for k in try(j.children, []) : [for l in try(k.children, []) : [for m in try(l.children, []) : try(m.attribute_name, null) == "EndPointPolicy" ? try(m.attribute_value, null) : null]]]]]),
+          flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : [for k in try(j.children, []) : [for l in try(k.children, []) : [for m in try(l.children, []) : [for n in try(m.children, []) : try(n.attribute_name, null) == "EndPointPolicy" ? try(n.attribute_value, null) : null]]]]]])
         ))
       ],
       # From authorization_exception_rules
@@ -1378,7 +1382,11 @@ locals {
         for rule in try(ps.authorization_exception_rules, []) : compact(concat(
           [try(rule.condition.attribute_name, null) == "EndPointPolicy" ? try(rule.condition.attribute_value, null) : null],
           [for i in try(rule.condition.children, []) : try(i.attribute_name, null) == "EndPointPolicy" ? try(i.attribute_value, null) : null],
-          flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : try(j.attribute_name, null) == "EndPointPolicy" ? try(j.attribute_value, null) : null]])
+          flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : try(j.attribute_name, null) == "EndPointPolicy" ? try(j.attribute_value, null) : null]]),
+          flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : [for k in try(j.children, []) : try(k.attribute_name, null) == "EndPointPolicy" ? try(k.attribute_value, null) : null]]]),
+          flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : [for k in try(j.children, []) : [for l in try(k.children, []) : try(l.attribute_name, null) == "EndPointPolicy" ? try(l.attribute_value, null) : null]]]]),
+          flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : [for k in try(j.children, []) : [for l in try(k.children, []) : [for m in try(l.children, []) : try(m.attribute_name, null) == "EndPointPolicy" ? try(m.attribute_value, null) : null]]]]]),
+          flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : [for k in try(j.children, []) : [for l in try(k.children, []) : [for m in try(l.children, []) : [for n in try(m.children, []) : try(n.attribute_name, null) == "EndPointPolicy" ? try(n.attribute_value, null) : null]]]]]])
         ))
       ]
     )
@@ -1388,7 +1396,11 @@ locals {
     for rule in try(local.ise.network_access.authorization_global_exception_rules, []) : compact(concat(
       [try(rule.condition.attribute_name, null) == "EndPointPolicy" ? try(rule.condition.attribute_value, null) : null],
       [for i in try(rule.condition.children, []) : try(i.attribute_name, null) == "EndPointPolicy" ? try(i.attribute_value, null) : null],
-      flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : try(j.attribute_name, null) == "EndPointPolicy" ? try(j.attribute_value, null) : null]])
+      flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : try(j.attribute_name, null) == "EndPointPolicy" ? try(j.attribute_value, null) : null]]),
+      flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : [for k in try(j.children, []) : try(k.attribute_name, null) == "EndPointPolicy" ? try(k.attribute_value, null) : null]]]),
+      flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : [for k in try(j.children, []) : [for l in try(k.children, []) : try(l.attribute_name, null) == "EndPointPolicy" ? try(l.attribute_value, null) : null]]]]),
+      flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : [for k in try(j.children, []) : [for l in try(k.children, []) : [for m in try(l.children, []) : try(m.attribute_name, null) == "EndPointPolicy" ? try(m.attribute_value, null) : null]]]]]),
+      flatten([for i in try(rule.condition.children, []) : [for j in try(i.children, []) : [for k in try(j.children, []) : [for l in try(k.children, []) : [for m in try(l.children, []) : [for n in try(m.children, []) : try(n.attribute_name, null) == "EndPointPolicy" ? try(n.attribute_value, null) : null]]]]]])
     ))
   ])
 

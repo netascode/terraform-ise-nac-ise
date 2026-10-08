@@ -1,3 +1,7 @@
+## 1.1.1 (unreleased)
+
+- Fix `terraform plan` failure and perpetual drift when an authorization rule mixes an `EndPointPolicy` condition with other condition types, and extend `EndPointPolicy` profiler-profile resolution to all condition nesting levels [link](https://github.com/netascode/terraform-ise-nac-ise/issues/96)
+
 ## 1.1.0
 
 - Fix TrustSec egress matrix cell update failing with "Only one Catch All Rule SGACL can exist" when a cell's `default_rule` had drifted out of band, triggered by any change to that cell
